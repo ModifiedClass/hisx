@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 
 import LinkBtn from '../../components/linkbtn'
 import {formateDate} from '../../utils/dateUtils'
-import {logout} from '../../redux/actions'
+//import {logout} from '../../redux/actions'
 //import memUtils from '../../utils/memUtils'
 //import storeUtils from '../../utils/storeUtils'
 
