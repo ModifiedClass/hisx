@@ -1,0 +1,38 @@
+使用antd和less
+yarn add antd
+yarn add babel-plugin-import --save-dev
+git add .
+git commit -m "***"
+npm run eject
+修改package.json
+"babel": {
+    "presets": [
+      "react-app"
+    ],
+    "plugins": [
+      ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
+    ]
+  }
+
+yarn add less less-loader
+
+修改webpack
+test: cssRegex,
+              exclude: cssModuleRegex,
+              use: getStyleLoaders({
+                importLoaders: 1,
+                sourceMap: isEnvProduction && shouldUseSourceMap,
+              },'less-loader'),
+
+//const cssRegex = /\.css$/;
+//const cssModuleRegex = /\.module\.css$/;
+改为
+const cssRegex = /\.(css|less)$/;
+const cssModuleRegex = /\.module\.(css|less)$/;
+
+
+跨域
+修改package.json
+
+    "proxy":"address:port"
+}

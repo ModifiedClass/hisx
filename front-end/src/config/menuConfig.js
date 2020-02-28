@@ -1,0 +1,93 @@
+const menuList=[
+{
+    title:'仪表盘',
+    key:'/dashboard',
+    icon:'dashboard',
+    isPublic:true
+},
+{
+    title:'帐户管理',
+    key:'/account',
+    icon:'contacts',
+    children:[
+    {
+        title:'组管理',
+        key:'/group',
+        icon:'team'
+    },
+    {
+        title:'部门管理',
+        key:'/department',
+        icon:'apartment'
+    },
+    {
+        title:'用户管理',
+        key:'/user',
+        icon:'user'
+    },
+    ]
+},
+{
+    title:'时间轴',
+    key:'/timeline',
+    icon:'history',
+},
+{
+    title:'信息设备',
+    key:'/informationdevice',
+    icon:'laptop',
+    children:[
+    {
+        title:'设备类别',
+        key:'/devicecategory',
+        icon:'unordered-list'
+    },
+    {
+        title:'设备型号',
+        key:'/devicemodel',
+        icon:'barcode'
+    },
+    {
+        title:'安装位置',
+        key:'/installlocation',
+        icon:'environment'
+    },
+    {
+        title:'设备列表',
+        key:'/deviceinfo',
+        icon:'menu'
+    },
+    {
+        title:'设备拓扑',
+        key:'/equtopo',
+        icon:'apartment'
+    },
+    ]
+},
+{
+    title:'运维记录',
+    key:'/oapm',
+    icon:'ordered-list',
+    children:[
+    {
+        title:'问题类别',
+        key:'/problemcategory',
+        icon:'block'
+    },
+    {
+        title:'处理记录',
+        key:'/processedrecord',
+        icon:'unordered-list'
+    },{
+        title:'打印机维修',
+        key:'/printerrepair',
+        icon:'tool'
+    },{
+        title:'硒鼓加粉',
+        key:'/cartriday',
+        icon:'download'
+    }
+    ]
+},
+]
+export default  menuList

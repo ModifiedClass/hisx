@@ -1,0 +1,38 @@
+1:入口index.js
+import {Provider} from 'react-redux'
+import store from './redux/store'
+
+ReactDOM.render((
+    <Provider store={store}>
+        <App />
+    </Provider>), document.getElementById('root'));
+    
+2:read js
+import {connect} from 'react-redux'
+
+const dataname=this.props.dataname
+
+export default connect(
+    state=>({dataname:state.dataname}),
+    {}
+)(componentname)
+
+3:write js
+import {connect} from 'react-redux'
+import {setdata} from '../../redux/actions'
+
+onClick={()=>this.props.setdata(item.dataname)}
+
+export default connect(
+    state=>({}),
+    {setdata}
+)(componentname)
+
+语法:
+createStore() 接收reducer函数,返回store对象
+combineReducers():接收包含多个reducer方法的对象,返回一个新的reducer函数
+
+store内部:
+getState()返回state数据
+dispatch():参数为action对象
+subscribe()参数为监听内部state更新的回调函数

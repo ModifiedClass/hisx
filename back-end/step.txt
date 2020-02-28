@@ -1,0 +1,87 @@
+windows下
+安装python并设置环境变量
+cmd下升级pip
+python -m pip install --upgrade pip -i https://pypi.douban.com/simple
+
+安装虚拟环境
+pip install virtualenv
+pip install virtualenvwrapper
+
+创建虚拟环境目录，创建虚拟环境
+cd ***
+virtualenv envname
+或者
+virtualenv -p C:\Users\Administrator\AppData\Local\Programs\Python\Python38\pythonw.exe --no-site-packages D:\administrator\Desktop\dev\virtualenv\django
+
+# 进入虚拟环境文件
+cd envname
+# 进入相关的启动文件夹
+cd Scripts
+将Scripts加入环境变量
+
+activate  # 启动虚拟环境  deactivate # 退出虚拟环境
+powershell下激活 先Set-ExecutionPolicy RemoteSigned
+./activate
+
+pip install django
+
+安装webapi框架
+pip install djangorestframework
+pip install django-filter
+pip install Markdown
+
+django-admin startproject projectname
+python manage.py startapp appname
+
+修改settings.py
+
+加入
+sys.path.insert(0,os.path.join(BASE_DIR,'apps')) 
+
+把生成的app名称加入INSTALLED_APPS序列中
+NSTALLED_APPS=[
+    ...,
+    'rest_framework',
+    'rest_framework.authtoken',
+    app名称,
+    ...,
+]
+
+MIDDLEWARE 中注释
+
+    #'django.contrib.sessions.middleware.SessionMiddleware',
+    #'django.contrib.auth.middleware.AuthenticationMiddleware',
+    #'django.contrib.messages.middleware.MessageMiddleware',
+
+域名访问权限
+ALLOWED_HOSTS=[]修改为ALLOWED_HOSTS=['*']
+
+设置模板路径
+TEMPLATES=[
+    ...
+    'DIRS':[os.path.join(BASE_DIR,'templates')],
+    ...
+]
+
+设置时区和中文
+LANGUAGE_CODE='zh-hans'
+TIME_ZONE='Asia/Shanghai'
+
+设置静态文件
+STATIC_URL='static'
+STATICFILES_DIR=[
+    os.path.join(BASE_DIR,'static'),
+]
+STATIC_ROOT=os.path.join(BASE_DIR,'static')
+
+
+数据迁移 、调试
+python manage.py makemigrations
+python manage.py migrate
+
+启用admin创建管理员
+python manage.py createsuperuser
+
+启动调试
+python manage.py runserver ip:port
+

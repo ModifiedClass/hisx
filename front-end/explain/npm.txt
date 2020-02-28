@@ -1,0 +1,14 @@
+npm install cnpm --registry=https://registry.npm.taobao.org
+
+npm install create-react-app --save-dev
+npm install react-highlight-words --save-dev
+npm install yarn --save-dev
+yarn add babel-plugin-import --save-dev
+yarn add antd --save-dev
+yarn add less less-loader --save-dev
+yarn add react-router-dom --save-dev
+yarn add axios --save-dev
+yarn add store --save-dev
+yarn add react-draft-wysiwyg draftjs-to-html
+
+yarn add redux react-redux redux-thunk redux-devtools-extension
