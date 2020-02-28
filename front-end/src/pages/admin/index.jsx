@@ -70,6 +70,6 @@ class Admin extends Component{
     }
 }
 export default connect(
-    state=({user:state.user}),
-        {}
+    //state=({user:state.user}),
+    //{}
 )(Admin)

@@ -12,3 +12,5 @@ yarn add store --save-dev
 yarn add react-draft-wysiwyg draftjs-to-html
 
 yarn add redux react-redux redux-thunk redux-devtools-extension
+
+先create-react-app创建项目，再用项目内得文件覆盖，再npm安装

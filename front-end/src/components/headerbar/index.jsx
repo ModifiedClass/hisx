@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 
 import LinkBtn from '../../components/linkbtn'
 import {formateDate} from '../../utils/dateUtils'
-import {logout} from '../../actions'
+import {logout} from '../../redux/actions'
 //import memUtils from '../../utils/memUtils'
 //import storeUtils from '../../utils/storeUtils'
 
@@ -47,7 +47,7 @@ class HeaderBar extends Component{
                     
                     <div className="header-left">
                         <Link to='/'>
-                            <span>&reg;HISP</span>
+                            <span>&reg;HISX</span>
                         </Link>
                     </div>
                 <div className="header-right">

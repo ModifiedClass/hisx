@@ -9,7 +9,7 @@ import {
     RESET_USER
 } from './actiontypes'
 
-import {storeUtils} from '../../storeUtils'
+import storeUtils from '../utils/storeUtils'
 import reqLogin from '../api/json/login'
 //设置面包屑同步action
 export const setBreadCrum=(breadCrum)=>({type:SET_BREAD_CRUM,data:breadCrum})
