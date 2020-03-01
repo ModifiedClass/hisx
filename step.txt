@@ -1,0 +1,24 @@
+新建工作区wrokplace
+在wrokplace下
+1安装react
+npm install -g create-react-app -g代表全局安装
+
+2创建项目
+create-react-app hisx    hisx是项目名称
+
+cd hisx
+
+2.1打包发布
+npm run build
+npm install -g server
+server build
+
+3创建项目目录结构
+
+4引入antd ant.design/docs/react/introduce-cn
+npm install -g yarn
+yarn add antd  完全安装
+yarn add react-app-revired customize-cra babel-plugin-import 指定模块安装
+
+5引入路由
+yarn add react-router-dom

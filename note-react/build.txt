@@ -1,0 +1,22 @@
+无跨域
+yarn run build
+or
+npm run build
+
+跨域
+使用nginx
+server{
+    #前台访问的端口
+    listen 80;
+    server_name localhost;
+    
+    #所有请求都转发给前台应用 不包含下面/api开头的路径
+    location / {
+        proxy_pass http://localhost:8000;
+    }
+    
+    #以/api开头的请求都发给前台
+    location ~ /api/ {
+        proxy_pass http://localhost:8001;
+    }
+}

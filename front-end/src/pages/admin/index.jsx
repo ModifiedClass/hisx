@@ -22,6 +22,7 @@ import DeviceCategory from './informationdevice/devicecategory'
 import DeviceModel from './informationdevice/devicemodel'
 import InstallLocation from './informationdevice/installlocation'
 import DeviceInfo from './informationdevice/deviceinfo'
+import NotFound from '../status/404'
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -44,7 +45,8 @@ class Admin extends Component{
                         <Content className="layout-main-bottom-right-content">
                             <BreadCrumBar className="layout-main-bottom-right-content-bcb"/>
                             <Switch>
-                                <Route exact path='/' component={Dashboard}/>
+                                <Redirect exact from='/' to='/dashboard' />
+                                <Route path='/' component={Dashboard}/>
                                 <Route path='/dashboard' component={Dashboard}/>
                                 <Route path='/group' component={Group}/>
                                 <Route path='/department' component={Department}/>
@@ -57,7 +59,7 @@ class Admin extends Component{
                                 <Route path='/installlocation' component={InstallLocation}/>
                                 <Route path='/deviceinfo' component={DeviceInfo}/>
                                 <Route path='/developing' component={Developing}/>
-                                <Redirect to='/developing' />
+                                <Route component={NotFound}/>
                             </Switch>
                         </Content>
                         <Footer className="layout-main-bottom-right-footer" >

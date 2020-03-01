@@ -13,4 +13,11 @@ yarn add react-draft-wysiwyg draftjs-to-html
 
 yarn add redux react-redux redux-thunk redux-devtools-extension
 
+yarn add echarts echarts-for-react
+
+import ReactEcharts from 'echarts-for-react'
+<ReactEcharts option={this.getOption()}/>
+or
+yarn add bizchart @antv/data-set
+
 先create-react-app创建项目，再用项目内得文件覆盖，再npm安装

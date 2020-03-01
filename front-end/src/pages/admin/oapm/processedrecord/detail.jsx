@@ -26,7 +26,14 @@ export default class ProcessedRecordDetail extends Component{
             <Badge color={BASE_BLUE} text="需跟进" />
         ))
         this.setState({stateDisplay})
-     }
+    }
+    /*
+    HashRouter
+    卸载之前清楚保存数据
+    componentDidUnMount(){
+        memUtils.processedrecord={}
+    }
+    */
     render(){
         const {create_time,
         situation,
@@ -38,6 +45,19 @@ export default class ProcessedRecordDetail extends Component{
         handler,
         pics
         }=this.props.location.state.processedrecord
+        /*
+        HashRouter
+        const {create_time,
+        situation,
+        solution,
+        processing_mode,
+        departmentId,
+        discoverer,
+        problem_category,
+        handler,
+        pics
+        }=memUtils.processedrecord
+        */
         const {stateDisplay}=this.state
         const title=(
             <span>
