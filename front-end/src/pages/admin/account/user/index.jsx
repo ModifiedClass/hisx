@@ -30,6 +30,10 @@ export default class User extends Component{
             dataIndex:'password',
         },
         {
+            title:'姓名',
+            dataIndex:'name',
+        },
+        {
             title:'所在组',
             dataIndex:'group_id',
             render:(group_id)=>this.groupNames[group_id]

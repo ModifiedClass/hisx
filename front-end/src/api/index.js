@@ -1,5 +1,6 @@
 const HOST=''
 import ajax from './ajax'
+import encapsulationfetch from './ajax'
 
 /**account**/
 //登陆

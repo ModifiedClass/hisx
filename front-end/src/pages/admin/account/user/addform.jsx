@@ -53,7 +53,18 @@ class AddForm extends PureComponent{
                     }
                 </Item>
                 )}
-                
+                 <Item label='姓名' {...formItemLayout}>
+                {
+                    getFieldDecorator('name',{
+                        initialValue:user.name,
+                        rules:[
+                        {required:true,message:'姓名不能为空!'}
+                        ]
+                    })(
+                        <Input placeholder='请输入姓名!'/>
+                    )
+                }
+                </Item>
                 <Item label='用户组' {...formItemLayout}>
                 {
                     getFieldDecorator('group_id',{

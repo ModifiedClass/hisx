@@ -58,7 +58,14 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework import exceptions
 
-from api import models
+from .serializers import ExampleSerializer
+class ExampleView(APIView):
+    def get(self,request,*args,**kwargs):
+        ret={'status':0,'msg':'msg','data':None}
+        examples=models.Example.objects.all()
+        ser=ExampleSerializer(instance=examples,many=True)#many 单个对象False
+        ret['data']=ser
+        return JsonResponse(json.dumps(ret,ensure_ascii=False))
 
 def md5(user):
     import hashlib

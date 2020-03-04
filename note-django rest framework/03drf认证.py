@@ -141,4 +141,73 @@ REST_FRAMEWORK={
     "UNAUTHENTICATED_USER":None,   #匿名用户 request.user=None
     "UNAUTHENTICATED_TOKEN":None,   #匿名用户 request.auth=None
 }
-#内置认证
+
+
+#csrf
+#views.py
+from django.middleware.csrf import get_token
+def getToken(request):
+    token=get_token(request)
+    return HttpResponse(json.dumps({'token':token}), content_type="application/json,charset=utf-8")
+#or
+def getToken(request):
+    token = django.middleware.csrf.get_token(request)
+    return JsonResponse({'token': token})
+    
+#url.py
+urlpatterns = [
+    path('api/get_token',getToken)
+]
+
+#api
+let that=this;
+const url='http://127.0.0.1/api/get_token';
+this.axios.get(url).then(res=>{
+    #先获取后台cookie
+    let csrftoken=that.$cookie.get('csrftoken');
+    const url='http://127.0.0.1/api/post_test';
+    #post 请求后台接口
+    this.axios.post(url,{},{
+        headers:{
+            'X-CSRFtoken':csrftoken
+        }
+    }).then(res=>{
+                console.log(res.data);
+            })
+})
+#跨域
+pip install django-cors-headers
+#setting.py
+INSTALLED_APPS = [
+    'corsheaders',
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+CORS_ALLOW_CREDENTIALS=True # 允许携带cookie
+CORS_ORIGIN_ALLOL_ALL=True
+CORS_ORIGIN_WHITELIST=('*') #域名白名单
+CORS_ALLOW_METHODS=(
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+CORS_ALLOW_HEADERS=(
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+
+# 前端需要携带cookies访问后端时,需要设置
+withCredentials: true

@@ -59,7 +59,7 @@ const menuList=[
     },
     {
         title:'设备拓扑',
-        key:'/equtopo',
+        key:'/devicetopo',
         icon:'apartment'
     },
     ]

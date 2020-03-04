@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 
 import {Card,Table,Button,Icon,message,Modal} from 'antd'
+import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
@@ -24,6 +25,25 @@ export default class Department extends Component{
         {
             title:'简码',
             dataIndex:'code',
+        },
+        {
+            title:'状态',
+            dataIndex:'status',
+            render:(status)=>{
+                if(status){
+                    return (
+                        <span>
+                            <Tag color={BASE_GREEN}>启用</Tag>
+                        </span>
+                    )
+                }else{
+                    return (
+                        <span>
+                            <Tag color={BASE_YELLOW}>停用</Tag>
+                        </span>
+                    )
+                }  
+            }
         },
         {
             title:'创建时间',
