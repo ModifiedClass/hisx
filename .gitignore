@@ -4,7 +4,16 @@
 /front-end/node_modules
 /front-end/.pnp
 front-end/.pnp.js
-back-end/db.sqlite3
+/back-end/db.sqlite3
+/back-end/apps/__pycache__
+/back-end/apps/account/__pycache__
+/back-end/apps/account/migrations
+/back-end/apps/informationdevice/__pycache__
+/back-end/apps/informationdevice/migrations
+/back-end/apps/oapm/__pycache__
+/back-end/apps/oapm/migrations
+/back-end/hbe/__pycache__
+/back-end/utils/__pycache__
 
 # testing
 /front-end/coverage

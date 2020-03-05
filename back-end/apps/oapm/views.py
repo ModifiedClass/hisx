@@ -29,16 +29,17 @@ class ProblemCategoryView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                #ser=ProblemCategorySerializer(instance=obj,many=True)#many 单个对象False
+                ser=ProblemCategorySerializer(instance=obj,many=True)#many 单个对象False
                 ret['status']=1
-                list=[]
+                '''list=[]
                 for d in obj:
                     dic={}
                     dic['_id']=d._id
                     dic['name']=d.name
                     dic['create_time']=d.create_time
                     list.append(dic)
-                ret['data']=list
+                ret['data']=list'''
+                ret['data']=ser
             return setzhJsonResponseHeader(ret)
         except Exception as e:
             ret['msg']=str(e)
