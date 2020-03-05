@@ -5,8 +5,8 @@ class GroupSerializer(serializers.ModelSerializer):
     _id=serializers.IntegerField()
     name = serializers.CharField()
     create_time=serializers.DateTimeField()
-    menu=serializers.TextField()
-    operation=serializers.TextField()
+    menu=serializers.CharField()
+    operation=serializers.CharField()
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_departments(self,row):
         department_obj_list=row.departments.all()
         ret=[]
-        fot item in department_obj_list:
+        for item in department_obj_list:
             ret.append({'id':item.id})
         return ret
 

@@ -37,8 +37,7 @@ class User(models.Model):
     username=models.CharField(max_length=30)
     name=models.CharField(max_length=30,blank=True,null=True)
     password=models.CharField(max_length=50,blank=True,null=True)
-    state=models.IntegerField(default=1)
-    error=models.PositiveIntegerField(default=0)
+    status=models.BooleanField(default=True)
     create_time=models.DateTimeField(blank=True,null=True,auto_now_add=True)
     isSuper = models.BooleanField(default=False)#超级用户
     group=models.ManyToManyField(Group)
@@ -53,7 +52,7 @@ class User(models.Model):
         return self.username
         
 class UserToken(models.Model):
-    user=models.OneToOneField(to=User)
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
     token=models.CharField(max_length=64)
     
     def __str__(self):

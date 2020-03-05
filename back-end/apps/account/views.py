@@ -1,80 +1,14 @@
 from django.shortcuts import render
-from rest_framework import viewsets
-
-from .models import User
-from .serializers import UserSerializer
-
-
-
-# Create your views here.
-
-'''class UserViewSet(viewsets.ModelViewSet):
-    queryset=User.object.order_by('name')
-    serializer_class=UserSerializer
-    
-from django.views import View
-class UserView(View):
-    #使用装饰器方法
-    #cbv模式装饰器
-    from django.views.decorators.csrf import csrf_exempt,csrf_protect
-    from django.utils.decorators import method_decorators
-    
-    @method_decorators(csrf_exempt)
-    def dispatch(self,request,*args,**kwargs):
-        return super(UserView,self).dispatch(request,*args,**kwargs)
-        
-    def get(self,request,*args,**kwargs):
-        return HttpResponse('GET:查询')
-    
-    def post(self,request,*args,**kwargs):
-        return HttpResponse('POST:新增')
-    
-    def put(self,request,*args,**kwargs):
-        return HttpResponse('PUT:修改（全部更新）')
-        
-    def delete(self,request,*args,**kwargs):
-        return HttpResponse('DELETE:删除')
-        
-    def patch(self,request,*args,**kwargs):
-        return HttpResponse('PATCH:修改（部分更新）')
-    
-    def head(self,request,*args,**kwargs):
-        return HttpResponse('HEAD:查询响应头信息，不包含响应主体')
-    
-    def options(self,request,*args,**kwargs):
-        return HttpResponse('OPTIONS:非简单请求之前预检，通过后才执行get post等')
-        
-    def trace(self,request,*args,**kwargs):
-        return HttpResponse('TRACE:请求服务器回显其收到的请求信息')
-        
-    def connect(self,request,*args,**kwargs):
-        return HttpResponse('CONNECT:将连接改为管道方式的代理服务器')
-'''
-        
-#验证示例
-from django.shortcuts import render
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework import exceptions
+from django.db import transaction
 
-from .serializers import ExampleSerializer
-class ExampleView(APIView):
-    def get(self,request,*args,**kwargs):
-        ret={'status':0,'msg':'msg','data':None}
-        examples=models.Example.objects.all()
-        ser=ExampleSerializer(instance=examples,many=True)#many 单个对象False
-        ret['data']=ser
-        return JsonResponse(json.dumps(ret,ensure_ascii=False))
+from .models import *
+from .serializers import *
+from utils.globalutilitys import *
 
-def md5(user):
-    import hashlib
-    import time
-    
-    ctime=str(time.time())
-    m=hashlib.md5(bytes(user,encoding='utf-8'))
-    m.update(bytes(ctime,encoding='utf-8'))
-    return m.hexdigest()
 
 class AuthView(APIView):
     '''
@@ -86,36 +20,295 @@ class AuthView(APIView):
         ret={'status':1,'msg':None,'data':None}
         try:
             username=request._request.POST.get('username')
-            password=request._request.POST.get('password')
-            obj=models.User.objects.filter(username=,password=).first()
+            password=pwdenc(request._request.POST.get('password'))
+            obj=models.User.objects.filter(username=username,password=password).first()
             if not obj:
                 ret['status']=2
                 ret['msg']="error"
                 
-            token=md5(username)
+            token=md5token(username)
             models.UserToken.objects.update_or_create(user=obj,defaults={'token':token})
             ret['data']=token
         except Exception as e:
             ret['status']=3
             ret['msg']="error"
         
-    return JsonResponse(ret)
+        return JsonResponse(ret)
 
-            
-class UserView(APIView):
+
+class GroupView(APIView):
     '''
-    用户相关
+    组
     '''
     def get(self,request,*args,**kwargs):
-        ret={'status':1,'msg':None,'data':None}
+        searchdict={}
+        if request.GET.get("_id"):
+            searchdict['_id']=request.GET.get("_id")
+        if request.GET.get("name"):
+            searchdict['name']=request.GET.get("name")
+        ret={'status':0,'msg':None,'data':None}
         try:
-            obj=models.User.objects.exclude(isDelete=True).order_by('name')
+            obj=Group.objects.filter(**searchdict).order_by('name')
             if not obj:
-                ret['status']=2
-                ret['msg']="error"
-            ret['data']=obj
+                ret['msg']="没有获取到数据!"
+            else:
+                ser=GroupSerializer(instance=obj,many=True)#many 单个对象False
+                ret['status']=1
+                ret['data']=ser
+            return setzhJsonResponseHeader(ret)
         except Exception as e:
             ret['status']=3
-            ret['msg']="error"
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+    
+    def post(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        name=res['name']
+        menu=res['menu']
+        operation=res['operation']
+        try:
+            with transaction.atomic():
+                obj=Group()
+                obj.name=name
+                obj.menu=menu
+                obj.operation=operation
+                obj.save()
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(ret)
+        except Exception as e:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
         
-    return JsonResponse(ret)
+    def delete(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        _id = res['_id']
+        try:
+            Group.objects.filter(id=_id).delete()
+            ret['status']=1
+            ret['msg']="操作成功!"
+            return setzhJsonResponseHeader(ret)
+        except:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+        
+    def patch(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        _id=res['_id']
+        name=res['name']
+        menu=res['menu']
+        operation=res['operation']
+        try:
+            with transaction.atomic():
+                obj=Group.objects.get(id=_id)
+                obj.name=name
+                obj.menu=menu
+                obj.operation=operation
+                obj.save()
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(ret)
+        except:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+
+
+class DepartmentView(APIView):
+    '''
+    部门
+    '''
+    def get(self,request,*args,**kwargs):
+        searchdict={}
+        if request.GET.get("_id"):
+            searchdict['_id']=request.GET.get("_id")
+        if request.GET.get("name"):
+            searchdict['name']=request.GET.get("name")
+        if request.GET.get("code"):
+            searchdict['code']=request.GET.get("code")
+        if request.GET.get("status"):
+            searchdict['status']=request.GET.get("status")
+        if request.GET.get("parent"):
+            searchdict['parent']=request.GET.get("parent")
+        ret={'status':0,'msg':None,'data':None}
+        try:
+            obj=Department.objects.filter(**searchdict).order_by('name')
+            if not obj:
+                ret['msg']="没有获取到数据!"
+            else:
+                ser=DepartmentSerializer(instance=obj,many=True)#many 单个对象False
+                ret['status']=1
+                ret['data']=ser
+            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
+            ret['status']=3
+            ret['msg']=str(e)
+            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+    
+    def post(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        name=res['name']
+        code=res['code']
+        parent=res['parent']
+        status=res['status']
+        try:
+            with transaction.atomic():
+                obj=Department()
+                obj.name=name
+                obj.code=code
+                obj.parent=Department.objects.get(id=parent)
+                obj.status=status
+                obj.save()
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(ret)
+        except Exception as e:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+        
+    def delete(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        _id = res['_id']
+        try:
+            Department.objects.filter(id=_id).delete()
+            ret['status']=1
+            ret['msg']="操作成功!"
+            return setzhJsonResponseHeader(ret)
+        except:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+        
+    def patch(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        _id=res['_id']
+        name=res['name']
+        code=res['code']
+        parent=res['parent']
+        status=res['status']
+        try:
+            with transaction.atomic():
+                obj=Department.objects.get(id=_id)
+                obj.name=name
+                obj.code=code
+                obj.parent=Department.objects.get(id=parent)
+                obj.status=status
+                obj.save()
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(ret)
+        except:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+
+
+class UserView(APIView):
+    '''
+    用户
+    '''
+    def get(self,request,*args,**kwargs):
+        searchdict={}
+        if request.GET.get("_id"):
+            searchdict['_id']=request.GET.get("_id")
+        if request.GET.get("username"):
+            searchdict['username']=request.GET.get("username")
+        if request.GET.get("name"):
+            searchdict['name']=request.GET.get("name")
+        if request.GET.get("status"):
+            searchdict['status']=request.GET.get("status")
+        if request.GET.get("group"):
+            searchdict['group']=request.GET.get("group")
+        if request.GET.get("department"):
+            searchdict['department']=request.GET.get("department")
+        ret={'status':0,'msg':None,'data':None}
+        try:
+            obj=User.objects.filter(**searchdict).order_by('name')
+            if not obj:
+                ret['msg']="没有获取到数据!"
+            else:
+                ser=UserSerializer(instance=obj,many=True)#many 单个对象False
+                ret['status']=1
+                ret['data']=ser
+            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
+            ret['status']=3
+            ret['msg']=str(e)
+            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+    
+    def post(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        username=res['username']
+        password=res['password']
+        name=res['name']
+        isSuper=res['isSuper']
+        group=res['group']
+        department=res['department']
+        try:
+            with transaction.atomic():
+                obj=User()
+                obj.username=username
+                obj.password=pwdenc(password)
+                obj.name=name
+                obj.isSuper=isSuper
+                obj.group=Group.objects.get(id=group)
+                obj.department=Department.objects.get(id=department)
+                obj.save()
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(ret)
+        except Exception as e:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+        
+    def delete(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        _id = res['_id']
+        try:
+            User.objects.filter(id=_id).delete()
+            ret['status']=1
+            ret['msg']="操作成功!"
+            return setzhJsonResponseHeader(ret)
+        except:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+        
+    def patch(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        _id=res['_id']
+        username=res['username']
+        password=res['password']
+        name=res['name']
+        isSuper=res['isSuper']
+        group=res['group']
+        department=res['department']
+        try:
+            with transaction.atomic():
+                obj=User.objects.get(id=_id)
+                obj.username=username
+                obj.password=pwdenc(password)
+                obj.name=name
+                obj.isSuper=isSuper
+                obj.group=Group.objects.get(id=group)
+                obj.department=Department.objects.get(id=department)
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(ret)
+        except:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)

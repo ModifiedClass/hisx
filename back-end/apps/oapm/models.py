@@ -1,6 +1,6 @@
 from django.db import models
 from account.models import Department,User
-from informationdevice import DeviceInfo
+from informationdevice.models import DeviceInfo
 # Create your models here.
 
 class ProblemCategory(models.Model):
@@ -17,7 +17,7 @@ class ProblemCategory(models.Model):
         
 class ProcessedRecord(models.Model):
     class Meta:
-        db_table="hisx_ProcessedRecords"
+        db_table="hisx_ProcessedRecs"
         verbose_name='处理记录'
         verbose_name_plural='处理记录'
     _id=models.AutoField(primary_key=True)
@@ -27,14 +27,14 @@ class ProcessedRecord(models.Model):
     department=models.ForeignKey(Department,on_delete=models.CASCADE)
     processing_mode=models.IntegerField(default=1)
     problem_state=models.IntegerField(default=1)
-    discoverer=models.ForeignKey(User,on_delete=models.CASCADE)
+    discoverer=models.ForeignKey(User,on_delete=models.CASCADE,related_name='discoverer')
     problem_category=models.ForeignKey(ProblemCategory,on_delete=models.CASCADE)
-    handler=models.ForeignKey(User,on_delete=models.CASCADE)
+    handler=models.ForeignKey(User,on_delete=models.CASCADE,related_name='handler')
 
     def __str__(self):
         return self.situation
 
-class Printerrepair(models.Model):
+class PrinterRepair(models.Model):
     class Meta:
         db_table="hisx_Printerrepairs"
         verbose_name='打印机维修'
@@ -57,9 +57,9 @@ class Cartriday(models.Model):
         
     _id=models.AutoField(primary_key=True)
     create_time=models.DateField(verbose_name='加粉日期')
-    status=models.BooleanField(default=False)  #False未审核 True已审核
-    handler=models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='处理人员')
+    _handler=models.ForeignKey(User,on_delete=models.CASCADE,verbose_name='处理人员')
     nums=models.IntegerField(verbose_name='数量')
+    status=models.BooleanField(default=False)  #False未审核 True已审核
     def __str__(self):
         return str(self.nums)
 

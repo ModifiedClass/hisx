@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-
+import sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0,os.path.join(BASE_DIR,'apps')) 
@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    #'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -127,7 +127,7 @@ STATIC_URL = '/static/'
 #认证
 REST_FRAMEWORK={
     #全局认证
-    "DEFAULT_AUTHENTICATION_CLASSES":['utils.auth.FirstAuthication','Authtication'],
+    #"DEFAULT_AUTHENTICATION_CLASSES":['utils.auth.FirstAuthication','Authtication'],
     #匿名
     #"DEFAULT_AUTHENTICATION_CLASSES":['utils.auth.FirstAuthication',],
     #"UNAUTHENTICATED_USER":None,   #匿名用户 request.user=None

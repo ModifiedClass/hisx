@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ProblemCategory,ProcessedRecord,Printerrepair,Cartriday,ApplicationSoftWare
+from .models import *
 
 class ProblemCategorySerializer(serializers.ModelSerializer):
     _id=serializers.IntegerField()
@@ -10,8 +10,8 @@ class ProblemCategorySerializer(serializers.ModelSerializer):
 class ProcessedRecordSerializer(serializers.ModelSerializer):
     _id=serializers.IntegerField()
     create_time=serializers.DateTimeField()
-    situation=serializers.TextField()
-    solution=serializers.TextField()
+    situation=serializers.CharField()
+    solution=serializers.CharField()
     department=serializers.CharField(source="department")
     processing_mode=serializers.IntegerField()
     problem_state=serializers.IntegerField()
@@ -20,7 +20,7 @@ class ProcessedRecordSerializer(serializers.ModelSerializer):
     handler=serializers.CharField(source="handler")
 
 
-class PrinterrepairSerializer(serializers.ModelSerializer):
+class PrinterRepairSerializer(serializers.ModelSerializer):
     _id=serializers.IntegerField()    
     printer=serializers.CharField(source="printer")
     create_time=serializers.DateField() 
@@ -43,5 +43,5 @@ class ApplicationSoftWareSerializer(serializers.ModelSerializer):
     framework=serializers.IntegerField()
     database=serializers.IntegerField()
     device=serializers.CharField(source="device")
-    deployment=serializers.TextField()
+    deployment=serializers.CharField()
     create_time=serializers.DateTimeField()

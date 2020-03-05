@@ -1,0 +1,27 @@
+cmd-python
+
+import sqlite3
+ 
+conn = sqlite3.connect('test.db')
+ 
+cur = conn.cursor()
+ 
+cur.execute('create table t(id int,v varchar(20));');
+ 
+cur.execute("insert into t values(%d,'%s')" % (1,'xxx'))
+cur.execute("insert into t values(%d,'%s')" % (2,'yyy'))
+ 
+cur.execute("update t set v = '%s' where id = %d" % ('zzz',2))
+ 
+cur.execute("select * from t;")
+ 
+results = cur.fetchall()
+ 
+for row in results:
+    print row
+ 
+conn.commit()
+ 
+cur.close()
+ 
+conn.close()

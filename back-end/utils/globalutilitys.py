@@ -24,6 +24,15 @@ def pwdenc(pwd):
     res=md5.hexdigest()
     return res
 
+def md5token(user):
+    import hashlib
+    import time
+    
+    ctime=str(time.time())
+    m=hashlib.md5(bytes(user,encoding='utf-8'))
+    m.update(bytes(ctime,encoding='utf-8'))
+    return m.hexdigest()
+
 #获取客户端ip
 #X-Forwarded-For:简称XFF头，它代表客户端，也就是HTTP的请求端真实的IP，只有在通过了HTTP 代理或者负载均衡服务器时才会添加该项。
 def get_ip(request):
@@ -36,16 +45,16 @@ def get_ip(request):
 
 
 #设置响应头信息
-def setzhJsonResponseHeader(res):
-    response = JsonResponse(json.dumps(res,ensure_ascii=False))
+def setJsonResponseHeader(res):
+    response = JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
     response["Access-Control-Allow-Headers"] = "content-type"
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "POST,GET,OPTIONS,PUT,DELETE,PATCH"
     response["Access-Control-Max-Age"] = "1000"
     return response
     
-def setJsonResponseHeader(res):
-    response = JsonResponse(res)
+def setzhJsonResponseHeader(res):
+    response = JsonResponse(res,safe=False)
     response["Access-Control-Allow-Headers"] = "content-type"
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "POST,GET,OPTIONS,PUT,DELETE,PATCH"

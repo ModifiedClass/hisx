@@ -53,7 +53,7 @@ class DeviceInfo(models.Model):
     installdate=models.DateField(auto_now_add=True)  #安装时间
     parent=models.ForeignKey('self',on_delete=models.CASCADE,blank=True,null=True) #连接设备
     runos=models.IntegerField(default= 1) #运行系统
-    installlocation=models.ForeignKey(Installlocation,on_delete=models.CASCADE,blank=True,null=True)
+    installlocation=models.ForeignKey(InstallLocation,on_delete=models.CASCADE,blank=True,null=True)
     create_time=models.DateTimeField(auto_now_add=True)
 
     class Meta:
