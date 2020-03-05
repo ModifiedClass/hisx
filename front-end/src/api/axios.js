@@ -1,23 +1,8 @@
 const HOST=''
+import axiosreq from './datareq'
 import fetchreq from './datareq'
 
 /**account**/
-//查询组
-export const getGroups=(group)=>fetchreq(HOST+'/api/account/group/',group)
-//添加组
-export const addGroup=(name)=>axiosreq(HOST+'/account/group/add',{name},'POST')
-//更新组
-export const updateGroup=(name)=>axiosreq(HOST+'/account/group/update',name,'PATCH')
-//部门
-
-//用户
-
-/**informationdevice**/
-
-/**oapm**/
-
-/**timeline**/
-
 //登陆
 export const reqLogin=(username,password)=>axiosreq(HOST+'/login',{username,password},'POST')
 

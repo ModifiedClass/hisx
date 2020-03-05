@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {message} from 'antd'
 
-export function ajax(url,data={},method='GET'){
+export function axiosreq(url,data={},method='GET'){
     return new Promise((resolve,reject)=>{
         let promise
         if(method==='GET'){
@@ -20,19 +20,21 @@ export function ajax(url,data={},method='GET'){
     
 }
 
+const csrftoken=()=fetchreq(HOST+'/api/account/get_token/')
+
 obj2String=(obj, arr = [], idx = 0)=>{
     for(let item in obj) {
         arr[idx++] = [item, obj[item]]
     }
     return new URLSearchParams(arr).toString()
 }
-export encapsulationfetch=(url,data={},method='GET',csrftoken='')=>{
+export fetchreq=(url,data={},method='GET')=>{
     const searchStr = obj2String(data)
     let opt={}
     if(method === 'GET'){
         url += '?' + searchStr
         opt={
-            method: method,
+            method: method.toUpperCase(),
             credentials:'include',
             headers: new Headers({
                 'X-csrftoken':csrftoken,
@@ -43,7 +45,7 @@ export encapsulationfetch=(url,data={},method='GET',csrftoken='')=>{
     }else{
         let data=JSON.stringify(data);
         opt={
-            method: method,
+            method: method.toUpperCase(),
             mode:'cors',
             credentials:'include',
             body:data,
