@@ -14,7 +14,7 @@ https://github.com/  ModifiedClass 12
 
 推送到github
  关联
-  git remote add origin https://github.com/ModifiedClass/RADHISP.git
+  git remote add origin https://github.com/ModifiedClass/hisx.git
   git push origin master
 
  创建新分支
@@ -28,7 +28,7 @@ https://github.com/  ModifiedClass 12
   
 克隆到本地
  新建目录 cmd
-  git clone https://github.com/ModifiedClass/RADHISP.git
+  git clone https://github.com/ModifiedClass/hisx.git
  cd 项目目录
  查看当前分支
   git branch

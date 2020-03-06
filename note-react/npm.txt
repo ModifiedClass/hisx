@@ -20,4 +20,4 @@ import ReactEcharts from 'echarts-for-react'
 or
 yarn add bizchart @antv/data-set
 
-先create-react-app创建项目，再用项目内得文件覆盖，再npm安装
+create-react-app

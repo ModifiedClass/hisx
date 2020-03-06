@@ -1,24 +1,24 @@
-ĞÂ½¨¹¤×÷Çøwrokplace
-ÔÚwrokplaceÏÂ
-1°²×°react
-npm install -g create-react-app -g´ú±íÈ«¾Ö°²×°
+æ–°å»ºå·¥ä½œåŒºwrokplace
+åœ¨wrokplaceä¸‹
+1å®‰è£…react
+npm install -g create-react-app -gä»£è¡¨å…¨å±€å®‰è£…
 
-2´´½¨ÏîÄ¿
-create-react-app hisx    hisxÊÇÏîÄ¿Ãû³Æ
+2åˆ›å»ºé¡¹ç›®
+create-react-app hisx    hisxæ˜¯é¡¹ç›®åç§°
 
 cd hisx
 
-2.1´ò°ü·¢²¼
+2.1æ‰“åŒ…å‘å¸ƒ
 npm run build
 npm install -g server
 server build
 
-3´´½¨ÏîÄ¿Ä¿Â¼½á¹¹
+3åˆ›å»ºé¡¹ç›®ç›®å½•ç»“æ„
 
-4ÒıÈëantd ant.design/docs/react/introduce-cn
+4å¼•å…¥antd ant.design/docs/react/introduce-cn
 npm install -g yarn
-yarn add antd  ÍêÈ«°²×°
-yarn add react-app-revired customize-cra babel-plugin-import Ö¸¶¨Ä£¿é°²×°
+yarn add antd  å®Œå…¨å®‰è£…
+yarn add react-app-revired customize-cra babel-plugin-import æŒ‡å®šæ¨¡å—å®‰è£…
 
-5ÒıÈëÂ·ÓÉ
+5å¼•å…¥è·¯ç”±
 yarn add react-router-dom

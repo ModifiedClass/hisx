@@ -20,7 +20,7 @@ export function axiosreq(url,data={},method='GET'){
     
 }
 
-const csrftoken=()=fetchreq(HOST+'/api/account/get_token/')
+const csrftoken=await fetch(HOST+'/api/account/get_token/')
 
 obj2String=(obj, arr = [], idx = 0)=>{
     for(let item in obj) {
@@ -28,7 +28,7 @@ obj2String=(obj, arr = [], idx = 0)=>{
     }
     return new URLSearchParams(arr).toString()
 }
-export fetchreq=(url,data={},method='GET')=>{
+export fetchreq=async(url,data={},method='GET')=>{
     const searchStr = obj2String(data)
     let opt={}
     if(method === 'GET'){
@@ -57,10 +57,11 @@ export fetchreq=(url,data={},method='GET')=>{
         };
     }
     
-    fetch(url,opt)
+    const obj=await fetch(url,opt)
         .then(res=>res.json())
         .then(res=>{
             return res;
         })
         .catch(err=>{message.error(err)})
+    return obj;
 }

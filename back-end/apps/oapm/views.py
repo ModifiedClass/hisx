@@ -18,7 +18,9 @@ class ProblemCategoryView(APIView):
     问题类别
     '''
     def get(self,request,*args,**kwargs):
-        searchdict={}
+        ret={'status':0}
+        return setzhJsonResponseHeader(ret)
+        '''searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
@@ -31,22 +33,30 @@ class ProblemCategoryView(APIView):
             else:
                 ser=ProblemCategorySerializer(instance=obj,many=True)#many 单个对象False
                 ret['status']=1
-                '''list=[]
-                for d in obj:
-                    dic={}
-                    dic['_id']=d._id
-                    dic['name']=d.name
-                    dic['create_time']=d.create_time
-                    list.append(dic)
-                ret['data']=list'''
+                #list=[]
+                #for d in obj:
+                #    dic={}
+                #    dic['_id']=d._id
+                #    dic['name']=d.name
+                #    dic['create_time']=d.create_time
+                #    list.append(dic)
+                #ret['data']=list
                 ret['data']=ser
             return setzhJsonResponseHeader(ret)
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(ret)'''
     
     def post(self,request,*args,**kwargs):
-        ret={'status':0,'msg':None,'data':None}
+        #for k, v in request._request.environ.items():
+        #    print(k, v)
+        pb=request.body
+        res=json.loads(pb)
+        print(res)
+        print(res['name'])
+        ret={'status':0}
+        return setzhJsonResponseHeader(ret)
+        '''ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
         name=res['name']
@@ -60,7 +70,7 @@ class ProblemCategoryView(APIView):
                 return setzhJsonResponseHeader(ret)
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(ret)'''
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
