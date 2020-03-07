@@ -99,7 +99,7 @@ export const deviceRunSystem=[
 }
 ]
 
-export const deviceStatus[
+export const deviceStatus=[
 {
     label:'正常',
     value:'0',   
@@ -114,7 +114,7 @@ export const deviceStatus[
 }
 ]
 
-export const appFrameWork[
+export const appFrameWork=[
 {
     label:'B/S',
     value:'0',   
@@ -129,7 +129,7 @@ export const appFrameWork[
 }
 ]
 
-export const dataBase[
+export const dataBase=[
 {
     label:'Oracle',
     value:'0',   

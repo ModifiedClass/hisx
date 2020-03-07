@@ -1,27 +1,20 @@
 import React,{Component} from 'react';
 import { Form, Icon, Input, Button,message } from 'antd';
-//import {Redirect} from 'react-router-dom'
+import {Redirect} from 'react-router-dom'
 
 import {connect} from 'react-redux'
 import {login} from '../../redux/actions'
 
 import './index.less'
 
-//import {reqLogin} from '../../api'
-//import memUtils from '../../utils/memUtils'
-//import storeUtils from '../../utils/storeUtils'
-
 class Login extends Component {
     handleSubmit=e=> {
-        e.preventDefault();console.log(this.props)
+        e.preventDefault();
         this.props.form.validateFields(async(err, values) => {
             if (!err) {
                 const{username,password}=values
-                /*
                 //调用分发异步actions函数
                 this.props.login(username,password)
-                */
-                message.success(username+password)
                 this.props.history.replace('/')
             }else{
                 console.log('校验失败!')
@@ -43,16 +36,15 @@ class Login extends Component {
         }
     }
     render(){
-        /*
         const user=this.props.user
         if(user && user._id){
-            <Redirect to='/admin'/>
-        }*/
+            return <Redirect to='/dashboard'/>
+        }
         const { getFieldDecorator } = this.props.form;
         return(
             <div className="login">
                 <section className="login-content">
-                    <h2>HISP</h2>
+                    <h2>HISX</h2>
                     <Form onSubmit={this.handleSubmit} className="login-form">
                         <Form.Item>
                         {getFieldDecorator('username', {

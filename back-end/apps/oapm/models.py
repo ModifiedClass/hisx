@@ -74,9 +74,21 @@ class ApplicationSoftWare(models.Model):
     create_time=models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table="hisx_ApplicationSoftWare"
+        db_table="hisx_ApplicationSoftWares"
         verbose_name='应用软件'
         verbose_name_plural='应用软件'
 
     def __str__(self):
         return self.name        
+
+
+class Img(models.Model):
+    path = models.ImageField(upload_to='oapm/img/')
+    name = models.CharField(max_length=50)
+    class Meta:
+        db_table="hisx_Imgs"
+        verbose_name='图片'
+        verbose_name_plural='图片'
+
+    def __str__(self):
+        return self.path

@@ -10,7 +10,7 @@ import {
 } from './actiontypes'
 
 import storeUtils from '../utils/storeUtils'
-import reqLogin from '../api/json/login'
+import {cLogin} from '../api'
 //设置面包屑同步action
 export const setBreadCrum=(breadCrum)=>({type:SET_BREAD_CRUM,data:breadCrum})
 
@@ -18,18 +18,18 @@ export const setBreadCrum=(breadCrum)=>({type:SET_BREAD_CRUM,data:breadCrum})
 export const receiveUser=(user)=>({type:RECEIVE_USER,data:user})
 //登录
 
-export const Login=(username,password)=>{
+export const login=(username,password)=>{
     return async dispatch=>{
-        /*const result=await reqLogin(username,password)
+        const result=await cLogin(username,password)
+        console.log(result)
         if(result.status===0){
             const user=result.data
             storeUtils.saveUser(user)
             dispatch(receiveUser(user))
         }else{
             const message=result.msg
-        }*/
-        const user=reqLogin.data
-        dispatch(receiveUser(user))
+            console.log(message)
+        }
     }
 }
 

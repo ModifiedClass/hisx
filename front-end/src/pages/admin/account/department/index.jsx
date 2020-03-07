@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 
-import {Card,Table,Button,Icon,message,Modal} from 'antd'
+import {Card,Table,Button,Icon,message,Modal,Tag} from 'antd'
 import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'

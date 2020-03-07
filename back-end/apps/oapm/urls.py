@@ -12,4 +12,6 @@ urlpatterns = [
     path('cartriday/',views.CartridayView.as_view()),
     #应用软件
     path('applicationsoftware/',views.ApplicationSoftWareView.as_view()),
+    #图片
+    path('img/',views.ImgView.as_view()),
 ]

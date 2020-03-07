@@ -1,7 +1,7 @@
-import axios from 'axios'
+//import axios from 'axios'
 import {message} from 'antd'
-
-export function axiosreq(url,data={},method='GET'){
+import {HOST} from '../utils/constants'
+/*export function axiosreq(url,data={},method='GET'){
     return new Promise((resolve,reject)=>{
         let promise
         if(method==='GET'){
@@ -18,39 +18,38 @@ export function axiosreq(url,data={},method='GET'){
         })
     })
     
-}
+}*/
 
-const csrftoken=await fetch(HOST+'/api/account/get_token/')
+const csrftoken=()=>{fetch(HOST+'/account/get_token/')}
 
-obj2String=(obj, arr = [], idx = 0)=>{
+const obj2String=(obj, arr = [], idx = 0)=>{
     for(let item in obj) {
         arr[idx++] = [item, obj[item]]
     }
     return new URLSearchParams(arr).toString()
 }
-export fetchreq=async(url,data={},method='GET')=>{
-    const searchStr = obj2String(data)
+const fetchreq=async(url,data={},method='GET')=>{
     let opt={}
     if(method === 'GET'){
-        url += '?' + searchStr
+        url += '?' + obj2String(data)
         opt={
             method: method.toUpperCase(),
             credentials:'include',
             headers: new Headers({
-                'X-csrftoken':csrftoken,
+                //'X-csrftoken':csrftoken,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             })
         }
     }else{
-        let data=JSON.stringify(data);
+        let para=JSON.stringify(data);
         opt={
             method: method.toUpperCase(),
             mode:'cors',
             credentials:'include',
-            body:data,
+            body:para,
             headers: new Headers({
-                'X-csrftoken':csrftoken,
+                //'X-csrftoken':csrftoken,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             })
@@ -65,3 +64,4 @@ export fetchreq=async(url,data={},method='GET')=>{
         .catch(err=>{message.error(err)})
     return obj;
 }
+export default fetchreq

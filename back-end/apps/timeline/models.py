@@ -11,8 +11,8 @@ class Timeline(models.Model):
 
     class Meta:
         db_table="hisx_Timeline"
-        verbose_name='时间线'
-        verbose_name_plural='时间线'
+        verbose_name='时间轴'
+        verbose_name_plural='时间轴'
 
     def __str__(self):
         return self.name

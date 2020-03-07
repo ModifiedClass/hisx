@@ -10,7 +10,7 @@ export default class FooterBar extends Component{
         }
     }
     render(){
-        let complany='hisp'
+        let complany='hisx'
         let devdate='2020',copyrightdate=''
         if(this.state.date.toString() === devdate){
             copyrightdate=this.state.date

@@ -123,7 +123,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
+# 配置上传文件存放的路径
+MEDIA_URL = '/media/'
+# 指定的文件存放的根目录，是一个字符串路径
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 #认证
 REST_FRAMEWORK={
     #全局认证

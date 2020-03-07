@@ -17,23 +17,29 @@ class AuthView(APIView):
     #局部绕过认证
     authentication_classes=[]
     def post(self,request,*args,**kwargs):
-        ret={'status':1,'msg':None,'data':None}
+        ret={'status':0,'msg':None,'data':None,'token':None}
+        pb=request.body
+        res=json.loads(pb)
+        username=res['username']
+        password=pwdenc(res['password'])
         try:
-            username=request._request.POST.get('username')
-            password=pwdenc(request._request.POST.get('password'))
-            obj=models.User.objects.filter(username=username,password=password).first()
+            #username=request._request.POST.get('username')
+            #password=pwdenc(request._request.POST.get('password'))
+            obj=User.objects.filter(username=username,password=password)
             if not obj:
-                ret['status']=2
-                ret['msg']="error"
-                
-            token=md5token(username)
-            models.UserToken.objects.update_or_create(user=obj,defaults={'token':token})
-            ret['data']=token
+                ret['msg']="用户名或密码不正确！"
+            else:    
+                token=md5token(username)
+                #UserToken.objects.update_or_create(user=obj,defaults={'token':token})
+                ser=UserSerializer(instance=obj,many=False)
+                print(ser)
+                ret['data']=ser
+                ret['token']=token
+                ret['status']=1
         except Exception as e:
-            ret['status']=3
-            ret['msg']="error"
+            ret['msg']=str(e)
         
-        return JsonResponse(ret)
+        return setzhJsonResponseHeader(ret)
 
 
 class GroupView(APIView):

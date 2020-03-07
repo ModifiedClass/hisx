@@ -18,9 +18,7 @@ class ProblemCategoryView(APIView):
     问题类别
     '''
     def get(self,request,*args,**kwargs):
-        ret={'status':0}
-        return setzhJsonResponseHeader(ret)
-        '''searchdict={}
+        searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
@@ -45,18 +43,12 @@ class ProblemCategoryView(APIView):
             return setzhJsonResponseHeader(ret)
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)'''
+            return setzhJsonResponseHeader(ret)
     
     def post(self,request,*args,**kwargs):
         #for k, v in request._request.environ.items():
         #    print(k, v)
-        pb=request.body
-        res=json.loads(pb)
-        print(res)
-        print(res['name'])
-        ret={'status':0}
-        return setzhJsonResponseHeader(ret)
-        '''ret={'status':0,'msg':None,'data':None}
+        ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
         name=res['name']
@@ -70,7 +62,7 @@ class ProblemCategoryView(APIView):
                 return setzhJsonResponseHeader(ret)
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)'''
+            return setzhJsonResponseHeader(ret)
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -82,7 +74,7 @@ class ProblemCategoryView(APIView):
             ret['status']=1
             ret['msg']="操作成功!"
             return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
         
@@ -100,7 +92,7 @@ class ProblemCategoryView(APIView):
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
 
@@ -181,7 +173,7 @@ class ProcessedRecordView(APIView):
             ret['status']=1
             ret['msg']="操作成功!"
             return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
         
@@ -213,7 +205,7 @@ class ProcessedRecordView(APIView):
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
 
@@ -276,7 +268,7 @@ class PrinterRepairView(APIView):
             ret['status']=1
             ret['msg']="操作成功!"
             return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
         
@@ -300,7 +292,7 @@ class PrinterRepairView(APIView):
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
 
@@ -363,7 +355,7 @@ class CartridayView(APIView):
             ret['status']=1
             ret['msg']="操作成功!"
             return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
         
@@ -385,7 +377,7 @@ class CartridayView(APIView):
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
 
@@ -458,7 +450,7 @@ class ApplicationSoftWareView(APIView):
             ret['status']=1
             ret['msg']="操作成功!"
             return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
         
@@ -486,6 +478,26 @@ class ApplicationSoftWareView(APIView):
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(ret)
-        except:
+        except Exception as e:
             ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+
+
+class ImgView(APIView):
+    def post(self, request):
+        from utils.globalutilitys import pwdenc
+        import datetime
+        ret={'status':0,'msg':None,'data':None}
+        f = request.FILES['img']#request.FILES.get('img')
+        f_name = pwdenc(datetime.datetime.now())
+        try:
+            img = Img()
+            img.name = f_name
+            img.path = f
+            img.save()
+            ret['status']=1
+            ret['data']=f_name
+            ret['msg']="操作成功!"
+            return setzhJsonResponseHeader(ret)
+        except Exception as e:
             return setzhJsonResponseHeader(ret)

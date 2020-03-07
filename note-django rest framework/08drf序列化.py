@@ -56,7 +56,7 @@ class ExampleView(APIView):
         
 #ModelSerializer序列化
 #serializers.py
-class ExampleSerializer(serializers.Serializer):
+class ExampleSerializer(serializers.ModelSerializer):
     types=Serializers.SerializerMethodField()
     class Meta:
         model=models.example

@@ -18,7 +18,7 @@ class Group(models.Model):
 
 class Department(models.Model):
     class Meta:
-        db_table="hisx_Department"
+        db_table="hisx_Departments"
         verbose_name='部门'
         verbose_name_plural='部门'
 
@@ -44,7 +44,7 @@ class User(models.Model):
     department=models.ManyToManyField(Department)
 
     class Meta:
-        db_table="hisx_User"
+        db_table="hisx_Users"
         verbose_name='用户'
         verbose_name_plural='用户'
 

@@ -1,73 +1,74 @@
-windowsÏÂ
-°²×°python²¢ÉèÖÃ»·¾³±äÁ¿
-cmdÏÂÉı¼¶pip
+ï»¿windowsä¸‹
+å®‰è£…pythonå¹¶è®¾ç½®ç¯å¢ƒå˜é‡
+cmdä¸‹å‡çº§pip
 python -m pip install --upgrade pip -i https://pypi.douban.com/simple
 
-°²×°ĞéÄâ»·¾³
+å®‰è£…è™šæ‹Ÿç¯å¢ƒ
 pip install virtualenv
 pip install virtualenvwrapper
 
-´´½¨ĞéÄâ»·¾³Ä¿Â¼£¬´´½¨ĞéÄâ»·¾³
+åˆ›å»ºè™šæ‹Ÿç¯å¢ƒç›®å½•ï¼Œåˆ›å»ºè™šæ‹Ÿç¯å¢ƒ
 cd ***
 virtualenv envname
-»òÕß
+æˆ–è€…
 virtualenv -p C:\Users\Administrator\AppData\Local\Programs\Python\Python38\pythonw.exe --no-site-packages D:\administrator\Desktop\dev\virtualenv\django
 
-# ½øÈëĞéÄâ»·¾³ÎÄ¼ş
+# è¿›å…¥è™šæ‹Ÿç¯å¢ƒæ–‡ä»¶
 cd envname
-# ½øÈëÏà¹ØµÄÆô¶¯ÎÄ¼ş¼Ğ
+# è¿›å…¥ç›¸å…³çš„å¯åŠ¨æ–‡ä»¶å¤¹
 cd Scripts
-½«Scripts¼ÓÈë»·¾³±äÁ¿
+å°†ScriptsåŠ å…¥ç¯å¢ƒå˜é‡
 
-activate  # Æô¶¯ĞéÄâ»·¾³  deactivate # ÍË³öĞéÄâ»·¾³
-powershellÏÂ¼¤»î ÏÈSet-ExecutionPolicy RemoteSigned
+activate  # å¯åŠ¨è™šæ‹Ÿç¯å¢ƒ  deactivate # é€€å‡ºè™šæ‹Ÿç¯å¢ƒ
+powershellä¸‹æ¿€æ´» å…ˆSet-ExecutionPolicy RemoteSigned
 ./activate
 
 pip install django
 
-°²×°webapi¿ò¼Ü
+å®‰è£…webapiæ¡†æ¶
 pip install djangorestframework
 pip install django-filter
 pip install Markdown
+pip install Pillow
 
 django-admin startproject projectname
 python manage.py startapp appname
 
-ĞŞ¸Äsettings.py
+ä¿®æ”¹settings.py
 
-¼ÓÈë
+åŠ å…¥
 sys.path.insert(0,os.path.join(BASE_DIR,'apps')) 
 
-°ÑÉú³ÉµÄappÃû³Æ¼ÓÈëINSTALLED_APPSĞòÁĞÖĞ
+æŠŠç”Ÿæˆçš„appåç§°åŠ å…¥INSTALLED_APPSåºåˆ—ä¸­
 NSTALLED_APPS=[
     ...,
     'rest_framework',
     'rest_framework.authtoken',
-    appÃû³Æ,
+    appåç§°,
     ...,
 ]
 
-MIDDLEWARE ÖĞ×¢ÊÍ
+MIDDLEWARE ä¸­æ³¨é‡Š
 
     #'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'django.contrib.messages.middleware.MessageMiddleware',
 
-ÓòÃû·ÃÎÊÈ¨ÏŞ
-ALLOWED_HOSTS=[]ĞŞ¸ÄÎªALLOWED_HOSTS=['*']
+åŸŸåè®¿é—®æƒé™
+ALLOWED_HOSTS=[]ä¿®æ”¹ä¸ºALLOWED_HOSTS=['*']
 
-ÉèÖÃÄ£°åÂ·¾¶
+è®¾ç½®æ¨¡æ¿è·¯å¾„
 TEMPLATES=[
     ...
     'DIRS':[os.path.join(BASE_DIR,'templates')],
     ...
 ]
 
-ÉèÖÃÊ±ÇøºÍÖĞÎÄ
+è®¾ç½®æ—¶åŒºå’Œä¸­æ–‡
 LANGUAGE_CODE='zh-hans'
 TIME_ZONE='Asia/Shanghai'
 
-ÉèÖÃ¾²Ì¬ÎÄ¼ş
+è®¾ç½®é™æ€æ–‡ä»¶
 STATIC_URL='static'
 STATICFILES_DIR=[
     os.path.join(BASE_DIR,'static'),
@@ -75,13 +76,13 @@ STATICFILES_DIR=[
 STATIC_ROOT=os.path.join(BASE_DIR,'static')
 
 
-Êı¾İÇ¨ÒÆ ¡¢µ÷ÊÔ
+æ•°æ®è¿ç§» ã€è°ƒè¯•
 python manage.py makemigrations
 python manage.py migrate
 
-ÆôÓÃadmin´´½¨¹ÜÀíÔ±
+å¯ç”¨adminåˆ›å»ºç®¡ç†å‘˜
 python manage.py createsuperuser
 
-Æô¶¯µ÷ÊÔ
+å¯åŠ¨è°ƒè¯•
 python manage.py runserver ip:port
 
