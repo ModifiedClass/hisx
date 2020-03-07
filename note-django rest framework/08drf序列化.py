@@ -59,8 +59,19 @@ class ExampleView(APIView):
 class ExampleSerializer(serializers.ModelSerializer):
     types=Serializers.SerializerMethodField()
     class Meta:
-        model=models.example
+        model=Example
         fields=['id','name','types']
+        # 这三种情况不能同时使用
+        # 1.取全部字段
+        #fields = "__all__"
+
+        # 2.自定义包含字段
+        # fields = ["id", "title", "pub_time"]
+        # 输出：[{"id": 1, "title": "python开发", "pub_time": "2011-08-27"},...]
+
+        # 3.排除某些字段
+        # exclude = ["id", "category","author", "publisher"]
+        # 输出：[{"title": "python开发", "pub_time": "2011-08-27"},...]
 
 #views.py
 from .serializers import ExampleSerializer
