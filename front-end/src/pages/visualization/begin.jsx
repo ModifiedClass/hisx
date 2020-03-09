@@ -8,9 +8,55 @@ import BMap from './bmap'
 export default class Begin extends Component{
     state={
         inhosnum:0,  //当前在院病人数
-        consultationnum:0, //当日就诊人次
-        preparatorynum:0, //预出院人数
-        nochecknum:0,//初始化出院未结账人数
+        consultationnum:0,  //当日就诊人次
+        preparatorynum:0,   //预出院人数
+        nochecknum:0,  //初始化出院未结账人数
+        incomebythisday:{  //日结账统计
+            incomebythisdaysum:0, //合计
+            cname:[],  //列名
+            cvalue:[],  //对应值
+            color:'#2f89cf'
+        },
+        incomebythismon:{   //月结账统计
+            incomebythismonsum:0, //合计
+            cname:[],  //列名
+            cvalue:[],  //对应值
+            color:'#27d08a'
+        },
+        numbyday:{    //当月每天门诊入出院人次
+            mons:[],
+            consultation:[],
+            emergency:[],
+            inhos:[],
+            outhos:[]
+        },
+        doctorload:{   //门诊医生负荷
+            cname:[],  //列名
+            cvalue:[],  //对应值
+            title:'',
+            subtitle:''
+        },
+        doctoratv:{   //门诊医生待诊
+            cname:[],  //列名
+            cvalue:[],  //对应值
+            title:'',
+            subtitle:''
+        }, 
+        avgwaitingtime:{  //就诊病人平均等待时间
+            cname:[],  //列名
+            cvalue:[],  //对应值
+            title:'',
+            subtitle:''
+        },
+        disease:{  //月疾病人次top10
+            cname:[],  //列名
+            cvalue:[],  //对应值
+            color:'#2f89cf'
+        },
+        medinsu:{  //初始化医保类别费用比例
+            medinsusum:0,
+            miamount:[]
+        },
     }
     
     //初始化当前在院病人数
@@ -41,56 +87,56 @@ export default class Begin extends Component{
         },1000 * 60 * 5)
     }
     
-    //日结账统计
+    //日结账统计 echarts_1 BBoxAll
     initincomebythisday=()=>{
         this.intervalId=setInterval(()=>{
             this.setState({inhosnum:0})
         },1000 * 60 * 5)
     }
     
-    //月结账统计
+    //月结账统计 echarts_1 BBoxAll
 	initincomebythismon=()=>{
         this.intervalId=setInterval(()=>{
             this.setState({inhosnum:0})
         },1000 * 60 * 5)
     }
     
-    //当月每天门诊入出院人次
+    //当月每天门诊入出院人次 echarts_4 BBoxAll
     initnumbyday=()=>{
         this.intervalId=setInterval(()=>{
             this.setState({inhosnum:0})
         },1000 * 60 * 5)
     }
     
-    //门诊医生负荷
+    //门诊医生负荷 echarts_31 BBoxAllSub
 	initdoctorload=()=>{
         this.intervalId=setInterval(()=>{
             this.setState({inhosnum:0})
         },1000 * 60 * 5)
     }
     
-    //门诊医生待诊
+    //门诊医生待诊 echarts_31 BBoxAllSub
 	initdoctoratv=()=>{
         this.intervalId=setInterval(()=>{
             this.setState({inhosnum:0})
         },1000 * 60 * 5)
     }
     
-    //就诊病人平均等待时间
+    //就诊病人平均等待时间 echarts_31 BBoxAllSub
 	initavgwaitingtime=()=>{
         this.intervalId=setInterval(()=>{
             this.setState({inhosnum:0})
         },1000 * 60 * 5)
     }
     
-    //月疾病人次top10
+    //月疾病人次top10 echarts_1 BBoxAll
     initdisease=()=>{
         this.intervalId=setInterval(()=>{
             this.setState({inhosnum:0})
         },1000 * 60 * 5)
     }
     
-    //初始化医保类别费用比例
+    //初始化医保类别费用比例 echarts_6 BBoxAll
     initmedinsu=()=>{
         this.intervalId=setInterval(()=>{
             this.setState({inhosnum:0})
@@ -464,8 +510,8 @@ export default class Begin extends Component{
         return(
             <ul className="clearfix">
                 <li>
-                    <BBoxAll title={'当日结账统计(元)'} sum={'incomebythisdaysum'} echartoption={'echart1'}/>
-                    <BBoxAll title={'本月结账统计(元)'} sum={'incomebythismonsum'} echartoption={'echart2'}/>
+                    <BBoxAll title={'当日结账统计(元)'} sum={'incomebythisdaysum'} echartoption={'echarts_1'}/>
+                    <BBoxAll title={'本月结账统计(元)'} sum={'incomebythismonsum'} echartoption={'echarts_1'}/>
                     <BBoxAll title={'当月出院病人医保费用比例(元)'} sum={'medinsusum'} echartoption={'echart6'}/>
                 </li>
                 <li>
