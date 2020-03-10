@@ -6,9 +6,9 @@ export default class BMap extends Component{
     render(){
         return(
             <div className="map">
-                <div className="map1"><img src="./img/lbx.png"></div>
-                <div className="map2"><img src="./img/jt.png"></div>
-                <div className="map3"><img src="./img/map.png"></div>
+                <div className="map1"><img src="./img/lbx.png"/></div>
+                <div className="map2"><img src="./img/jt.png"/></div>
+                <div className="map3"><img src="./img/map.png"/></div>
                 <div className="map4" id="map_1"></div>
 			    <div className="">
                     <div className="barbox">

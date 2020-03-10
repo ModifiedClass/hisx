@@ -306,13 +306,13 @@ export default class Begin extends Component{
                 },
                 areaStyle: {
                     normal: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        /*color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                             offset: 0,
                             color: 'rgba(1, 132, 213, 0.4)'
                         }, {
                             offset: 0.8,
                             color: 'rgba(1, 132, 213, 0.1)'
-                        }], false),
+                        }], false),*/
                         shadowColor: 'rgba(0, 0, 0, 0.1)',
                     }
                 },
@@ -341,13 +341,13 @@ export default class Begin extends Component{
                 },
                 areaStyle: {
                     normal: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        /*color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                             offset: 0,
                             color: 'rgba(1, 132, 213, 0.4)'
                         }, {
                             offset: 0.8,
                             color: 'rgba(1, 132, 213, 0.1)'
-                        }], false),
+                        }], false),*/
                         shadowColor: 'rgba(0, 0, 0, 0.1)',
                     }
                 },
@@ -376,13 +376,13 @@ export default class Begin extends Component{
                 },
                 areaStyle: {
                     normal: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        /*color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                             offset: 0,
                             color: 'rgba(0, 216, 135, 0.4)'
                         }, {
                             offset: 0.8,
                             color: 'rgba(0, 216, 135, 0.1)'
-                        }], false),
+                        }], false),*/
                         shadowColor: 'rgba(0, 0, 0, 0.1)',
                     }
                 },
@@ -411,13 +411,13 @@ export default class Begin extends Component{
                 },
                 areaStyle: {
                     normal: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        /*color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                             offset: 0,
                             color: 'rgba(0, 216, 135, 0.4)'
                         }, {
                             offset: 0.8,
                             color: 'rgba(0, 216, 135, 0.1)'
-                        }], false),
+                        }], false),*/
                         shadowColor: 'rgba(0, 0, 0, 0.1)',
                     }
                 },
@@ -471,9 +471,9 @@ export default class Begin extends Component{
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)",
-                position:(p)=>{   //其中p为当前鼠标的位置
+                /*position:(p)=>{   //其中p为当前鼠标的位置
                     [p[0] + 10, p[1] - 10];
-                }
+                }*/
             },
             legend: {        
                 top:'70%',
@@ -515,13 +515,13 @@ export default class Begin extends Component{
                     <BBoxAll title={'当月出院病人医保费用比例(元)'} sum={'medinsusum'} echartoption={'echart6'}/>
                 </li>
                 <li>
-                    <BBar inhosnum={} consultationnum={}/>
-                    <BMap preparatorynum={} nochecknum={}/>
+                    <BBar inhosnum={''} consultationnum={''}/>
+                    <BMap preparatorynum={''} nochecknum={''}/>
                 </li>
                 <li>
-                    <BBoxAll title={'本月门诊住院病人统计(人次)'} sum={} echartoption={'echart4'}/>                    
-	        		<BBoxAllSub title={} sum={} echartoptions={'echart4'}>
-                    <BBoxAll title={'当月出院病人疾病诊断统计(人次)'} sum={} echartoption={'echart5'}/> 
+                    <BBoxAll title={'本月门诊住院病人统计(人次)'} sum={''} echartoption={'echart4'}/>                    
+	        		<BBoxAllSub title={''} sum={''} echartoptions={'echart4'}/>
+                    <BBoxAll title={'当月出院病人疾病诊断统计(人次)'} sum={''} echartoption={'echart5'}/> 
                 </li>    
             </ul>
         )

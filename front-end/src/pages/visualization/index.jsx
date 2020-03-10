@@ -2,10 +2,9 @@ import React,{Component} from 'react'
 import {Link,withRouter} from 'react-router-dom'
 
 import {formateDate} from '../../utils/dateUtils'
-import './index.css'
-import './echarts.min.js'
-import './liupanshui.js'
-import Begin from './begin'
+import './index.less'
+//import './liupanshui.js'
+//import Begin from './begin'
 
 class Visualization extends Component{
     state={
@@ -32,12 +31,12 @@ class Visualization extends Component{
 	                <iframe 
                         frameborder="0" 
                         src="./bg.html"
-                        style={{width: 100%; height: 100%}}>
+                        style={{ width: '100%',height: '100%'}}>
                     </iframe>
 	            </div>
                 <div className="loading">
                     <div className="loadbox">
-                        <img src="./img/loading.gif">
+                        <img src="./img/loading.gif" />
                         页面加载中... 
                     </div>
                 </div>
@@ -49,7 +48,7 @@ class Visualization extends Component{
                     </div>
                 </div>
                 <div className="mainbox">
-                    <Begin />
+                {/*<Begin />*/}
                 </div>
                 <div className="back"></div>
             </div>
