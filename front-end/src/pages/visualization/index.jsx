@@ -5,6 +5,9 @@ import {formateDate} from '../../utils/dateUtils'
 import './index.less'
 //import './liupanshui.js'
 //import Begin from './begin'
+import loadinggif from './img/loading.gif'
+import head_bg from './img/head_bg.png'
+import bg from './img/bg.jpg'
 
 class Visualization extends Component{
     state={
@@ -26,7 +29,7 @@ class Visualization extends Component{
         const {currentTime} =this.state
         const title="数据可视化"
         return(
-            <div>
+            <div style={{background:'#000d4a' url({bg}) 'center' 'top', background-size:'cover',color:'#666',font-size: '.1rem'}}>
                 <div className="canvas" style={{opacity: .2}}>
 	                <iframe 
                         frameborder="0" 
@@ -36,11 +39,11 @@ class Visualization extends Component{
 	            </div>
                 <div className="loading">
                     <div className="loadbox">
-                        <img src="./img/loading.gif" />
+                        <img src={loadinggif} />
                         页面加载中... 
                     </div>
                 </div>
-                <div className="head">
+                <div className="head" style={{background: url({head_bg}) no-repeat center center;}}>
                     <h1>{title}</h1>
                     <div className="weather">
                         <span id="showTime">{currentTime}</span>
