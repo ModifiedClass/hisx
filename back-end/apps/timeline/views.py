@@ -24,7 +24,7 @@ class TimelineView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=TimelineSerializer(instance=obj,many=True)#many 单个对象False
+                ser=TimelineSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return setzhJsonResponseHeader(ret)

@@ -17,28 +17,25 @@ class AuthView(APIView):
     #局部绕过认证
     authentication_classes=[]
     def post(self,request,*args,**kwargs):
-        ret={'status':0,'msg':None,'data':None,'token':None}
+        ret={'status':0,'msg':None,'data':[],'token':None}
         pb=request.body
         res=json.loads(pb)
         username=res['username']
         password=pwdenc(res['password'])
         try:
-            #username=request._request.POST.get('username')
             #password=pwdenc(request._request.POST.get('password'))
             obj=User.objects.filter(username=username,password=password)
             if not obj:
                 ret['msg']="用户名或密码不正确！"
             else:    
                 token=md5token(username)
-                #UserToken.objects.update_or_create(user=obj,defaults={'token':token})
-                ser=UserSerializer(instance=obj,many=False)
-                print(ser)
-                ret['data']=ser
+                UserToken.objects.update_or_create(user=obj.first(),defaults={'token':token})
+                ser=UserSerializer(instance=obj,many=True)
+                ret['data']=ser.data
                 ret['token']=token
                 ret['status']=1
         except Exception as e:
             ret['msg']=str(e)
-        
         return setzhJsonResponseHeader(ret)
 
 
@@ -58,7 +55,7 @@ class GroupView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=GroupSerializer(instance=obj,many=True)#many 单个对象False
+                ser=GroupSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return setzhJsonResponseHeader(ret)
@@ -147,7 +144,7 @@ class DepartmentView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=DepartmentSerializer(instance=obj,many=True)#many 单个对象False
+                ser=DepartmentSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))
@@ -242,7 +239,7 @@ class UserView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=UserSerializer(instance=obj,many=True)#many 单个对象False
+                ser=UserSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))

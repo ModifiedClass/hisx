@@ -65,7 +65,7 @@ class DeviceInfo(models.Model):
         return self.name
 
 
-class devicetopo(models.Model):
+class DeviceTopo(models.Model):
     _id=models.AutoField(primary_key=True)
     icon=models.CharField(max_length=50)
     x=models.IntegerField(default= 1)

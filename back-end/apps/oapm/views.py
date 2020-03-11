@@ -29,7 +29,7 @@ class ProblemCategoryView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=ProblemCategorySerializer(instance=obj,many=True)#many 单个对象False
+                ser=ProblemCategorySerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 #list=[]
                 #for d in obj:
@@ -123,7 +123,7 @@ class ProcessedRecordView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=ProcessedRecordSerializer(instance=obj,many=True)#many 单个对象False
+                ser=ProcessedRecordSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))
@@ -228,7 +228,7 @@ class PrinterRepairView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=PrinterRepairSerializer(instance=obj,many=True)#many 单个对象False
+                ser=PrinterRepairSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))
@@ -315,7 +315,7 @@ class CartridayView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=CartridaySerializer(instance=obj,many=True)#many 单个对象False
+                ser=CartridaySerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))
@@ -404,7 +404,7 @@ class ApplicationSoftWareView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=ApplicationSoftWareSerializer(instance=obj,many=True)#many 单个对象False
+                ser=ApplicationSoftWareSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))

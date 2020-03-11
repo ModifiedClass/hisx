@@ -124,7 +124,6 @@ export default class Home extends Component{
             width: 150,
             render:(processedrecord)=>(
             <span>
-                //使用HashRouter<PreviewBtn onClick={()=>this.showDetail(processedrecord)}/>
                 <PreviewBtn onClick={()=>this.props.history.push('/processedrecord/detail',{processedrecord})}/>&nbsp;
                 <EditBtn onClick={()=>this.props.history.push('/processedrecord/addorupdate',processedrecord)}/>&nbsp;
                 <DeleteBtn onClick={()=>this.deleteProcessedRecord(processedrecord)}/>
@@ -133,12 +132,6 @@ export default class Home extends Component{
         }
         ]
     }
-    /*
-    //使用HashRouter
-    showDetail=(processedrecord)=>{
-        nemUtils.processedrecord=processedrecord
-        this.props.history.push('/processedrecord/detail')
-    }*/
     getProcessedRecords= async(pageNum)=>{
         /*this.pageNum=pageNum
         this.setState({loading:true})

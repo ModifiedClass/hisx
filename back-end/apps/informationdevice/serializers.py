@@ -1,46 +1,32 @@
 from rest_framework import serializers
-from .models import DeviceCategory,DeviceModel,InstallLocation,DeviceInfo,devicetopo
+from .models import *
 
 class DeviceCategorySerializer(serializers.ModelSerializer):
-    _id=serializers.IntegerField()
-    name=serializers.CharField()
-    create_time=serializers.DateTimeField()
+    class Meta:
+        model=DeviceCategory
+        fields = "__all__"
 
         
 class DeviceModelSerializer(serializers.ModelSerializer): 
-    _id=serializers.IntegerField()
-    name=serializers.CharField()
-    devicectegory=serializers.CharField(source="devicectegory")
-    create_time=serializers.DateTimeField()
+    class Meta:
+        model=DeviceModel
+        fields = "__all__"
 
 
 class InstallLocationSerializer(serializers.ModelSerializer):
-    _id=serializers.IntegerField()
-    name=serializers.CharField()
-    create_time=serializers.DateTimeField()
+    class Meta:
+        model=InstallLocation
+        fields = "__all__"
 
         
 class DeviceInfoSerializer(serializers.ModelSerializer):
     class Meta:
+        model=DeviceInfo
         depth = 2
-        
-    _id=serializers.IntegerField()
-    name=serializers.CharField()
-    sn=serializers.CharField()
-    status=serializers.IntegerField()
-    devicemodel=serializers.CharField(source="devicemodel")
-    ip=serializers.CharField()
-    mac=serializers.CharField()
-    installdate=serializers.DateField()
-    parent=serializers.CharField(source="parent")
-    runos=serializers.IntegerField()
-    installlocation=serializers.CharField(source="installlocation")
-    create_time=serializers.DateTimeField()
+        fields = "__all__"
 
 
-class devicetopoSerializer(serializers.ModelSerializer):
-    _id=serializers.IntegerField()
-    icon=serializers.CharField()
-    x=serializers.IntegerField()
-    y=serializers.IntegerField()
-    device=serializers.CharField(source="device")
+class DeviceTopoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=DeviceTopo
+        fields = "__all__"

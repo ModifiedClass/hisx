@@ -1,45 +1,33 @@
 from rest_framework import serializers
 from .models import Group,Department,User,UserToken
 
-class GroupSerializer(serializers.Serializer):
-    _id=serializers.IntegerField()
-    name = serializers.CharField()
-    create_time=serializers.DateTimeField()
-    menu=serializers.CharField()
-    operation=serializers.CharField()
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Group
+        fields = "__all__"
 
 
-class DepartmentSerializer(serializers.Serializer):
-    _id=serializers.IntegerField()
-    name=serializers.CharField()
-    code=serializers.CharField()
-    parent=serializers.CharField(source="parent")
-    status = serializers.BooleanField() 
-    create_time=serializers.DateTimeField()
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Department
+        fields = "__all__"
+
     
 class UserSerializer(serializers.ModelSerializer):
-    '''_id=serializers.IntegerField()
-    username=serializers.CharField()
-    name=serializers.CharField()
-    password=serializers.CharField()
-    state=serializers.IntegerField()
-    error=serializers.IntegerField()
-    create_time=serializers.DateTimeField()
-    isSuper = serializers.BooleanField()
-    group=serializers.CharField(source="Group")#外键一对多
-    departments=serializers.SerializerMethodField() #外键多对多
+    department=serializers.SerializerMethodField()
     
-    def get_departments(self,row):
-        department_obj_list=row.departments.all()
+    def get_department(self,row):
+        department_obj_list=row.department.all()
         ret=[]
         for item in department_obj_list:
-            ret.append({'id':item.id})
-        return ret'''
-    departments=serializers.SerializerMethodField()
+            ret.append({'id':item.id,'name':item.name})
+        return ret
+        
     class Meta:
         model=User
-        fields=['_id','username','password','departments']
+        fields = "__all__"
 
-class UserTokenSerializer(serializers.Serializer):
-    user=serializers.CharField(source="user")
-    token=serializers.CharField()
+class UserTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=UserToken
+        fields = "__all__"

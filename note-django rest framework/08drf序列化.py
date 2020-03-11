@@ -42,7 +42,7 @@ class ExampleSerializer(serializers.Serializer):
     def get_types(self,row):
         type_obj_list=row.types.all()
         ret=[]
-        fot item in type_obj_list
+        for item in type_obj_list:
             ret.append({'id':item.id,'name':item.name})
         return ret
 

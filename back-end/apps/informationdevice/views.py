@@ -27,7 +27,7 @@ class DeviceCategoryView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=DeviceCategorySerializer(instance=obj,many=True)#many 单个对象False
+                ser=DeviceCategorySerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))
@@ -103,7 +103,7 @@ class DeviceModelView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=DeviceModelSerializer(instance=obj,many=True)#many 单个对象False
+                ser=DeviceModelSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))
@@ -183,7 +183,7 @@ class InstallLocationView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=InstallLocationSerializer(instance=obj,many=True)#many 单个对象False
+                ser=InstallLocationSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
             return JsonResponse(json.dumps(ret,ensure_ascii=False))
@@ -265,7 +265,7 @@ class DeviceInfoView(APIView):
                 start=(pageNumber - 1) * pageSize
                 end=nums if nums<pageNumber*pageSize else pageNumber*pageSize
                 DeviceInfos = DeviceInfo.objects.filter(**searchdict).order_by(order)[start:end]
-                ser=DeviceInfoSerializer(instance=obj,many=True)#many 单个对象False
+                ser=DeviceInfoSerializer(instance=obj,many=True).data#many 单个对象False
                 obj = { "rows" : ser, "total" : nums }
                 ret['status']=1
                 ret['data']=ser
@@ -373,7 +373,7 @@ class DeviceTopoView(APIView):
             if not deviceinfos or not InstallLocations:
                 ret['msg']="没有获取到数据!"
             else:
-                ilser=InstallLocationSerializer(instance=InstallLocations,many=True)
+                ilser=InstallLocationSerializer(instance=InstallLocations,many=True).data
                 result['ls']=ilser
                 ts=[]
                 for t in deviceinfos:
