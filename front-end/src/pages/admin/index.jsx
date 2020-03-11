@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Redirect,Route,Switch} from 'react-router-dom'
+import {Redirect,BrowserRouter,Route,Switch} from 'react-router-dom'
 import { Layout } from 'antd';
 import {connect} from 'react-redux'
 
@@ -29,9 +29,9 @@ const { Header, Footer, Sider, Content } = Layout;
 class Admin extends Component{
     render(){
         const user=this.props.user
-        if(!user||!user._id){
+        /*if(!user||!user._id){
             return <Redirect to='/login'/>
-        }
+        }*/
         return(
             <Layout className="layout-main">
                 <Header className="layout-main-top">
@@ -45,20 +45,19 @@ class Admin extends Component{
                         <Content className="layout-main-bottom-right-content">
                             <BreadCrumBar className="layout-main-bottom-right-content-bcb"/>
                             <Switch>
-                                <Redirect exact from='/' to='/dashboard' />
-                                <Route path='/' component={Dashboard}/>
-                                <Route path='/dashboard' component={Dashboard}/>
-                                <Route path='/group' component={Group}/>
-                                <Route path='/department' component={Department}/>
-                                <Route path='/user' component={User}/>
-                                <Route path='/problemcategory' component={ProblemCategory}/>
-                                <Route path='/processedrecord' component={ProcessedRecord}/>
-                                <Route path='/timeline' component={TimeLine}/>
-                                <Route path='/devicecategory' component={DeviceCategory}/>
-                                <Route path='/devicemodel' component={DeviceModel}/>
-                                <Route path='/installlocation' component={InstallLocation}/>
-                                <Route path='/deviceinfo' component={DeviceInfo}/>
-                                <Route path='/developing' component={Developing}/>
+                                <Redirect exact from='/admin' to='/admin/dashboard' />
+                                <Route path='/admin/dashboard' component={Dashboard}/>
+                                <Route path='/admin/group' component={Group}/>
+                                <Route path='/admin/department' component={Department}/>
+                                <Route path='/admin/user' component={User}/>
+                                <Route path='/admin/problemcategory' component={ProblemCategory}/>
+                                <Route path='/admin/processedrecord' component={ProcessedRecord}/>
+                                <Route path='/admin/timeline' component={TimeLine}/>
+                                <Route path='/admin/devicecategory' component={DeviceCategory}/>
+                                <Route path='/admin/devicemodel' component={DeviceModel}/>
+                                <Route path='/admin/installlocation' component={InstallLocation}/>
+                                <Route path='/admin/deviceinfo' component={DeviceInfo}/>
+                                <Route path='/admin/developing' component={Developing}/>
                                 <Route component={NotFound}/>
                             </Switch>
                         </Content>

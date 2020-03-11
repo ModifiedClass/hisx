@@ -1,90 +1,90 @@
 const menuList=[
 {
     title:'仪表盘',
-    key:'/dashboard',
+    key:'/admin/dashboard',
     icon:'dashboard',
     isPublic:true
 },
 {
     title:'帐户管理',
-    key:'/account',
+    key:'/admin/account',
     icon:'contacts',
     children:[
     {
         title:'组管理',
-        key:'/group',
+        key:'/admin/group',
         icon:'team'
     },
     {
         title:'部门管理',
-        key:'/department',
+        key:'/admin/department',
         icon:'apartment'
     },
     {
         title:'用户管理',
-        key:'/user',
+        key:'/admin/user',
         icon:'user'
     },
     ]
 },
 {
     title:'时间轴',
-    key:'/timeline',
+    key:'/admin/timeline',
     icon:'history',
 },
 {
     title:'信息设备',
-    key:'/informationdevice',
+    key:'/admin/informationdevice',
     icon:'laptop',
     children:[
     {
         title:'设备类别',
-        key:'/devicecategory',
+        key:'/admin/devicecategory',
         icon:'unordered-list'
     },
     {
         title:'设备型号',
-        key:'/devicemodel',
+        key:'/admin/devicemodel',
         icon:'barcode'
     },
     {
         title:'安装位置',
-        key:'/installlocation',
+        key:'/admin/installlocation',
         icon:'environment'
     },
     {
         title:'设备列表',
-        key:'/deviceinfo',
+        key:'/admin/deviceinfo',
         icon:'menu'
     },
     {
         title:'设备拓扑',
-        key:'/devicetopo',
+        key:'/admin/devicetopo',
         icon:'apartment'
     },
     ]
 },
 {
     title:'运维记录',
-    key:'/oapm',
+    key:'/admin/oapm',
     icon:'ordered-list',
     children:[
     {
         title:'问题类别',
-        key:'/problemcategory',
+        key:'/admin/problemcategory',
         icon:'block'
     },
     {
         title:'处理记录',
-        key:'/processedrecord',
+        key:'/admin/processedrecord',
         icon:'unordered-list'
     },{
         title:'打印机维修',
-        key:'/printerrepair',
+        key:'/admin/printerrepair',
         icon:'tool'
     },{
         title:'硒鼓加粉',
-        key:'/cartriday',
+        key:'/admin/cartriday',
         icon:'download'
     }
     ]

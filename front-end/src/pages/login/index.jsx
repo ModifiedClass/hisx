@@ -15,11 +15,12 @@ class Login extends Component {
                 const{username,password}=values
                 //调用分发异步actions函数
                 this.props.login(username,password)
-                this.props.history.replace('/')
+                //this.props.history.replace('/')
             }else{
-                console.log('校验失败!')
-                this.props.history.replace('/')
+                message.error('校验失败!')
+                //
             }
+            this.props.history.replace('/admin')
         });
     }
     validatePwd=(rule,value,callback)=>{
@@ -38,7 +39,7 @@ class Login extends Component {
     render(){
         const user=this.props.user
         if(user && user._id){
-            return <Redirect to='/dashboard'/>
+            return <Redirect to='/admin'/>
         }
         const { getFieldDecorator } = this.props.form;
         return(
