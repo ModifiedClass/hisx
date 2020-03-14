@@ -23,11 +23,27 @@ export default class BBox extends Component{
                 series:[{
                     name:'销量',
                     type:'bar',
-                    data:sales
+                    data:sales,
+                    barWidth:'35%', //柱子宽度
+                        itemStyle: {
+                            normal: {
+                                color:'#2f89cf',
+                                opacity: 1,
+				                barBorderRadius: 5,
+                            }
+                        }
                 },{
                     name:'库存',
                     type:'bar',
-                    data:stores 
+                    data:stores ,
+                    barWidth:'35%', //柱子宽度
+                        itemStyle: {
+                            normal: {
+                                color:'#27d08a',
+                                opacity: 1,
+				                barBorderRadius: 5,
+                            }
+                        }
                 }]
             }
         }
@@ -37,7 +53,7 @@ export default class BBox extends Component{
         return(
             <div style={boxall}>
             <div style={alltitle}>测试</div>
-            <ReactEcharts option={this.getOption(sales,stores)}/>
+            <ReactEcharts option={this.getOption(sales,stores)} style={{minHeight:'inherit'}}/>
             <div style={boxfoot}>测试</div>
             </div>
         )

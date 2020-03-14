@@ -1,151 +1,6 @@
-import React,{Component} from 'react'
-
-import BBoxAll from './bboxall'
-import BBoxAllSub from './bboxallsub'
-import BBar from './bbar'
-import BMap from './bmap'
-
-
-export default class Begin extends Component{
-    state={
-        inhosnum:0,  //当前在院病人数
-        consultationnum:0,  //当日就诊人次
-        preparatorynum:0,   //预出院人数
-        nochecknum:0,  //初始化出院未结账人数
-        incomebythisday:{  //日结账统计
-            incomebythisdaysum:0, //合计
-            cname:[],  //列名
-            cvalue:[],  //对应值
-            color:'#2f89cf'
-        },
-        incomebythismon:{   //月结账统计
-            incomebythismonsum:0, //合计
-            cname:[],  //列名
-            cvalue:[],  //对应值
-            color:'#27d08a'
-        },
-        numbyday:{    //当月每天门诊入出院人次
-            mons:[],
-            consultation:[],
-            emergency:[],
-            inhos:[],
-            outhos:[]
-        },
-        doctorload:{   //门诊医生负荷
-            cname:[],  //列名
-            cvalue:[],  //对应值
-            title:'',
-            subtitle:''
-        },
-        doctoratv:{   //门诊医生待诊
-            cname:[],  //列名
-            cvalue:[],  //对应值
-            title:'',
-            subtitle:''
-        }, 
-        avgwaitingtime:{  //就诊病人平均等待时间
-            cname:[],  //列名
-            cvalue:[],  //对应值
-            title:'',
-            subtitle:''
-        },
-        disease:{  //月疾病人次top10
-            cname:[],  //列名
-            cvalue:[],  //对应值
-            color:'#2f89cf'
-        },
-        medinsu:{  //初始化医保类别费用比例
-            medinsusum:0,
-            miamount:[]
-        },
-    }
-    
-    //初始化当前在院病人数
-    initinhosnum=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //初始化当日就诊人次
-	initconsultationnum=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({consultationnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //初始化预出院人数
-	initpreparatorynum=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({preparatorynum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //初始化出院未结账人数
-	initnochecknum=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({nochecknum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //日结账统计 echarts_1 BBoxAll
-    initincomebythisday=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //月结账统计 echarts_1 BBoxAll
-	initincomebythismon=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //当月每天门诊入出院人次 echarts_4 BBoxAll
-    initnumbyday=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //门诊医生负荷 echarts_31 BBoxAllSub
-	initdoctorload=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //门诊医生待诊 echarts_31 BBoxAllSub
-	initdoctoratv=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //就诊病人平均等待时间 echarts_31 BBoxAllSub
-	initavgwaitingtime=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //月疾病人次top10 echarts_1 BBoxAll
-    initdisease=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
-    
-    //初始化医保类别费用比例 echarts_6 BBoxAll
-    initmedinsu=()=>{
-        this.intervalId=setInterval(()=>{
-            this.setState({inhosnum:0})
-        },1000 * 60 * 5)
-    }
     //echartoption
     //柱状图
-    echarts_1=(cname,cvalue,color)=>{
+export const echartHistogram=(cname,cvalue,color)=>{
         return {
             tooltip: {
                 trigger: 'axis',
@@ -226,7 +81,7 @@ export default class Begin extends Component{
     }
 
     //波形图	mon：当月号数 consultation 就诊 
-    echarts_4=(mons,consultation,emergency,inhos,outhos)=>{
+export const echartWaveform=(mons,consultation,emergency,inhos,outhos)=>{
         return{
 	        tooltip: {
                 trigger: 'axis',
@@ -434,7 +289,7 @@ export default class Begin extends Component{
         };
     }
     //	miamount医保金额
-    echarts_6=(miamount)=>{
+export const echartPie=(miamount)=>{
         return{
             tooltip: {
                 trigger: 'item',
@@ -459,7 +314,7 @@ export default class Begin extends Component{
         };
     }
     //当前医生平均负荷
-    echarts_31=(data1,data2,title,subtitle)=>{
+export const echartCircle=(data1,data2,title,subtitle)=>{
         return {
 	        title: [{
                 text: title,
@@ -498,40 +353,3 @@ export default class Begin extends Component{
             }]
         };
     }
-    
-    componentDidMount(){
-        this.initinhosnum()
-    }
-    
-    componentWillUnmount(){
-        clearInterval(this.intervalId)
-    }
-    
-    render(){
-        const listyle={
-            float: 'left',
-            padding: 0,
-            width: '30%',
-            listStyleType:'none',
-        }
-        
-        return(
-            <ul className="clearfix">
-                <li style={listyle}>
-                    <BBoxAll title={'当日结账统计(元)'} sum={'incomebythisdaysum'} echartoption={'echarts_1'}/>
-                    <BBoxAll title={'本月结账统计(元)'} sum={'incomebythismonsum'} echartoption={'echarts_1'}/>
-                    <BBoxAll title={'当月出院病人医保费用比例(元)'} sum={'medinsusum'} echartoption={'echart6'}/>
-                </li>
-                <li style={listyle}>
-                    <BBar inhosnum={this.tinitinhosnum()} consultationnum={this.initconsultationnum()}/>
-                    <BMap preparatorynum={this.initpreparatorynum()} nochecknum={this.initnochecknum()}/>
-                </li>
-                <li style={listyle}>
-                    <BBoxAll title={'本月门诊住院病人统计(人次)'} sum={''} echartoption={'echart4'}/>                    
-	        		<BBoxAllSub title={''} sum={''} echartoptions={'echart4'}/>
-                    <BBoxAll title={'当月出院病人疾病诊断统计(人次)'} sum={''} echartoption={'echart5'}/> 
-                </li>    
-            </ul>
-        )
-    }
-}

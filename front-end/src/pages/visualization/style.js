@@ -18,7 +18,8 @@ export const bodystyle={
     backgroundPosition:'center',
     backgroundSize:'100% 100%',//contain
     color:'#666',
-    fontSize: 14
+    fontSize: 14,
+    height:'100%',
 }
 export const headstyle={
     backgroundImage: 'url('+headbg+')',
@@ -44,8 +45,11 @@ export const weather={
 export const weatherspan={
     color:'#fff',
 }
-export const mainbox={
-    padding:5
+export const contentstyle={
+    padding:5,
+    height:'100%',
+    position:'relative',
+    minHeight:'inherit'
 }
 //begin next jsx
 export const boxall={
@@ -59,9 +63,9 @@ export const boxall={
     //backgroundSize: '100%',
     //backgroundPosition:'auto',
     position: 'relative',
-    //marginBottom: 1,
+    marginBottom: 0,
     zIndex: 10,
-    height: '100%'
+    height: '100%',
 }
 export const alltitle={
             fontSize:18,
