@@ -86,3 +86,6 @@ python manage.py createsuperuser
 启动调试
 python manage.py runserver ip:port
 
+
+安装cx-Oracle
+pip install cx-Oracle

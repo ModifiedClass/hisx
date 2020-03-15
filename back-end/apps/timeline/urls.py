@@ -1,5 +1,5 @@
 from django.urls import path
-from oapm import views
+from timeline import views
 
 urlpatterns = [
     #时间轴

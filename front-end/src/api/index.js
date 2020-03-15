@@ -112,5 +112,27 @@ export const couTimeLine=(timeline)=>fetchreq(HOST+'/api/timeline/',timeline,(ti
 //删除时间轴
 export const dTimeLine=(timelineId)=>fetchreq(HOST+'/api/timeline/',{'_id':timelineId},'DELETE')
 
-
+/**visualization**/
+//病人区域分布
+export const getpatdis=()=>fetchreq(HOST+'/api/visualization/getpatdis/')
+//初始化实时病人信息
+export const getinhosnum=()=>fetchreq(HOST+'/api/visualization/getinhosnum/')
+//当月出院未结账病人数
+export const getnochecknum=()=>fetchreq(HOST+'/api/visualization/getnochecknum/')
+//三年收入对比
+export const getdisease=()=>fetchreq(HOST+'/api/visualization/getdisease/')
+//当月每天门诊入出院人次
+export const getnumbyday=()=>fetchreq(HOST+'/api/visualization/getnumbyday/')
+//医保类别费用比例
+export const getmedinsu=()=>fetchreq(HOST+'/api/visualization/getmedinsu/')
+//日结账统计
+export const getincomebythisday=()=>fetchreq(HOST+'/api/visualization/getincomebythisday/')
+//月结账统计
+export const getincomebythismon=()=>fetchreq(HOST+'/api/visualization/getincomebythismon/')
+//医生负荷
+export const getdoctorload=()=>fetchreq(HOST+'/api/visualization/getdoctorload/')
+//医生待诊
+export const getdoctoratv=()=>fetchreq(HOST+'/api/visualization/getdoctoratv/')
+//患者平均等待时间
+export const getavgwaitingtime=()=>fetchreq(HOST+'/api/visualization/getavgwaitingtime/')
 

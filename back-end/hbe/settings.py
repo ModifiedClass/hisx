@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'account',
     'informationdevice',
-    'oapm'
+    'oapm',
+    'visualization'
 ]
 
 MIDDLEWARE = [

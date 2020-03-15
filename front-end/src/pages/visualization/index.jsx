@@ -1,14 +1,10 @@
 import React,{Component} from 'react'
 import {Link,withRouter} from 'react-router-dom'
-import { Layout} from 'antd';
+import { Row, Col } from 'antd'
 
 import {formateDate} from '../../utils/dateUtils'
-import {canvas,bodystyle,headstyle,headtitle,weather,weatherspan,contentstyle} from './style.js'
-//import './index.less'
-//import './liupanshui.js'
-import BBox from './bbox'
-
-const { Header, Content } = Layout;
+import Start from './start'
+import './index.css'
 
 class Visualization extends Component{
     state={
@@ -30,27 +26,32 @@ class Visualization extends Component{
         const {currentTime} =this.state
         const title="数据可视化"
         return(
-            <Layout style={bodystyle}>
-                <div style={canvas}>
-	                <iframe 
-                        frameborder="0" 
-                        src="./bg.html"
-                        style={{ width: '100%',height: '100%'}}>
-                    </iframe>
-	            </div>
-                <Header style={{padding:'0px'}}>
-                    <div style={headstyle}>
-                        <h1 style={headtitle}>{title}</h1>
-                        <div style={weather}>
-                            <span style={weatherspan}>{currentTime}</span>
+            <div style={{height:'100%'}}>
+            <div className="canvas" style={{opacity: '.2'}}>
+	            <iframe 
+                    frameborder="0" 
+                    src="./bg.html"
+                    style={{ width: '100%',height: '100%'}}>
+                </iframe>
+            </div>
+            <Row>
+                <Col span={24}>
+                    <div className="head">
+                        <h1>数据可视化</h1>
+                        <div className="weather">
+                            <span >{currentTime}</span>
                             <Link to="/admin">后台</Link>
                         </div>
                     </div>
-                </Header>
-                <Content sytle={contentstyle}>
-                        <BBox/>
-                </Content>
-            </Layout>
+                </Col>
+            </Row>
+            <Row>
+                <Col span={24}>
+                    <Start/>
+                </Col>
+            </Row>
+            </div>
+            
         )
     }
 }

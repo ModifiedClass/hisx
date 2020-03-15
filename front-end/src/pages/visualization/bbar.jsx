@@ -1,21 +1,26 @@
 import React,{Component} from 'react'
+import ReactEcharts from 'echarts-for-react'
 
 
 export default class BBar extends Component{
     
     render(){
         return(
-            <div className="bar">
-                <div className="barbox">
-                    <ul className="clearfix">
-                        <li className="pulll_left counter">{this.props.inhosnum}</li>
-                        <li className="pulll_left counter">{this.props.consultationnum}</li>
+            <div class="bar">
+                <div class="barbox">
+                    <ul class="clearfix">
+                        <li class="pulll_left counter">{this.props.nowhosnum}</li>
+                        <li class="pulll_left counter">{this.props.inhosnum}</li>
+						<li class="pulll_left counter">{this.props.outhosnum}</li>
+						<li class="pulll_left counter">{this.props.ssnum}</li>
                     </ul>
                 </div>
-                <div className="barbox2">
-                    <ul className="clearfix">
-                        <li className="pulll_left">在院病人数 </li>
-                        <li className="pulll_left">当日就诊人次</li>
+                <div class="barbox2">
+                    <ul class="clearfix">
+                        <li class="pulll_left">在院病人数 </li>
+                        <li class="pulll_left">入院病人数</li>
+						<li class="pulll_left">出院病人数</li>
+						<li class="pulll_left">手术台数</li>
                     </ul>
                 </div>
             </div>

@@ -1,5 +1,6 @@
-    //echartoption
-    //柱状图
+import {lpsgeoCoordMap} from './geo'
+//echartoption
+//柱状图
 export const echartHistogram=(cname,cvalue,color)=>{
         return {
             tooltip: {
@@ -353,3 +354,128 @@ export const echartCircle=(data1,data2,title,subtitle)=>{
             }]
         };
     }
+//map
+
+const convertData = (lpsdata)=>{
+        var res = [];
+        for (var i = 0; i < lpsdata.length; i++) {
+            var geoCoord = lpsgeoCoordMap[lpsdata[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: lpsdata[i].name,
+                    value: geoCoord.concat(lpsdata[i].value)
+                });
+            }
+        }
+        return res;
+}
+export const echartLpsMap=(lpsdata)=>{
+    return{
+        title: {
+            text: '当月出院病人区域分布',
+            left: 'center',
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        tooltip : {
+            trigger: 'item',
+		    formatter: function (params) {
+                if(typeof(params.value)[2] == "undefined"){
+              	    return params.name + ' : ' + params.value;
+                }else{
+              	    return params.name + ' : ' + params.value[2];
+                }
+            }
+        },
+  
+        geo: {
+            show:true,
+            map: 'liupanshui',
+            label: {
+                emphasis: {
+                    show:true,  //是否显示文本
+                    color:'#CCC',  //文本颜色
+                }
+            },
+            roam: true,//放大缩小
+            itemStyle: {
+                normal: {
+                    areaColor: '#4c60ff',
+                    borderColor: '#002097'
+                },
+                emphasis: {
+                    areaColor: '#293fff'
+                }
+            },
+        },
+        series : [{
+            name: '病人数',
+            type: 'effectScatter',
+            coordinateSystem: 'geo',
+            data:convertData(lpsdata),
+            symbolSize: function (val) {
+                return val[2] / 15;
+            },
+            label: {
+                normal: {
+                    formatter: '{b}',
+                    position: 'right',
+                    show: true
+                },
+                emphasis: {
+                    show: true
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: '#ffeb7b'
+                }
+            },
+            rippleEffect: { //涟漪特效相关配置。
+                brushType: 'stroke' //波纹的绘制方式
+            },
+            hoverAnimation: true, //鼠标移入放大圆
+        }]
+    }
+}
+
+export const echartMuHistogram=(cname,cvalue)=>{
+    return {
+        color: ['#00d887', '#EEB422', '#DC143C'],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {
+            data: cname
+        },
+        calculable: true,
+        xAxis: [{
+            type: 'category',
+            axisTick: {
+                show: false
+            },
+            data: ['01', '02', '03', '04', '05', '06','07', '08', '09', '10', '11', '12']
+        }],
+        yAxis: [{
+            type: 'value'
+        }],
+        series: [{
+            name: cname[0],
+            type: 'bar',
+            barGap: 0,
+            data: cvalue[0]
+        },{
+            name: cname[1],
+            type: 'bar',
+            data: cvalue[1]
+        },{
+            name: cname[2],
+            type: 'bar',
+            data: cvalue[2]
+        }]
+    }
+}

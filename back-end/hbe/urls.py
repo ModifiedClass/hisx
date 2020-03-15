@@ -19,5 +19,7 @@ from django.urls import path,re_path,include
 urlpatterns = [
     path('api/account/', include('account.urls')),
     path('api/informationdevice/', include('informationdevice.urls')),
-    path('api/oapm/', include('oapm.urls'))
+    path('api/oapm/', include('oapm.urls')),
+    path('api/timeline/', include('timeline.urls')),
+    path('api/visualization/', include('visualization.urls'))
 ]
