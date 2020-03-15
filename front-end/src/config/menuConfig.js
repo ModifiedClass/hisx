@@ -1,7 +1,7 @@
 const menuList=[
 {
     title:'仪表盘',
-    key:'/admin/dashboard',
+    key:'/dashboard',
     icon:'dashboard',
     isPublic:true
 },
@@ -12,24 +12,24 @@ const menuList=[
     children:[
     {
         title:'组管理',
-        key:'/admin/group',
+        key:'/group',
         icon:'team'
     },
     {
         title:'部门管理',
-        key:'/admin/department',
+        key:'/department',
         icon:'apartment'
     },
     {
         title:'用户管理',
-        key:'/admin/user',
+        key:'/user',
         icon:'user'
     },
     ]
 },
 {
     title:'时间轴',
-    key:'/admin/timeline',
+    key:'/timeline',
     icon:'history',
 },
 {
@@ -39,27 +39,27 @@ const menuList=[
     children:[
     {
         title:'设备类别',
-        key:'/admin/devicecategory',
+        key:'/devicecategory',
         icon:'unordered-list'
     },
     {
         title:'设备型号',
-        key:'/admin/devicemodel',
+        key:'/devicemodel',
         icon:'barcode'
     },
     {
         title:'安装位置',
-        key:'/admin/installlocation',
+        key:'/installlocation',
         icon:'environment'
     },
     {
         title:'设备列表',
-        key:'/admin/deviceinfo',
+        key:'/deviceinfo',
         icon:'menu'
     },
     {
         title:'设备拓扑',
-        key:'/admin/devicetopo',
+        key:'/devicetopo',
         icon:'apartment'
     },
     ]
@@ -71,20 +71,20 @@ const menuList=[
     children:[
     {
         title:'问题类别',
-        key:'/admin/problemcategory',
+        key:'/problemcategory',
         icon:'block'
     },
     {
         title:'处理记录',
-        key:'/admin/processedrecord',
+        key:'/processedrecord',
         icon:'unordered-list'
     },{
         title:'打印机维修',
-        key:'/admin/printerrepair',
+        key:'/printerrepair',
         icon:'tool'
     },{
         title:'硒鼓加粉',
-        key:'/admin/cartriday',
+        key:'/cartriday',
         icon:'download'
     }
     ]

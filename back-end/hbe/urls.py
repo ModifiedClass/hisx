@@ -21,5 +21,4 @@ urlpatterns = [
     path('api/informationdevice/', include('informationdevice.urls')),
     path('api/oapm/', include('oapm.urls')),
     path('api/timeline/', include('timeline.urls')),
-    path('api/visualization/', include('visualization.urls'))
 ]

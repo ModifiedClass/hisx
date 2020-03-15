@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'account',
     'informationdevice',
     'oapm',
-    'visualization'
 ]
 
 MIDDLEWARE = [

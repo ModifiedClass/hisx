@@ -89,3 +89,10 @@ python manage.py runserver ip:port
 
 安装cx-Oracle
 pip install cx-Oracle
+
+
+
+删除App
+manage.py migrate your_app_name zero
+删除整个App文件夹
+在settings.py的Installed Apps中移除该app

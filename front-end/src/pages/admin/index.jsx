@@ -45,19 +45,19 @@ class Admin extends Component{
                         <Content className="layout-main-bottom-right-content">
                             <BreadCrumBar className="layout-main-bottom-right-content-bcb"/>
                             <Switch>
-                                <Redirect exact from='/admin' to='/admin/dashboard' />
-                                <Route path='/admin/dashboard' component={Dashboard}/>
-                                <Route path='/admin/group' component={Group}/>
-                                <Route path='/admin/department' component={Department}/>
-                                <Route path='/admin/user' component={User}/>
-                                <Route path='/admin/problemcategory' component={ProblemCategory}/>
-                                <Route path='/admin/processedrecord' component={ProcessedRecord}/>
-                                <Route path='/admin/timeline' component={TimeLine}/>
-                                <Route path='/admin/devicecategory' component={DeviceCategory}/>
-                                <Route path='/admin/devicemodel' component={DeviceModel}/>
-                                <Route path='/admin/installlocation' component={InstallLocation}/>
-                                <Route path='/admin/deviceinfo' component={DeviceInfo}/>
-                                <Route path='/admin/developing' component={Developing}/>
+                                <Redirect exact from='/' to='/dashboard' />
+                                <Route path='/dashboard' component={Dashboard}/>
+                                <Route path='/group' component={Group}/>
+                                <Route path='/department' component={Department}/>
+                                <Route path='/user' component={User}/>
+                                <Route path='/problemcategory' component={ProblemCategory}/>
+                                <Route path='/processedrecord' component={ProcessedRecord}/>
+                                <Route path='/timeline' component={TimeLine}/>
+                                <Route path='/devicecategory' component={DeviceCategory}/>
+                                <Route path='/devicemodel' component={DeviceModel}/>
+                                <Route path='/installlocation' component={InstallLocation}/>
+                                <Route path='/deviceinfo' component={DeviceInfo}/>
+                                <Route path='/developing' component={Developing}/>
                                 <Route component={NotFound}/>
                             </Switch>
                         </Content>
