@@ -48,7 +48,7 @@ export default class User extends Component{
             width:300,
             render:(user)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(user)}/>&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.showUpdate(user)}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteUser(user)}/>
             </span>
             )

@@ -121,11 +121,11 @@ export default class Home extends Component{
         {
             title:'操作',
             fixed: 'right',
-            width: 150,
+            width: 100,
             render:(processedrecord)=>(
             <span>
-                <PreviewBtn onClick={()=>this.props.history.push('/processedrecord/detail',{processedrecord})}/>&nbsp;
-                <EditBtn onClick={()=>this.props.history.push('/processedrecord/addorupdate',processedrecord)}/>&nbsp;
+                <PreviewBtn onClick={()=>this.props.history.push('/processedrecord/detail',{processedrecord})}/>&nbsp;&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.props.history.push('/processedrecord/addorupdate',processedrecord)}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteProcessedRecord(processedrecord)}/>
             </span>
             )

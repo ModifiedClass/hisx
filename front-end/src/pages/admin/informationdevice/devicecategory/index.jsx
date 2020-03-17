@@ -32,7 +32,7 @@ export default class DeviceCategory extends Component{
             width:300,
             render:(devicecategory)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(devicecategory)}/>&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.showUpdate(devicecategory)}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteDeviceCategory(devicecategory)}/>
             </span>
             )

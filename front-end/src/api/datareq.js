@@ -1,6 +1,6 @@
 //import axios from 'axios'
 import {message} from 'antd'
-import {HOST} from '../utils/constants'
+//import {HOST} from '../utils/constants'
 /*export function axiosreq(url,data={},method='GET'){
     return new Promise((resolve,reject)=>{
         let promise
@@ -20,7 +20,7 @@ import {HOST} from '../utils/constants'
     
 }*/
 
-const csrftoken=()=>{fetch(HOST+'/account/get_token/')}
+//const csrftoken=()=>{fetch(HOST+'/account/get_token/')}
 
 const obj2String=(obj, arr = [], idx = 0)=>{
     for(let item in obj) {

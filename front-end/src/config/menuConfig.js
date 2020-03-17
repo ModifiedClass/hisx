@@ -7,7 +7,7 @@ const menuList=[
 },
 {
     title:'帐户管理',
-    key:'/account',
+    key:'',
     icon:'contacts',
     children:[
     {
@@ -34,7 +34,7 @@ const menuList=[
 },
 {
     title:'信息设备',
-    key:'/informationdevice',
+    key:'',
     icon:'laptop',
     children:[
     {
@@ -66,10 +66,14 @@ const menuList=[
 },
 {
     title:'运维记录',
-    key:'/oapm',
+    key:'',
     icon:'ordered-list',
     children:[
     {
+        title:'信息化模块',
+        key:'/informationizeapp',
+        icon:'appstore'
+    },{
         title:'问题类别',
         key:'/problemcategory',
         icon:'block'

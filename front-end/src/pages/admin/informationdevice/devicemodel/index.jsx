@@ -42,7 +42,7 @@ export default class DeviceModel extends Component{
             width:300,
             render:(devicemodel)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(devicemodel)}/>&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.showUpdate(devicemodel)}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteDeviceModel(devicemodel)}/>
             </span>
             )

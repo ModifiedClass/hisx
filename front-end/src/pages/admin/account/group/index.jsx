@@ -39,7 +39,7 @@ export default class Group extends Component{
             width:300,
             render:(group)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(group)}/>&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.showUpdate(group)}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteGroup(group)}/>
             </span>
             )

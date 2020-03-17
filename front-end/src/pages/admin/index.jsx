@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Redirect,BrowserRouter,Route,Switch} from 'react-router-dom'
+import {Redirect,Route,Switch} from 'react-router-dom'
 import { Layout } from 'antd';
 import {connect} from 'react-redux'
 
@@ -28,8 +28,8 @@ const { Header, Footer, Sider, Content } = Layout;
 
 class Admin extends Component{
     render(){
-        const user=this.props.user
-        /*if(!user||!user._id){
+        /*const user=this.props.user
+        if(!user||!user._id){
             return <Redirect to='/login'/>
         }*/
         return(

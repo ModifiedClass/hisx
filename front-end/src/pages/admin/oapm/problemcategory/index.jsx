@@ -31,7 +31,7 @@ export default class ProblemCategory extends Component{
             width:300,
             render:(problemcategory)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(problemcategory)} />&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.showUpdate(problemcategory)} />&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteProblemCategory(problemcategory)} />
             </span>
             )

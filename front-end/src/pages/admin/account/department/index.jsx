@@ -55,7 +55,7 @@ export default class Department extends Component{
             width:300,
             render:(department)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(department)}/>&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.showUpdate(department)}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteDepartment(department)}/>
             </span>
             )

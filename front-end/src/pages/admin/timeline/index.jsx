@@ -36,7 +36,7 @@ export default class TimeLine extends Component{
             width:300,
             render:(timeline)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(timeline)}/>&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.showUpdate(timeline)}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteTimeLine(timeline)}/>
             </span>
             )

@@ -14,9 +14,9 @@ class NotFound extends Component {
         
         return(
             <Row className="not-found">
-                <Col span={12} className="not-found-left"></Col>
-                <Col span={12} className="not-found-right">
-                    <h1>404</h1>
+                <Col span={11} className="not-found-left"></Col>
+                <Col span={13} className="not-found-right">
+                    <h1>ERROR</h1>
                     <h2>抱歉,您访问的页面不存在.</h2>
                     <div>
                         <Button type='primart' onClick={this.goDashboard}>

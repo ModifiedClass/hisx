@@ -32,7 +32,7 @@ export default class InstallLocation extends Component{
             width:300,
             render:(installlocation)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(installlocation)}/>&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.showUpdate(installlocation)}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteInstallLocation(installlocation)}/>
             </span>
             )
