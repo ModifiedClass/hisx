@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React,{PureComponent} from 'react';
 import PropTypes from 'prop-types'
 import {
     Form, 
@@ -10,81 +10,89 @@ import {
     Icon,
     } from 'antd'
 
-import {problemState} from '../../../../config/selectConfig'
+import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
 
 const Option=Select.Option
 const Item=Form.Item
 
-class Search extends Component{
+class Search extends PureComponent{
     static propTypes={
         setForm:PropTypes.func.isRequired,
     }
-    componentWillMount(){
-        this.props.setForm(this.props.form)
+    getSearchItem=()=>{
+        return this.props.form.getFieldsValue()
     }
     render(){
         
         return(
             <Form className="ant-advanced-search-form" >
                 <Row gutter={24}>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Item label="类别">
                             <Select>
                                 {
-                                    problemState.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                                    deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
                         </Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Item label="型号">
                             <Select>
                                 {
-                                    problemState.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                                    deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
                         </Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Item label="位置">
                             <Select>
                                 {
-                                    problemState.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                                    deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
                         </Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Item label="系统">
                             <Select>
                                 {
-                                    problemState.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                                    deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
                         </Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Item label='名称' >
                             <Input placeholder='请输入类别名称!'/>
                         </Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Item label={'ip'} >
                             <Input placeholder="placeholder" />
                         </Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Item label={'mac'} >
                             <Input placeholder="placeholder" />
                         </Item>
                     </Col>
-                    <Col span={6}>
+                    <Col span={8}>
                         <Item label="状态">
                             <Select>
                                 {
-                                    problemState.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                                    deviceStatus.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
+                        </Item>
+                    </Col>
+                    <Col span={8}>
+                        <Item style={{float:'right'}}>
+                            <span>
+                                <Button style={{marginBottom:10}} type='primary' onClick={this.props.Searchdevs}>搜索<Icon type='search'/></Button>
+                                <Button style={{ marginLeft: 8 }} type="button" onClick={()=>{this.form.resetFields()}}><Icon type='reload'/>重置</Button>
+                            </span>
                         </Item>
                     </Col>
                 </Row>

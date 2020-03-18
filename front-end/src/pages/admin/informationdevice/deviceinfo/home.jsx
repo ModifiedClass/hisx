@@ -29,7 +29,6 @@ const Option=Select.Option
 
 export default class Home extends Component{
     state={
-        expand:false,
         deviceinfos:[],
         total:0,
         loading:false,
@@ -161,7 +160,12 @@ export default class Home extends Component{
         this.processedrecord=processedrecord
         this.setState({isShow:true})
     }
-    
+    Searchdevs=()=>{
+        console.log(this.form.getFieldsValue())
+    }
+    resetForm=()=>{
+        this.form.resetFields()
+    }
     addOrUpdateDeviceInfo=()=>{
         this.form.validateFields(async(err,values)=>{
             if(!err){
@@ -210,14 +214,10 @@ export default class Home extends Component{
         const onFinish = values => {
             console.log('Received values of form: ', values);
         }
-        const extra=<span>
-             <Button style={{marginBottom:10}} type='primary' onClick={()=>{}}>搜索<Icon type='search'/></Button>
-             <Button style={{ marginLeft: 8 }} type="button" onClick={()=>{}}><Icon type='reload'/>重置</Button>
-        </span>
         return(
             <div>
-            <Search />
-            <Card title={title} extra={extra}>
+            <Search setForm={(form)=>{this.form=form}}/>
+            <Card title={title} Searchdevs={this.Searchdevs}>
                 <Table
                 bordered
                 rowKey='_id'
