@@ -1,17 +1,12 @@
 import React,{Component} from 'react';
 import {
-    Form, 
-    Row, 
-    Col,
+    Collapse,
     Card,
-    Select,
-    Input,
     Button,
     Modal,
     Icon,
     Table,
     message,
-    Tooltip,
     Tag
     } from 'antd'
 
@@ -19,13 +14,12 @@ import {BASE_GREEN,BASE_RED,BASE_BLUE} from '../../../../utils/colors'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import PreviewBtn from '../../../../components/previewbtn'
-import Search from './search'
+import SearchForm from './searchform'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
 //import {reqDeviceInfos} from '../../../../../api'
 import reqDeviceInfos from '../../../../api/json/processedrecord.js'
-
-const Option=Select.Option
+const { Panel } = Collapse
 
 export default class Home extends Component{
     state={
@@ -33,8 +27,14 @@ export default class Home extends Component{
         total:0,
         loading:false,
         isShow:false,
-        searchName:'',  //搜素关键字
-        searchType:''    //搜素类型
+        devicecategory:'',  //搜素关键字
+        devicemodel:'',
+        installlocation:'',
+        runos:'',
+        name:'',
+        ip:'',
+        mac:'',
+        status:''
     }
     
     initColums=()=>{
@@ -113,11 +113,11 @@ export default class Home extends Component{
             title:'操作',
             fixed: 'right',
             width: 100,
-            render:(processedrecord)=>(
+            render:(deviceinfo)=>(
             <span>
-                <PreviewBtn onClick={()=>this.props.history.push('/processedrecord/detail',{processedrecord})}/>&nbsp;&nbsp;&nbsp;
-                <EditBtn onClick={()=>this.props.history.push('/processedrecord/addorupdate',processedrecord)}/>&nbsp;&nbsp;&nbsp;
-                <DeleteBtn onClick={()=>this.deleteDeviceInfo(processedrecord)}/>
+                <PreviewBtn onClick={()=>this.props.history.push('/deviceinfo/detail',{deviceinfo})}/>&nbsp;&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.props.history.push('/deviceinfo/addorupdate',deviceinfo)}/>&nbsp;&nbsp;&nbsp;
+                <DeleteBtn onClick={()=>this.deleteDeviceInfo(deviceinfo)}/>
             </span>
             )
         }
@@ -127,18 +127,28 @@ export default class Home extends Component{
     getDeviceInfos= async(pageNum)=>{
         /*this.pageNum=pageNum
         this.setState({loading:true})
-        const{searchName,searchType}=this.state
-        let result
-        if(searchName){
-            result=reqDeviceInfos({
-                pageNum,
-                pageSize:PAGE_SIZE,
-                searchName,
-                searchType
-                })
-        }else{
-            result=await reqDeviceInfos(pageNum,PAGE_SIZE)
-        }
+        const{
+            devicecategory, 
+            devicemodel,
+            installlocation,
+            runos,
+            name,
+            ip,
+            mac,
+            status
+        }=this.state
+        let result=reqDeviceInfos({
+            pageNum,
+            pageSize:PAGE_SIZE,
+            devicecategory, 
+            devicemodel,
+            installlocation,
+            runos,
+            name,
+            ip,
+            mac,
+            status
+        })
         
         this.setState({loading:false})
         if(result.status===0){
@@ -152,17 +162,15 @@ export default class Home extends Component{
     }
 
     showAdd=()=>{
-        this.processedrecord=null
+        this.deviceinfo=null
         this.setState({isShow:true})
     }
     
-    showUpdate=(processedrecord)=>{
-        this.processedrecord=processedrecord
+    showUpdate=(deviceinfo)=>{
+        this.deviceinfo=deviceinfo
         this.setState({isShow:true})
     }
-    Searchdevs=()=>{
-        console.log(this.form.getFieldsValue())
-    }
+
     resetForm=()=>{
         this.form.resetFields()
     }
@@ -170,37 +178,55 @@ export default class Home extends Component{
         this.form.validateFields(async(err,values)=>{
             if(!err){
                 this.setState({isShow:false})
-                const processedrecord=values
+                const deviceinfo=values
                 this.form.resetFields()
-                if(this.processedrecord){
-                    processedrecord.id=this.processedrecord._id
+                if(this.deviceinfo){
+                    deviceinfo.id=this.deviceinfo._id
                 }
-                /*const result=await reqAddorUpdateUser(processedrecord)
+                /*const result=await reqAddorUpdateUser(deviceinfo)
                 if(result.status===9){
-                    message.success('${this.processedrecord? '新增':'编辑'}成功')
+                    message.success('${this.deviceinfo? '新增':'编辑'}成功')
                     this.getDeviceInfos()
                 }else{
                     message.error(result.msg)
                 }*/
-                console.log(processedrecord)
+                console.log(deviceinfo)
             }
         })
     }
     
-    deleteDeviceInfo=(processedrecord)=>{
+    deleteDeviceInfo=(deviceinfo)=>{
         Modal.confirm({
-            title:'确认删除'+processedrecord.name+'吗？',
+            title:'确认删除'+deviceinfo.name+'吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteDeviceInfo(processedrecord._id)
+                /*const result=await reqdeleteDeviceInfo(deviceinfo._id)
                 if(result.status===0){
                     message.success('删除成功！')
                     this.getDeviceInfos()
                 }*/
-                message.error(processedrecord.name)
+                message.error(deviceinfo.name)
             }
         })
     }
-    
+    setSearchItem=(searchItem)=>{
+        this.setState({
+            devicecategory:searchItem.devicecategory,
+            devicemodel:searchItem.devicemodel,
+            installlocation:searchItem.installlocation,
+            runos:searchItem.runos,
+            name:searchItem.name,
+            ip:searchItem.ip,
+            mac:searchItem.mac,
+            status:searchItem.status
+        },()=>{  //解决setState延迟
+            this.consoleitem(this.state)
+            //this.getDeviceInfos()
+        })
+        console.log(searchItem.devicecategory)
+    }
+    consoleitem=(item)=>{
+        console.log(item.devicecategory)
+    }
     componentWillMount(){
         this.initColums()
     }
@@ -209,15 +235,15 @@ export default class Home extends Component{
     }
     
     render(){
-        const {deviceinfos,total,loading,searchName,searchType,expand}=this.state
-        const title=<Button style={{marginBottom:10}} type='primary' onClick={()=>this.props.history.push('/processedrecord/addorupdate')}><Icon type='unordered-list'/>新增</Button>
-        const onFinish = values => {
-            console.log('Received values of form: ', values);
-        }
+        const {deviceinfos,total,loading}=this.state
+        const title=<Button type='primary' onClick={()=>this.props.history.push('/processedrecord/addorupdate')}><Icon type='unordered-list'/>新增</Button>
         return(
-            <div>
-            <Search setForm={(form)=>{this.form=form}}/>
-            <Card title={title} Searchdevs={this.Searchdevs}>
+            <Card title={title} >
+                <Collapse>
+                <Panel header="搜索" >
+                <SearchForm setForm={(form)=>{this.form=form}} setSearchItem={this.setSearchItem}/>
+                </Panel>
+                </Collapse>
                 <Table
                 bordered
                 rowKey='_id'
@@ -233,7 +259,6 @@ export default class Home extends Component{
                     }}
                 />
             </Card>
-            </div>
         )
     }
 }

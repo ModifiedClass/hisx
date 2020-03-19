@@ -253,8 +253,22 @@ class DeviceInfoView(APIView):
         searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
+        if request.GET.get("devicecategory"):
+            searchdict['devicecategory']=request.GET.get("devicecategory")
+        if request.GET.get("devicemodel"):
+            searchdict['devicemodel']=request.GET.get("devicemodel")
+        if request.GET.get("installlocation"):
+            searchdict['installlocation']=request.GET.get("installlocation")
+        if request.GET.get("runos"):
+            searchdict['runos']=request.GET.get("runos")
         if request.GET.get("name"):
             searchdict['name']=request.GET.get("name")
+        if request.GET.get("ip"):
+            searchdict['ip']=request.GET.get("ip")
+        if request.GET.get("mac"):
+            searchdict['mac']=request.GET.get("mac")
+        if request.GET.get("status"):
+            searchdict['status']=request.GET.get("status")
         ret={'status':0,'msg':None,'data':None}
         try:
             obj=DeviceInfo.objects.filter(**searchdict).order_by('name')

@@ -7,7 +7,7 @@ const menuList=[
 },
 {
     title:'帐户管理',
-    key:'',
+    key:'/account',
     icon:'contacts',
     children:[
     {
@@ -34,7 +34,7 @@ const menuList=[
 },
 {
     title:'信息设备',
-    key:'',
+    key:'informationdevice',
     icon:'laptop',
     children:[
     {
@@ -66,7 +66,7 @@ const menuList=[
 },
 {
     title:'运维记录',
-    key:'',
+    key:'/oapm',
     icon:'ordered-list',
     children:[
     {

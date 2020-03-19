@@ -15,83 +15,140 @@ import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
 const Option=Select.Option
 const Item=Form.Item
 
-class Search extends PureComponent{
+class SearchForm extends PureComponent{
     static propTypes={
-        setForm:PropTypes.func.isRequired,
+        setForm:PropTypes.func.isRequired
     }
-    getSearchItem=()=>{
-        return this.props.form.getFieldsValue()
+    onReset=()=>{
+        this.props.form.resetFields()
+    }
+    getFormItem=()=>{
+        this.props.form.validateFields((err,values)=>{
+            this.props.setSearchItem(values)
+        })
+        
+    }
+    componentWillMount(){
+        this.props.setForm(this.props.form)
     }
     render(){
-        
+        const {getFieldDecorator}=this.props.form
         return(
             <Form className="ant-advanced-search-form" >
                 <Row gutter={24}>
                     <Col span={8}>
                         <Item label="类别">
+                        {
+                        getFieldDecorator('devicecategory',{
+                        initialValue:''})
+                        (
                             <Select>
                                 {
                                     deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
+                            )
+                        }
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item label="型号">
+                        {
+                        getFieldDecorator('devicemodel',{
+                        initialValue:''})
+                        (
                             <Select>
                                 {
                                     deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
+                            )
+                        }
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item label="位置">
+                        {
+                        getFieldDecorator('installlocation',{
+                        initialValue:''})
+                        (
                             <Select>
                                 {
                                     deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
+                            )
+                        }
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item label="系统">
+                        {
+                        getFieldDecorator('runos',{
+                        initialValue:''})
+                        (
                             <Select>
                                 {
                                     deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
+                            )
+                        }
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item label='名称' >
-                            <Input placeholder='请输入类别名称!'/>
+                        {
+                        getFieldDecorator('name',{
+                        initialValue:''})
+                            (
+                            <Input />
+                            )
+                        }
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item label={'ip'} >
-                            <Input placeholder="placeholder" />
+                        {
+                        getFieldDecorator('ip',{
+                        initialValue:''})
+                        (
+                            <Input/>
+                            )
+                        }
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item label={'mac'} >
-                            <Input placeholder="placeholder" />
+                        {
+                        getFieldDecorator('mac',{
+                        initialValue:''})
+                        (
+                            <Input/>
+                            )
+                        }
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item label="状态">
+                        {
+                        getFieldDecorator('status',{
+                        initialValue:''})
+                        (
                             <Select>
                                 {
                                     deviceStatus.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
                                 }
                             </Select>
+                            )
+                        }
                         </Item>
                     </Col>
                     <Col span={8}>
                         <Item style={{float:'right'}}>
                             <span>
-                                <Button style={{marginBottom:10}} type='primary' onClick={this.props.Searchdevs}>搜索<Icon type='search'/></Button>
-                                <Button style={{ marginLeft: 8 }} type="button" onClick={()=>{this.form.resetFields()}}><Icon type='reload'/>重置</Button>
+                                <Button style={{marginBottom:10}} type='primary' onClick={this.getFormItem}>搜索<Icon type='search'/></Button>
+                                <Button style={{ marginLeft: 8 }} type="button" onClick={this.onReset}><Icon type='reload'/>重置</Button>
                             </span>
                         </Item>
                     </Col>
@@ -100,4 +157,4 @@ class Search extends PureComponent{
         )
     }
 }
-export default Form.create()(Search)
+export default Form.create()(SearchForm)

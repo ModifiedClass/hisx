@@ -18,9 +18,9 @@ export default class ProcessedRecordDetail extends Component{
          const pstate=result.data.name
          this.setState({pstate})*/
          
-        const stateDisplay=problem_state==='0' ? (
+        const stateDisplay=problem_state==='1' ? (
             <Badge color={BASE_RED} text="待处理" />
-        ) :(problem_state==='1' ? (
+        ) :(problem_state==='2' ? (
             <Badge color={BASE_GREEN} text="已处理" />
         ):(
             <Badge color={BASE_BLUE} text="需跟进" />
