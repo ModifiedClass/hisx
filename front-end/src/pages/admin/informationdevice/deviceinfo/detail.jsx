@@ -66,17 +66,17 @@ export default class DeviceInfoDetail extends Component{
         return(
             <Card title={title}>
               <Descriptions bordered>
-                <Item label='类别：' span={3}>{devicecategoryDisplay}</Item>
-                <Item label='型号：' span={3}>{devicemodelDisplay}</Item>
-                <Item label='序列号：' span={3}>{sn}</Item>
-                <Item label='上级设备：' span={3}>{parentDisplay}</Item>
+                <Item label='类别：' span={1}>{devicecategoryDisplay}</Item>
+                <Item label='型号：' span={2}>{devicemodelDisplay}</Item>
+                <Item label='上级设备：' span={1}>{parentDisplay}</Item>
+                <Item label='序列号：' span={2}>{sn}</Item>
+                <Item label='设备名称：' span={1}>{name}</Item>
+                <Item label='运行系统：' span={2}>{runosDisplay}</Item>
                 <Item label='安装地点：' span={3}>{installlocationDisplay}</Item>
-                <Item label='运行系统：' span={3}>{runosDisplay}</Item>
-                <Item label='设备名称：' span={3}>{name}</Item>
                 <Item label='设备ip：' span={3}>{ip}</Item>
                 <Item label='设备mac：' span={3}>{mac}</Item>
-                <Item label='设备状态：' span={3}>{stateDisplay}</Item>
-                <Item label='安装时间：' span={3}>{create_time}</Item>
+                <Item label='设备状态：' span={1}>{stateDisplay}</Item>
+                <Item label='安装时间：' span={2}>{create_time}</Item>
               </Descriptions>
             </Card>  
         )
