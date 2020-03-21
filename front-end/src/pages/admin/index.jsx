@@ -17,6 +17,9 @@ import User from './account/user'
 import Developing from './developing'
 import ProblemCategory from './oapm/problemcategory'
 import ProcessedRecord from './oapm/processedrecord'
+import ApplicationSoftWare from './oapm/applicationsoftWare'
+import PrinterRepair from './oapm/printerrepair'
+import Cartriday from './oapm/cartriday'
 import TimeLine from './timeline'
 import DeviceCategory from './informationdevice/devicecategory'
 import DeviceModel from './informationdevice/devicemodel'
@@ -52,6 +55,9 @@ class Admin extends Component{
                                 <Route path='/user' component={User}/>
                                 <Route path='/problemcategory' component={ProblemCategory}/>
                                 <Route path='/processedrecord' component={ProcessedRecord}/>
+                                <Route path='/applicationsoftWare' component={ApplicationSoftWare}/>
+                                <Route path='/printerrepair' component={PrinterRepair}/>
+                                <Route path='/cartriday' component={Cartriday}/>
                                 <Route path='/timeline' component={TimeLine}/>
                                 <Route path='/devicecategory' component={DeviceCategory}/>
                                 <Route path='/devicemodel' component={DeviceModel}/>

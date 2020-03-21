@@ -2,13 +2,10 @@ import React,{Component} from 'react';
 
 import {Card,Form,Input,Select,Cascader,Button,Icon,DatePicker} from 'antd'
 import BackBtn from '../../../../components/backbtn'
-import PicsWall from './picswall'
 
 import reqCascaderDepartments from '../../../../api/json/cascaderdepartment.js'
-import reqUsers from '../../../../api/json/user.js'
-import reqProblemCategorys from '../../../../api/json/problemcategory.js'
 import {shortDate} from '../../../../utils/dateUtils'
-import {problemState,processingMode} from '../../../../config/selectConfig'
+import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
@@ -19,52 +16,62 @@ const {TextArea}=Input
 const thisDate=shortDate(Date.now())
 
 class AddOrUpdate extends Component{
+
     state={
-        options:[],
+        devicecategorys:[],
+        devicemodels:[],
+        parents:[],
+        installlocations:[]
     }
-    
-    constructor(props){
-        super(props)
-        this.pw=React.createRef()
-    }
-    getDepartments=async (parentId)=>{
-        //const result=await reqDepartments(parentId)
+
+    getDeviceCategorys=async ()=>{
         const result=reqCascaderDepartments
-        if(result.status==='0'){
-            const departments=result.data
-            this.setState({options:departments})            
+        if(result.status==='1'){
+            this.setState({devicecategorys:result.data})            
         }
-        
+    }
+    getDeviceModels=async (dcid)=>{
+        const result=reqCascaderDepartments
+        if(result.status==='1'){
+            this.setState({devicemodels:result.data})            
+        } 
+    }
+    getParents=async ()=>{
+        const result=reqCascaderDepartments
+        if(result.status==='1'){
+            this.setState({parents:result.data})            
+        }  
+    }
+    getInstallLocations=async ()=>{
+        const result=reqCascaderDepartments
+        if(result.status==='1'){
+            this.setState({installlocations:result.data})            
+        }
     }
     
     submit=()=>{
         this.props.form.validateFields((error,values)=>{
             if(!error){
-                const imgs=this.pw.current.getImgs()
                 console.log(values)
-                console.log(imgs)
             }
         })
     }
     
     componentDidMount(){
-        this.getDepartments('0')
+        this.getDeviceCategorys()
+        this.getDeviceModels('0')
+        this.getParents()
+        this.getInstallLocations()
     }
     
     componentWillMount(){
-        const processedrecord=this.props.location.state
-        this.isUpdate=!!processedrecord
+        const deviceinfo=this.props.location.state
+        this.isUpdate=!!deviceinfo
         //{}空对象 避免undifine
-        this.processedrecord=processedrecord ||{}
+        this.deviceinfo=deviceinfo ||{}
     }
     render(){
-        const {isUpdate,processedrecord,imgs}=this
-        //级联id数组
-        /*const {departmentId}=processedrecord        
-        const departmentIds=[]
-        if(isUpdate){
-            departmentIds.push()
-        }*/
+        const {isUpdate,deviceinfo}=this
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:2},
@@ -74,145 +81,121 @@ class AddOrUpdate extends Component{
         const title=(
             <span>
                 <BackBtn onClick={()=>this.props.history.goBack()}/>
-                <span>{isUpdate ? '更新记录':'新增记录'}</span>
+                <span>{isUpdate ? '更新设备':'新增设备'}</span>
             </span>
         )
         return(
             <Card title={title}>
                 <Form {...formItemLayout}>
-                    <Item label="记录时间">
-                    {getFieldDecorator('create_time',{
-                        initialValue:isUpdate ? moment(processedrecord.create_time,'YYYY-MM-DD') : moment(thisDate,'YYYY-MM-DD'),
+                    <Item label="设备类别">
+                    {getFieldDecorator('devicecategory',{
+                        initialValue:isUpdate ? deviceinfo.devicecategory :'1',
                         rules:[
                         {
-                            required:true,message:'记录时间不能为空!'
+                            required:true,message:'设备类别不能为空!'
+                        }
+                        ]
+                    })(
+                        <Select onChange={value=>this.getDeviceModels(value)}>
+                        {
+                            this.state.devicecategorys.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                        }
+                        </Select>
+                    )}
+                    </Item>
+                    <Item label="设备型号">
+                    {getFieldDecorator('devicemodel',{
+                        initialValue:isUpdate ? deviceinfo.devicemodel :'1',
+                    })(
+                        <Select>
+                        {
+                            this.state.devicemodels.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                        }
+                        </Select>
+                    )}
+                    </Item>
+                    <Item label="序列号">
+                    {getFieldDecorator('sn',{
+                        initialValue:isUpdate ? deviceinfo.sn : '',
+                    })(
+                        <Input placeholder='序列号' />
+                    )}
+                    </Item>
+                    <Item label="设备名称">
+                    {getFieldDecorator('name',{
+                        initialValue:isUpdate ? deviceinfo.name : '',
+                    })(
+                        <Input placeholder='设备名称' />
+                    )}
+                    </Item>
+                    <Item label="运行系统">
+                    {getFieldDecorator('runos',{
+                        initialValue:isUpdate ? deviceinfo.runos : '2',
+                    })(
+                        <Select>
+                        {
+                            deviceRunSystem.map(item=><Option key={item.value} value={item.value}>{item.label}</Option>)
+                        }
+                        </Select>
+                    )}
+                    </Item>
+                    <Item label="安装地点">
+                    {getFieldDecorator('installlocation',{
+                        initialValue:isUpdate ? deviceinfo.installlocation : '1',
+                        rules:[
+                        {
+                            required:true,message:'安装地点不能为空!'
+                        }
+                        ]
+                    })(
+                        <Select>
+                        {
+                            this.state.installlocations.map(item=><Option key={item._id} value={item._id}>{item.name}</Option>)
+                        }
+                        </Select>
+                    )}
+                    </Item>
+                    <Item label="设备IP">
+                    {getFieldDecorator('ip',{
+                        initialValue:isUpdate ? deviceinfo.ip : '',
+                    })(
+                        <Input placeholder='多个ip用/隔开' />
+                    )}
+                    </Item>
+                    <Item label="设备MAC">
+                    {getFieldDecorator('mac',{
+                        initialValue:isUpdate ? deviceinfo.mac : '',
+                    })(
+                        <Input placeholder='多个mac用/隔开' />
+                    )}
+                    </Item>
+                    <Item label="安装时间">
+                    {getFieldDecorator('create_time',{
+                        initialValue:isUpdate ? moment(deviceinfo.create_time,'YYYY-MM-DD') : moment(thisDate,'YYYY-MM-DD'),
+                        rules:[
+                        {
+                            required:true,message:'安装时间不能为空!'
                         }
                         ]
                     })(
                         <DatePicker/>
                     )}
                     </Item>
-                    <Item label="问题状态">
-                    {getFieldDecorator('problem_state',{
-                        initialValue:isUpdate ? processedrecord.problem_state :'1',
+                    <Item label="设备状态">
+                    {getFieldDecorator('status',{
+                        initialValue:isUpdate ? deviceinfo.status : '1',
                         rules:[
                         {
-                            required:true,message:'问题状态不能为空!'
+                            required:true,message:'设备状态不能为空!'
                         }
                         ]
                     })(
                         <Select>
                         {
-                            problemState.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                            deviceStatus.map(item=><Option key={item.value} value={item.value}>{item.label}</Option>)
                         }
                         </Select>
                     )}
-                    </Item>
-                    <Item label="发生部门">
-                    {getFieldDecorator('department',{
-                        initialValue:['2','21','211'],
-                        rules:[
-                        {
-                            required:true,message:'发生部门不能为空!'
-                        }
-                        ]
-                    })(
-                        <Cascader 
-                        options={this.state.options}
-                        placeholder="请选择部门!"
-                        />
-                    )}
-                    </Item>
-                    <Item label="发现人">
-                    {getFieldDecorator('discoverer',{
-                        initialValue:isUpdate ? processedrecord.discoverer : '2',
-                        rules:[
-                        {
-                            required:true,message:'发现人不能为空!'
-                        }
-                        ]
-                    })(
-                        <Select>
-                        {
-                            reqUsers.data.users.map(ru=><Option key={ru._id} value={ru._id}>{ru.username}</Option>)
-                        }
-                        </Select>
-                    )}
-                    </Item>
-                    <Item label="问题类别">
-                    {getFieldDecorator('problem_category',{
-                        initialValue:isUpdate ? processedrecord.problem_category : '1',
-                        rules:[
-                        {
-                            required:true,message:'问题类别不能为空!'
-                        }
-                        ]
-                    })(
-                        <Select>
-                        {
-                            reqProblemCategorys.data.map(pc=><Option key={pc._id} value={pc._id}>{pc.name}</Option>)
-                        }
-                        </Select>
-                    )}
-                    </Item>
-                    <Item label="处理方式">
-                    {getFieldDecorator('processing_mode',{
-                        initialValue:isUpdate ? processedrecord.processing_mode : '2',
-                        rules:[
-                        {
-                            required:true,message:'处理方式不能为空!'
-                        }
-                        ]
-                    })(
-                        <Select>
-                        {
-                            processingMode.map(pm=><Option key={pm.value} value={pm.value}>{pm.label}</Option>)
-                        }
-                        </Select>
-                    )}
-                    </Item>
-                    <Item label="处理人">
-                    {getFieldDecorator('handler',{
-                        initialValue:isUpdate ? processedrecord.handler : '2',
-                        rules:[
-                        {
-                            required:true,message:'处理人不能为空!'
-                        }
-                        ]
-                    })(
-                        <Select>
-                        {
-                            reqUsers.data.users.map(ru=><Option key={ru._id} value={ru._id}>{ru.username}</Option>)
-                        }
-                        </Select>
-                    )}
-                    </Item>
-                    <Item label="问题情况">
-                    {getFieldDecorator('situation',{
-                        initialValue:isUpdate ? processedrecord.situation : '病人预结或结账提示有项目未对码',
-                        rules:[
-                        {
-                            required:true,message:'问题情况不能为空!'
-                        }
-                        ]
-                    })(
-                        <TextArea placeholder='' autoSize={{minRows:2,maxRows:6}}/>
-                    )}
-                    </Item>
-                    <Item label="解决办法">
-                    {getFieldDecorator('solution',{
-                        initialValue:isUpdate ? processedrecord.solution : '医保管理-医保项目管理-对码',
-                        rules:[
-                        {
-                            required:true,message:'解决办法不能为空!'
-                        }
-                        ]
-                    })(
-                        <TextArea placeholder='' autoSize={{minRows:2,maxRows:6}}/>
-                    )}
-                    </Item>
-                    <Item label="相关图片">
-                        <PicsWall ref={this.pw} imgs={imgs}/>
                     </Item>
                     <Item>
                         <Button type='primary'><Icon type="save" onClick={this.submit}/>提交</Button>&nbsp;&nbsp;

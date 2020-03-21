@@ -1,8 +1,6 @@
 import React,{Component} from 'react';
 
-import {Card,Icon,Descriptions, Badge,Empty} from 'antd'
-import {BASE_GREEN,BASE_RED,BASE_BLUE} from '../../../../utils/colors'
-import {BASE_IMG_URL} from '../../../../utils/constants'
+import {Card,Descriptions} from 'antd'
 import BackBtn from '../../../../components/backbtn'
 import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
 
@@ -17,7 +15,36 @@ export default class DeviceInfoDetail extends Component{
         installlocationDisplay:'',
         runosDisplay:'',
     }
-     
+    initStateDisplay=para=>{
+        deviceStatus.map(item=>{
+            if(String(item.value)===String(para)){
+                this.setState({stateDisplay:item.label})
+            }
+        })
+    }
+    initDevicecategoryDisplay=para=>{
+        /*const result=await rDeviceCategorys(para)
+        this.setState({devicecategoryDisplay:result[0].data.name})*/
+    }
+    initDevicemodelDisplay=para=>{
+        /*const result=await rDevicemodels(para)
+        this.setState({devicemodelDisplay:result[0].data.name})*/
+    }
+    initParentDisplay=para=>{
+        /*const result=await rDeviceInfos(para)
+        this.setState({parentDisplay:result[0].data.name})*/
+    }
+    initInstalllocationDisplay=para=>{
+        /*const result=await rInstalllocations(para)
+        this.setState({installlocationDisplay:result[0].data.name})*/
+    }
+    initRunosDisplay=para=>{
+        deviceRunSystem.map(item=>{
+            if(String(item.value)===String(para)){
+                this.setState({runosDisplay:item.label})
+            }
+        })
+    }
     componentDidMount(){
         const {
             devicecategory,
@@ -25,20 +52,10 @@ export default class DeviceInfoDetail extends Component{
             parent,
             installlocation,
             runos,
-            status
+            status,
         }=this.props.location.state.deviceinfo
-         /*const result=await reqState(pstateId)
-         const pstate=result.data.name
-         this.setState({pstate})*/
-           
-        const stateDisplay=status==='3' ? (
-            <Badge color={BASE_RED} text="停用" />
-        ) :(status==='2' ? (
-            <Badge color={BASE_GREEN} text="维修" />
-        ):(
-            <Badge color={BASE_BLUE} text="正常" />
-        ))
-        this.setState({stateDisplay})
+        this.initStateDisplay(status)
+        this.initRunosDisplay(runos)      
      }
     render(){
         const { 

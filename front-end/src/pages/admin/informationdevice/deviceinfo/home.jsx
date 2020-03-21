@@ -84,7 +84,7 @@ export default class Home extends Component{
             width: 80,
             dataIndex:'status',
             render:(status)=>{
-                if(status==='0'){
+                if(status==='2'){
                     return (
                         <span>
                             <Tag color={BASE_RED}>维修</Tag>
@@ -96,19 +96,23 @@ export default class Home extends Component{
                             <Tag color={BASE_GREEN}>正常</Tag>
                         </span>
                     )
-                }else{
+                }else if(status==='3'){
                     return (
                         <span>
                             <Tag color={BASE_BLUE}>停用</Tag>
                         </span>
                     )
-                }   
+                } else {
+                    return (
+                        <span></span>
+                    )
+                }  
             }
         },{
             title:'安装时间',
             dataIndex:'installdate',
             width: 150,
-            render:(create_time)=>formateDate(create_time)
+            render:(installdate)=>formateDate(installdate)
         },{
             title:'操作',
             fixed: 'right',
@@ -236,7 +240,7 @@ export default class Home extends Component{
     
     render(){
         const {deviceinfos,total,loading}=this.state
-        const title=<Button type='primary' onClick={()=>this.props.history.push('/processedrecord/addorupdate')}><Icon type='unordered-list'/>新增</Button>
+        const title=<Button type='primary' onClick={()=>this.props.history.push('/deviceinfo/addorupdate')}><Icon type='unordered-list'/>新增</Button>
         return(
             <Card title={title} >
                 <Collapse>

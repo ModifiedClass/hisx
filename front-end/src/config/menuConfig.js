@@ -71,7 +71,7 @@ const menuList=[
     children:[
     {
         title:'信息化模块',
-        key:'/informationizeapp',
+        key:'/applicationsoftWare',
         icon:'appstore'
     },{
         title:'问题类别',
