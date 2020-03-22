@@ -1,0 +1,105 @@
+﻿进入要创建项目的目录，比如我的
+#cd /usr/local/www/
+#source env1/bin/activate.csh
+
+(ENV1)# pip3 install django
+(ENV1)# pip3 install djangorestframework
+(ENV1)# pip3 install django-filter
+(ENV1)# pip3 install Markdown
+(ENV1)# pip3 install Pillow
+
+查看django目录
+(ENV1)# pip3 show django
+/root/.virtualenvs/env1/lib/python3.7/site-packages/
+
+生成项目
+(ENV1)# django-admin startproject 项目名称
+
+创建app
+(ENV1)# python3 manage.py startapp app名称
+如果此时报错，提示oduleNotFoundError: No module named '_sqlite3'
+https://pkgs.org/download/sqlite找到适合的版本连接下载安装sqlite3
+# pkg install py36-sqlite3
+安装成功后就可以创建Django app了，Django开发环境搭建成功！
+
+修改settings.py
+
+加入
+sys.path.insert(0,os.path.join(BASE_DIR,'apps')) 
+新创建app可以(ENV1)# python3 manage.py startapp app名称 apps 
+
+把生成的app名称加入INSTALLED_APPS序列中
+NSTALLED_APPS=[
+    ...,
+    'rest_framework',
+    'rest_framework.authtoken',
+    app名称,
+    ...,
+]
+
+MIDDLEWARE 中注释
+    #'django.contrib.sessions.middleware.SessionMiddleware',
+    #'django.contrib.auth.middleware.AuthenticationMiddleware',
+    #'django.contrib.messages.middleware.MessageMiddleware',
+
+域名访问权限
+ALLOWED_HOSTS=[]修改为ALLOWED_HOSTS=['*']
+
+设置模板路径
+TEMPLATES=[
+    ...
+    'DIRS':[os.path.join(BASE_DIR,'templates')],
+    ...
+]
+
+设置时区和中文
+LANGUAGE_CODE='zh-hans'
+TIME_ZONE='Asia/Shanghai'
+
+设置静态文件
+STATIC_URL='static'
+STATICFILES_DIR=[
+    os.path.join(BASE_DIR,'static'),
+]
+STATIC_ROOT=os.path.join(BASE_DIR,'static')
+
+数据库连接
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'name',
+        'USER': 'root',
+        'PASSWORD': 'm-7-13',
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
+
+创建数据模型
+
+编辑models.py
+
+编辑views.py
+
+编辑admin.py
+
+编辑urls.py
+
+数据迁移 、调试
+
+(ENV1)# python3 manage.py makemigrations
+(ENV1)# python3 manage.py migrate
+
+启用admin创建管理员
+(ENV1)# python3 manage.py createsuperuser
+
+启动调试
+(ENV1)# python3 manage.py runserver ip:port
+
+安装cx-Oracle
+pip install cx-Oracle
+
+删除App
+manage.py migrate your_app_name zero
+删除整个App文件夹
+在settings.py的Installed Apps中移除该app

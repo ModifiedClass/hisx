@@ -1,0 +1,43 @@
+﻿开始直接使用pkg install mysql8安装，系统提示找不到mysql8，后来发现是名字不对，于是进入ports目录查看mysql各版本的名称。
+
+#cd /usr/ports/databases/
+#ls 
+
+找到mysql的名称原来是mysql80-server，于是
+#pkg install mysql80-server
+如果提示错误：
+
+===> Creating groups.
+Using existing group 'mysql'.
+===> Creating users
+Creating user 'mysql' with uid '88'.
+pw: user 'mysql' disappeared during update
+install: unknown user mysql
+pkg: PRE-INSTALL script failed
+
+执行
+# /usr/sbin/pwd_mkdb -p /etc/master.passwd
+再重新执行安装
+#pkg install mysql80-server
+等待。。。
+安装成功后，查看mysql版本
+#mysql -V
+显示mysql  Ver 8.0.16 for FreeBSD12.0 on amd64 (Source distribution)
+安装成功。
+
+开机启动mysql
+# ee /etc/rc.conf
+最后一行加入
+mysql_enable="YES" 
+保存
+#reboot
+
+设置mysql密码
+/usr/local/bin/mysqladmin -u root password '密码'
+
+设置编码
+#vi /usr/local/etc/mysql/my.cnf
+在[mysqld]下加入：
+character_set_server=utf8
+init_connect='SET NAMES utf8'
+:wq

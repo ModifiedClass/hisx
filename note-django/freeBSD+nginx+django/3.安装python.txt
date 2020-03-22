@@ -1,0 +1,24 @@
+﻿# pkg install python37 -y
+
+或者
+
+#cd /usr/ports/lang/python37/ && make install clean
+
+
+修改默认python版本
+
+#cd /usr/local/bin
+#mv python python.old
+#ln -s python3.7 python
+安装完成后
+#python 
+报错，提示Shared object "libdl.so.1" not found
+执行
+#cp /lib/libc.so.7  /lib/libdl.so.1
+
+安装pip3
+#python -m ensurepip
+
+升级setuptools和pip
+#pip3 install --upgrade setuptools
+#python -m pip install --upgrade pip

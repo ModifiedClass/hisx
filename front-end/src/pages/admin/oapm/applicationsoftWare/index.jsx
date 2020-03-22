@@ -5,13 +5,13 @@ import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
-//import {reqProblemCategorys} from '../../../../../api'
-import reqProblemCategorys from '../../../../api/json/problemcategory.js'
+import {appFrameWork,dataBase} from '../../../../config/selectConfig'
+import reqApplicationSoftWares from '../../../../api/json/applicationsoftware.js'
 import AddForm from './addform'
 
 export default class ApplicationSoftWare extends Component{
     state={
-        problemcategorys:[],
+        applicationsoftwares:[],
         loading:false,
         isShow:false,
     }
@@ -20,82 +20,115 @@ export default class ApplicationSoftWare extends Component{
         {
             title:'名称',
             dataIndex:'name',
-        },
-        {
+        },{
+            title:'架构',
+            dataIndex:'framework',
+            render:(framework)=>this.getFramework(framework),
+        },{
+            title:'数据库',
+            dataIndex:'database',
+            render:(database)=>this.getDatabase(database),
+        },{
+            title:'安装设备',
+            dataIndex:'device_id',
+            render:(device_id)=>this.getDeviceinfo(device_id),
+        },{
+            title:'部署',
+            dataIndex:'deployment',
+        },{
             title:'创建时间',
             dataIndex:'create_time',
             render:(create_time)=>formateDate(create_time)
-        },
-        {
+        },{
             title:'操作',
             width:300,
-            render:(problemcategory)=>(
+            render:(applicationsoftware)=>(
             <span>
-                <EditBtn onClick={()=>this.showUpdate(problemcategory)} />&nbsp;&nbsp;&nbsp;
-                <DeleteBtn onClick={()=>this.deleteProblemCategory(problemcategory)} />
+                <EditBtn onClick={()=>this.showUpdate(applicationsoftware)} />&nbsp;&nbsp;&nbsp;
+                <DeleteBtn onClick={()=>this.deleteApplicationSoftWare(applicationsoftware)} />
             </span>
             )
         }
         ]
     }
     
-    getProblemCategorys= async()=>{
+    getFramework=framework=>{
+        appFrameWork.map(item)=>{
+            if(item.value===framework){
+                return item.label
+            }
+        }
+    }
+    getDatabase=database=>{
+        dataBase.map(item)=>{
+            if(item.value===database){
+                return item.label
+            }
+        }
+    }
+    getDeviceinfo=async(device_id)=>{
+        const result=await rDeviceCategorys(device_id)
+        if(result.status===1){
+            return result[0].data.name
+        }
+    }
+    getApplicationSoftWares= async()=>{
         /*this.setState({loading:true})
         const {parentId}=this.state
-        const result=await reqProblemCategorys('0')
+        const result=await reqApplicationSoftWares('0')
         this.setState({loading:false})
         if(result.status===0){
-            const problemcategorys=result.data
-            this.setState(problemcategorys)
+            const applicationsoftwares=result.data
+            this.setState(applicationsoftwares)
         }else{
             message.error("获取数据失败!")
         }*/
-        const problemcategorys=reqProblemCategorys.data
-        this.setState({problemcategorys})
+        const applicationsoftwares=reqApplicationSoftWares.data
+        this.setState({applicationsoftwares})
     }
 
     showAdd=()=>{
-        this.problemcategory=null
+        this.applicationsoftware=null
         this.setState({isShow:true})
     }
     
-    showUpdate=(problemcategory)=>{
-        this.problemcategory=problemcategory
+    showUpdate=(applicationsoftware)=>{
+        this.applicationsoftware=applicationsoftware
         this.setState({isShow:true})
     }
     
-    addOrUpdateProblemCategory=()=>{
+    addOrUpdateApplicationSoftWare=()=>{
         this.form.validateFields(async(err,values)=>{
             if(!err){
                 this.setState({isShow:false})
-                const problemcategory=values
+                const applicationsoftware=values
                 this.form.resetFields()
-                if(this.problemcategory){
-                    problemcategory.id=this.problemcategory._id
+                if(this.applicationsoftware){
+                    applicationsoftware.id=this.applicationsoftware._id
                 }
-                /*const result=await reqAddorUpdateUser(problemcategory)
+                /*const result=await reqAddorUpdateUser(applicationsoftware)
                 if(result.status===9){
-                    message.success('${this.problemcategory? '新增':'编辑'}成功')
-                    this.getProblemCategorys()
+                    message.success('${this.applicationsoftware? '新增':'编辑'}成功')
+                    this.getApplicationSoftWares()
                 }else{
                     message.error(result.msg)
                 }*/
-                console.log(problemcategory)    
+                console.log(applicationsoftware)    
             }
         })
         
     }
     
-    deleteProblemCategory=(problemcategory)=>{
+    deleteApplicationSoftWare=(applicationsoftware)=>{
         Modal.confirm({
-            title:'确认删除'+problemcategory.name+'吗？',
+            title:'确认删除'+applicationsoftware.name+'吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteProblemCategory(problemcategory._id)
+                /*const result=await reqdeleteApplicationSoftWare(applicationsoftware._id)
                 if(result.status===0){
                     message.success('删除成功！')
-                    this.getProblemCategorys()
+                    this.getApplicationSoftWares()
                 }*/
-                message.error(problemcategory.name)
+                message.error(applicationsoftware.name)
             }
         })
     }
@@ -104,11 +137,11 @@ export default class ApplicationSoftWare extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getProblemCategorys()
+        this.getApplicationSoftWares()
     }
     render(){
-        const {problemcategorys,loading,isShow}=this.state
-        const problemcategory=this.problemcategory||{}
+        const {applicationsoftwares,loading,isShow}=this.state
+        const applicationsoftware=this.applicationsoftware||{}
         const title=<Button type='primary' onClick={this.showAdd}><Icon type='block'/>新增</Button>
         return(
             <Card title={title}>
@@ -116,15 +149,15 @@ export default class ApplicationSoftWare extends Component{
                 bordered
                 rowKey='_id'
                 loading={loading}
-                dataSource={problemcategorys}
+                dataSource={applicationsoftwares}
                 columns={this.columns}
                 pagination={{defaultPageSize:PAGE_SIZE,ShowQuickJumper:true}}
                 />
                 
                 <Modal
-                  title={problemcategory._id ? "编辑类别" : '新增类别'}
+                  title={applicationsoftware._id ? "编辑应用" : '新增应用'}
                   visible={isShow}
-                  onOk={this.addOrUpdateProblemCategory}
+                  onOk={this.addOrUpdateApplicationSoftWare}
                   onCancel={()=>{
                       this.form.resetFields()
                       this.setState({isShow:false})
@@ -132,8 +165,8 @@ export default class ApplicationSoftWare extends Component{
                 >
                     <AddForm 
                     setForm={(form)=>{this.form=form}} 
-                    problemcategory={problemcategory}
-                    problemcategorys={problemcategorys}
+                    applicationsoftware={applicationsoftware}
+                    applicationsoftwares={applicationsoftwares}
                     />
                 </Modal>
             </Card>

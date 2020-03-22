@@ -1,0 +1,29 @@
+﻿1.安装virtualenv
+
+# pip3 install --upgrade pip
+# pip3 install virtualenv
+目前我的FreeBSD无法安装virtualenvwrapper
+
+查找virtualenv所在目录
+# find / -name "virtualenv"
+>> /usr/local/bin/virtualenv
+
+创建虚拟环境
+#cd /root
+#virtualenv --no-site-packages --python=python3 env1
+说明：
+# --no-site-packages 表示 干净的虚拟环境不会携带本地已安装的安装包
+#--python=python3 表示虚拟环境使用的解释器是python3
+
+创建成功后，/root目录下会产生一个env1目录
+激活虚拟环境
+#source /root/env1/bin/activate
+如果报错，使用
+#source /root/env1/bin/activate.csh
+
+成功后，命令行前面有(env1)，代表在env1环境下执行
+退出虚拟环境
+#deactivate
+
+删除虚拟环境
+#rm -rf env1
