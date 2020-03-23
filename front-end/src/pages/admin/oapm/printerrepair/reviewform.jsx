@@ -14,7 +14,7 @@ export default class ReviewForm extends Component{
     }
     
     getHanelerNums=(value)=>{
-        const result=rCartridays({'_hanlder':value})
+        const result=rPrinterRepairs({'_hanlder':value})
         let nums=0
         for(let i=0;i<result.data.length;i++){
             nums+=result.data.nums

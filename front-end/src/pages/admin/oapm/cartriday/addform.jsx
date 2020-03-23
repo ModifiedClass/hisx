@@ -6,10 +6,10 @@ import {Form,Input} from 'antd'
 const Item=Form.Item
 
 class AddForm extends PureComponent{
-    
+
     static propTypes={
         setForm:PropTypes.func.isRequired,
-        problemcategory:PropTypes.object
+        cartriday:PropTypes.object
     }
     
     componentWillMount(){
@@ -17,7 +17,7 @@ class AddForm extends PureComponent{
     }
     
     render(){
-        const {problemcategory}=this.props
+        const {cartriday,users}=this.props
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:5},
@@ -25,18 +25,33 @@ class AddForm extends PureComponent{
         }
         return(
             <Form>
-                <Item label='类别名称' {...formItemLayout}>
+                <Item label='处理人员' {...formItemLayout}>
                 {
-                    getFieldDecorator('name',{
-                        initialValue:problemcategory.name,
+                    getFieldDecorator('_handler',{
                         rules:[
-                        {required:true,message:'类别名称不能为空!'}
+                        {required:true,message:'处理人员不能为空!'}
                         ]
                     })(
-                        <Input placeholder='请输入类别名称名!'/>
+                        <Select>
+                        {
+                            users.map(item=><Option key={item._id} value={item._id}>{item.name}</Option>)
+                        }
+                        </Select>
                     )
                 }
-                </Item>                
+                </Item>
+                <Item label='数量' {...formItemLayout}>
+                {
+                    getFieldDecorator('nums',{
+                        initialValue:0,
+                        rules:[
+                        {required:true,message:'数量不能为空!'}
+                        ]
+                    })(
+                        <Input />
+                    )
+                }
+                </Item>   
             </Form>
         )
     }

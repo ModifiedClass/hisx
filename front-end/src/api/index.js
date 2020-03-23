@@ -88,6 +88,8 @@ export const rPrinterRepairs=(printerrepair)=>fetchreq(HOST+'/api/oapm/printerre
 export const couPrinterRepair=(printerrepair)=>fetchreq(HOST+'/api/oapm/printerrepair/',printerrepair,(printerrepair._id ? 'PATCH' : 'POST'))
 //删除打印机维修
 export const dPrinterRepair=(printerrepairId)=>fetchreq(HOST+'/api/oapm/printerrepair/',{'_id':printerrepairId},'DELETE')
+//审核打印机维修
+export const rePrinterRepair=(handlerId)=>fetchreq(HOST+'/api/oapm/printerrepair/',{'handler':handlerId},'PUT')
 
 
 //读取硒鼓加粉
@@ -96,6 +98,10 @@ export const rCartridays=(cartriday)=>fetchreq(HOST+'/api/oapm/cartriday/',cartr
 export const couCartriday=(cartriday)=>fetchreq(HOST+'/api/oapm/cartriday/',cartriday,(cartriday._id ? 'PATCH' : 'POST'))
 //删除硒鼓加粉
 export const dCartriday=(cartridayId)=>fetchreq(HOST+'/api/oapm/cartriday/',{'_id':cartridayId},'DELETE')
+//审核硒鼓加粉
+export const reCartriday=(handlerId)=>fetchreq(HOST+'/api/oapm/cartriday/',{'_handler':handlerId},'PUT')
+
+
 
 //读取应用软件
 export const rApplicationSoftwares=(applicationsoftware)=>fetchreq(HOST+'/api/oapm/applicationsoftware/',applicationsoftware)

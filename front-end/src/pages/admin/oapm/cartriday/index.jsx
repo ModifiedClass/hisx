@@ -25,7 +25,7 @@ export default class Cartriday extends Component{
             dataIndex:'create_time',
             render:(create_time)=>formateDate(create_time)
         },{
-            title:'处理人',
+            title:'处理人员',
             dataIndex:'_handler',
         },{
             title:'数量',
@@ -116,19 +116,17 @@ export default class Cartriday extends Component{
         this.form.validateFields(async(err,values)=>{
             if(!err){
                 this.setState({reviewShow:false})
-                const cartriday=values
+                const _handler=values._handler
+                console.log(_handler)
                 this.form.resetFields()
-                if(this.cartriday){
-                    cartriday.id=this.cartriday._id
-                }
-                /*const result=await reqAddorUpdateUser(cartriday)
-                if(result.status===9){
-                    message.success('${this.cartriday? '新增':'编辑'}成功')
+
+                /*const result=await reCartriday(_handler)
+                if(result.status===1){
+                    message.success('审核成功')
                     this.getCartridays()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(cartriday)    
+                }*/  
             }
         })
         
@@ -169,8 +167,8 @@ export default class Cartriday extends Component{
                 >
                     <AddForm 
                     setForm={(form)=>{this.form=form}} 
+                    handlers={users}
                     cartriday={cartriday}
-                    cartridays={cartridays}
                     />
                 </Modal>
                 <Modal

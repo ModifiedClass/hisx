@@ -295,6 +295,23 @@ class PrinterRepairView(APIView):
         except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(ret)
+            
+    def put(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        searchdict={}
+        searchdict['handler']=request.GET.get("handler")
+        searchdict['status']=False
+        try:
+            with transaction.atomic():
+                PrinterRepair.objects.filter(**searchdict).update(status=True)
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(ret)
+        except Exception as e:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
 
 
 class CartridayView(APIView):
@@ -374,6 +391,23 @@ class CartridayView(APIView):
                 obj.handler=User.objects.get(id=handler)
                 obj.nums=nums
                 obj.save()
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(ret)
+        except Exception as e:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(ret)
+            
+    def put(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        searchdict={}
+        searchdict['_handler']=request.GET.get("_handler")
+        searchdict['status']=False
+        try:
+            with transaction.atomic():
+                Cartriday.objects.filter(**searchdict).update(status=True)
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(ret)
