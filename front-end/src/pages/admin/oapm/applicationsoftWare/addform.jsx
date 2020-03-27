@@ -1,11 +1,12 @@
 import React,{PureComponent} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,Input} from 'antd'
+import {Form,Input,Select} from 'antd'
 import {appFrameWork,dataBase} from '../../../../config/selectConfig'
 
 const Item=Form.Item
 const {TextArea}=Input
+const Option=Select.Option
 
 class AddForm extends PureComponent{
     

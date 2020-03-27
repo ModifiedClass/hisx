@@ -1,26 +1,27 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,Input,Tree} from 'antd'
+import {Form,Input,Select} from 'antd'
 
+const Option=Select.Option
 
 export default class ReviewForm extends Component{
-    constructor(props){
+    /*constructor(props){
         super(props)
         state={
             nums:0
         }
         const {users}=this.props.users
-    }
+    }*/
     
     getHanelerNums=(value)=>{
-        const result=rPrinterRepairs({'_hanlder':value})
+        /*const result=rPrinterRepairs({'_hanlder':value})
         let nums=0
         for(let i=0;i<result.data.length;i++){
             nums+=result.data.nums
         }
         return nums
-        this.setState({nums})
+        this.setState({nums})*/
     }    
     
     render(){
@@ -29,6 +30,7 @@ export default class ReviewForm extends Component{
             labelCol:{span:5},
             wrapperCol:{span:15}
         }
+        const {getFieldDecorator}=this.props.form
         return(
             <Form>
                 <Form.Item label='处理人员' {...formItemLayout}>
@@ -46,6 +48,7 @@ export default class ReviewForm extends Component{
                  )
                 }
                 <Input value={this.state.nums} disabled/>
+                </Form.Item>
             </Form>
         )
     }

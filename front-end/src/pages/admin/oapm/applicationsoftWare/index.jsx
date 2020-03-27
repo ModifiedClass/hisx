@@ -6,7 +6,7 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
 import {appFrameWork,dataBase} from '../../../../config/selectConfig'
-import reqApplicationSoftWares from '../../../../api/json/applicationsoftware.js'
+//import reqApplicationSoftWares from '../../../../api/json/applicationsoftware.js'
 import AddForm from './addform'
 
 export default class ApplicationSoftWare extends Component{
@@ -53,24 +53,24 @@ export default class ApplicationSoftWare extends Component{
     }
     
     getFramework=framework=>{
-        appFrameWork.map(item)=>{
+        appFrameWork.map((item)=>{
             if(item.value===framework){
                 return item.label
             }
-        }
+        })
     }
     getDatabase=database=>{
-        dataBase.map(item)=>{
+        dataBase.map((item)=>{
             if(item.value===database){
                 return item.label
             }
-        }
+        })
     }
     getDeviceinfo=async(device_id)=>{
-        const result=await rDeviceCategorys(device_id)
+        /*const result=await rDeviceCategorys(device_id)
         if(result.status===1){
             return result[0].data.name
-        }
+        }*/
     }
     getApplicationSoftWares= async()=>{
         /*this.setState({loading:true})
@@ -83,8 +83,8 @@ export default class ApplicationSoftWare extends Component{
         }else{
             message.error("获取数据失败!")
         }*/
-        const applicationsoftwares=reqApplicationSoftWares.data
-        this.setState({applicationsoftwares})
+        /*const applicationsoftwares=reqApplicationSoftWares.data
+        this.setState({applicationsoftwares})*/
     }
 
     showAdd=()=>{

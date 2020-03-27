@@ -136,8 +136,8 @@ class DepartmentView(APIView):
             searchdict['code']=request.GET.get("code")
         if request.GET.get("status"):
             searchdict['status']=request.GET.get("status")
-        if request.GET.get("parent"):
-            searchdict['parent']=request.GET.get("parent")
+        if request.GET.get("_parent"):
+            searchdict['parent']=request.GET.get("_parent")
         ret={'status':0,'msg':None,'data':None}
         try:
             obj=Department.objects.filter(**searchdict).order_by('name')
@@ -147,11 +147,11 @@ class DepartmentView(APIView):
                 ser=DepartmentSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -159,22 +159,23 @@ class DepartmentView(APIView):
         res=json.loads(pb)
         name=res['name']
         code=res['code']
-        parent=res['parent']
+        parent=res['_parent']
         status=res['status']
         try:
             with transaction.atomic():
                 obj=Department()
                 obj.name=name
                 obj.code=code
-                obj.parent=Department.objects.get(id=parent)
+                if parent:
+                    obj.parent=Department.objects.get(_id=parent)
                 obj.status=status
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -182,13 +183,13 @@ class DepartmentView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            Department.objects.filter(id=_id).delete()
+            Department.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
-        except:
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -197,22 +198,23 @@ class DepartmentView(APIView):
         _id=res['_id']
         name=res['name']
         code=res['code']
-        parent=res['parent']
+        parent=res['_parent']
         status=res['status']
         try:
             with transaction.atomic():
-                obj=Department.objects.get(id=_id)
+                obj=Department.objects.get(_id=_id)
                 obj.name=name
                 obj.code=code
-                obj.parent=Department.objects.get(id=parent)
+                if parent:
+                    obj.parent=Department.objects.get(_id=parent)
                 obj.status=status
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
-        except:
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class UserView(APIView):

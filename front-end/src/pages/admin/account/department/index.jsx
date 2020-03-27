@@ -1,30 +1,98 @@
 import React,{Component} from 'react';
 
-import {Card,Table,Button,Icon,message,Modal,Tag} from 'antd'
+import {Card,Table,Button,Icon,message,Modal,Tag,Input} from 'antd'
 import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
-import {PAGE_SIZE} from '../../../../utils/constants'
-//import {reqDepartments} from '../../../../../api'
-import reqDepartments from '../../../../api/json/department.js'
+import {rDepartments,couDepartment,dDepartment} from '../../../../api'
 import AddForm from './addform'
+import Highlighter from 'react-highlight-words'
 
 export default class Department extends Component{
     state={
         departments:[],
         loading:false,
         isShow:false,
+        searchText: '',
+        searchedColumn: '',
     }
+    getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  }
     initColums=()=>{
         this.columns=[
         {
             title:'名称',
             dataIndex:'name',
+            ...this.getColumnSearchProps('name'),
         },
         {
             title:'简码',
             dataIndex:'code',
+            ...this.getColumnSearchProps('code'),
         },
         {
             title:'状态',
@@ -62,20 +130,72 @@ export default class Department extends Component{
         }
         ]
     }
-    
+    ptoc=(data)=>{
+        let resData = data.slice()
+        let tree = []
+
+        for (let i = 0; i < resData.length; i++) {
+            if (resData[i]._parent === null) {
+                let obj = {
+                    _id: resData[i]._id,
+                    value: resData[i]._id,
+                    key: resData[i]._id,
+                    name: resData[i].name,
+                    title: resData[i].name,
+                    code: resData[i].code,
+                    create_time: resData[i].create_time,
+                    status: resData[i].status,
+                    _parent: resData[i]._parent,
+                    children: []
+                }
+                tree.push(obj)
+                resData.splice(i, 1)
+                i--
+            }
+        }
+        
+        run(tree)
+        function run(chiArr){
+            if (resData.length !== 0) {
+                for (let i = 0; i < chiArr.length; i++) {
+                    for (let j = 0; j < resData.length; j++) {
+                        if (chiArr[i]._id === resData[j]._parent) {
+                            let obj = {
+                                _id: resData[j]._id,
+                                key: resData[j]._id,
+                                value: resData[j]._id,
+                                title: resData[j].name,
+                                name: resData[j].name,
+                                code: resData[j].code,
+                                create_time: resData[j].create_time,
+                                status: resData[j].status,
+                                _parent: resData[j]._parent,
+                                children: []
+                            }
+                            chiArr[i].children.push(obj)
+                            resData.splice(j, 1)
+                            j--
+                        }
+                    }
+                    run(chiArr[i].children)
+                }
+            }
+        }
+        return tree;
+    }
+   
     getDepartments= async()=>{
-        /*this.setState({loading:true})
-        const {parentId}=this.state
-        const result=await reqDepartments('0')
+        this.setState({loading:true})
+        //const {parentId}=this.state
+        const result=await rDepartments({'_parent':''})
         this.setState({loading:false})
-        if(result.status===0){
-            const departments=result.data
-            this.setState(departments)
+        if(result.status===1){
+            const departments=this.ptoc(result.data)
+            this.setState({departments})
+            
         }else{
             message.error("获取数据失败!")
-        }*/
-        const departments=reqDepartments.data
-        this.setState({departments})
+        }
     }
 
     showAdd=()=>{
@@ -95,16 +215,19 @@ export default class Department extends Component{
                 const department=values
                 this.form.resetFields()
                 if(this.department){
-                    department.id=this.department._id
+                    department._id=this.department._id
                 }
-                /*const result=await reqAddorUpdateUser(department)
-                if(result.status===9){
-                    message.success('${this.department? '新增':'编辑'}成功')
+                if(department.status)
+                    department.status=true
+                else
+                    department.status=false
+                const result=await couDepartment(department)
+                if(result.status===1){
+                    message.success('操作成功')
                     this.getDepartments()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(department)
+                }
             }
         })
     }
@@ -113,12 +236,13 @@ export default class Department extends Component{
         Modal.confirm({
             title:'确认删除'+department.name+'吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteDepartment(department._id)
-                if(result.status===0){
+                const result=await dDepartment(department._id)
+                if(result.status===1){
                     message.success('删除成功！')
                     this.getDepartments()
-                }*/
-                message.error(department.name)
+                }else{
+                    message.error(result.msg)
+                } 
             }
         })
     }
@@ -141,7 +265,8 @@ export default class Department extends Component{
                 loading={loading}
                 dataSource={departments}
                 columns={this.columns}
-                pagination={{defaultPageSize:PAGE_SIZE,ShowQuickJumper:true}}
+                pagination={false}
+                scroll={{ y: 480 }}
                 />
                 
                 <Modal

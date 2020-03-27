@@ -25,7 +25,7 @@ class Department(models.Model):
     _id=models.AutoField(primary_key=True)
     name=models.CharField(max_length=20,unique=True)
     code=models.CharField(max_length=20,blank=True,null=True)
-    parent=models.ForeignKey('self',on_delete=models.CASCADE,blank=True,null=True)
+    _parent=models.ForeignKey('self',on_delete=models.CASCADE,blank=True,null=True)
     status = models.BooleanField(default=True) #启用,停用
     create_time=models.DateTimeField(blank=True,null=True,auto_now_add=True)
 

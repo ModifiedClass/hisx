@@ -17,6 +17,11 @@ https://github.com/  ModifiedClass 12
   git remote add origin https://github.com/ModifiedClass/hisx.git
   git push origin master
 
+切换远程仓库
+  git remote 查看所有远程仓库
+  git remote rm origin
+  git remote add origin https://github.com/ModifiedClass/arcanum.git
+
  创建新分支
   git checkout -b dev
   git push origin dev

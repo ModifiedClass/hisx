@@ -14,7 +14,7 @@ export const dGroup=(groupId)=>fetchreq(HOST+'/api/account/group/',{'_id':groupI
 //读取部门
 export const rDepartments=(department)=>fetchreq(HOST+'/api/account/department/',department)
 //增加或更新部门
-export const cDepartment=(department)=>fetchreq(HOST+'/api/account/department/',department,(department._id ? 'PATCH' : 'POST'))
+export const couDepartment=(department)=>fetchreq(HOST+'/api/account/department/',department,(department._id ? 'PATCH' : 'POST'))
 //删除部门
 export const dDepartment=(departmentId)=>fetchreq(HOST+'/api/account/department/',{'_id':departmentId},'DELETE')
 

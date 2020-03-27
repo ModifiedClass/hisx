@@ -1,9 +1,15 @@
 import React,{PureComponent} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,Input} from 'antd'
+import {Form,Input,Select,Cascader,DatePicker} from 'antd'
+import {shortDate} from '../../../../utils/dateUtils'
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 
 const Item=Form.Item
+const Option=Select.Option
+const thisDate=shortDate(Date.now())
 
 class AddForm extends PureComponent{
 
@@ -17,6 +23,7 @@ class AddForm extends PureComponent{
     }
     
     render(){
+
         const {printerrepair,users}=this.props
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
@@ -57,7 +64,7 @@ class AddForm extends PureComponent{
                 </Item>
                 <Item label="处理时间">
                     {getFieldDecorator('create_time',{
-                        initialValue:isUpdate ? moment(create_time,'YYYY-MM-DD') : moment(thisDate,'YYYY-MM-DD'),
+                        initialValue:printerrepair ? moment(printerrepair.create_time,'YYYY-MM-DD') : moment(thisDate,'YYYY-MM-DD'),
                         rules:[
                         {
                             required:true,message:'处理时间不能为空!'
@@ -69,7 +76,7 @@ class AddForm extends PureComponent{
                 </Item>
                 <Item label="处理人员">
                     {getFieldDecorator('discoverer',{
-                        initialValue:isUpdate ? processedrecord.discoverer : '2',
+                        initialValue:printerrepair ? printerrepair.discoverer : '2',
                         rules:[
                         {
                             required:true,message:'处理人员不能为空!'
@@ -78,7 +85,7 @@ class AddForm extends PureComponent{
                     })(
                         <Select>
                         {
-                            reqUsers.data.users.map(ru=><Option key={ru._id} value={ru._id}>{ru.username}</Option>)
+                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.username}</Option>)
                         }
                         </Select>
                     )}

@@ -55,11 +55,10 @@ const fetchreq=async(url,data={},method='GET')=>{
             })
         };
     }
-    
     const obj=await fetch(url,opt)
         .then(res=>res.json())
         .then(res=>{
-            return res;
+            return eval('(' + res + ')')
         })
         .catch(err=>{message.error(err)})
     return obj;

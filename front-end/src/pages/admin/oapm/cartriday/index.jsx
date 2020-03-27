@@ -6,7 +6,7 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
 //import {reqCartridays} from '../../../../../api'
-import reqCartridays from '../../../../api/json/cartriday.js'
+//import reqCartridays from '../../../../api/json/cartriday.js'
 import AddForm from './addform'
 import ReviewForm from './reviewform'
 
@@ -58,8 +58,8 @@ export default class Cartriday extends Component{
         }else{
             message.error("获取数据失败!")
         }*/
-        const cartridays=reqCartridays.data
-        this.setState({cartridays})
+        /*const cartridays=reqCartridays.data
+        this.setState({cartridays})*/
     }
 
     showAdd=()=>{

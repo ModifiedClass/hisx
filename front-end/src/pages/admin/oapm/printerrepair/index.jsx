@@ -6,7 +6,7 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
 //import {reqPrinterRepairs} from '../../../../../api'
-import reqPrinterRepairs from '../../../../api/json/printerrepair.js'
+//import reqPrinterRepairs from '../../../../api/json/printerrepair.js'
 import AddForm from './addform'
 import ReviewForm from './reviewform'
 
@@ -60,8 +60,8 @@ export default class PrinterRepair extends Component{
         }else{
             message.error("获取数据失败!")
         }*/
-        const printerrepairs=reqPrinterRepairs.data
-        this.setState({printerrepairs})
+        /*const printerrepairs=reqPrinterRepairs.data
+        this.setState({printerrepairs})*/
     }
 
     showAdd=()=>{

@@ -1,13 +1,12 @@
 import React,{PureComponent} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,Input,Select} from 'antd'
+import {Form,Input,Select,TreeSelect,Switch} from 'antd'
 
 const Item=Form.Item
-const Option=Select.Option
 
 class AddForm extends PureComponent{
-    
+
     static propTypes={
         setForm:PropTypes.func.isRequired,
         departments:PropTypes.array.isRequired,
@@ -19,7 +18,7 @@ class AddForm extends PureComponent{
     }
     
     render(){
-        const {departments,department}=this.props
+        const {department}=this.props
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:5},
@@ -51,19 +50,29 @@ class AddForm extends PureComponent{
                     )
                     }
                 </Item>
-                
                 <Item label='上级部门' {...formItemLayout}>
-                {
-                    getFieldDecorator('parent_id',{
-                        initialValue:department.parent_id,
+                    {
+                    getFieldDecorator('_parent',{
+                        initialValue:department._parent
                     })(
-                        <Select>
-                        {
-                            departments.map(department=><Option key={department._id} value={department._id}>{department.name}</Option>)
-                        }
-                        </Select>
-                    )
-                }
+                        <TreeSelect
+                        style={{ width: '100%' }}
+                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                        treeData={this.props.departments}
+                        placeholder="上级部门"
+                        treeDefaultExpandAll
+                        onChange={this.onChange}
+                        />
+                    )}
+                </Item>
+                <Item label='启用' {...formItemLayout}>
+                    {
+                    getFieldDecorator('status', { 
+                        valuePropName: 'checked',
+                        initialValue:department.status
+                    })(
+                        <Switch checkedChildren="启用" unCheckedChildren="禁用" />
+                    )}
                 </Item>
             </Form>
         )

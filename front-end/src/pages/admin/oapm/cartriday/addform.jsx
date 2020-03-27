@@ -1,9 +1,10 @@
 import React,{PureComponent} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,Input} from 'antd'
+import {Form,Input,Select} from 'antd'
 
 const Item=Form.Item
+const Option=Select.Option
 
 class AddForm extends PureComponent{
 
