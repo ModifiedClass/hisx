@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import {Link,withRouter} from 'react-router-dom'
 import {connect} from 'react-redux'
-import { Menu, Icon} from 'antd';
+import { Menu, Icon} from 'antd'
 
 import './index.less'
 
@@ -9,7 +9,7 @@ import menuList from '../../config/menuConfig'
 //import memUtils from '../../utils/memUtils'
 import {setBreadCrum} from '../../redux/actions'
 
-const { SubMenu } = Menu;
+const { SubMenu } = Menu
 
 class SiderBar extends Component{
     

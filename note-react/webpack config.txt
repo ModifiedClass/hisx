@@ -1,3 +1,5 @@
+显示配置文件
+npm run eject
 使用antd和less
 yarn add antd
 yarn add babel-plugin-import --save-dev

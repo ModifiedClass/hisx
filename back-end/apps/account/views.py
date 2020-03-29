@@ -58,11 +58,11 @@ class GroupView(APIView):
                 ser=GroupSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -80,10 +80,10 @@ class GroupView(APIView):
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -94,10 +94,10 @@ class GroupView(APIView):
             Group.objects.filter(id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -116,10 +116,10 @@ class GroupView(APIView):
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class DepartmentView(APIView):

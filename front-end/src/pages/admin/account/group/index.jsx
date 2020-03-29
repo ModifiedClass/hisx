@@ -4,7 +4,7 @@ import {Card,Table,Button,Icon,message,Modal} from 'antd'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import reqGroups from '../../../../api/json/group'
+import {rGroups,couGroup,dGroup} from '../../../../api'
 import AddForm from './addform'
 import AuthMenuForm from './authmenuform'
 import AuthOperationForm from './authoperationform'
@@ -47,17 +47,17 @@ export default class Group extends Component{
         ]
     }
     getGroups=async ()=>{
-        /*const result=await reqGroups()
-        if(result.status===0){
+        this.setState({loading:true})
+        const result=await rGroups()
+        this.setState({loading:false})
+        if(result.status===1){
             const groups=result.data
             this.setState({
                 groups:groups
             })
-        }*/
-        const groups=reqGroups.data
-        this.setState({
-            groups
-        })
+        }else{
+            message.error("获取数据失败!")
+        }
     }
     
     //设置选中
@@ -84,16 +84,15 @@ export default class Group extends Component{
                 const group=values
                 this.form.resetFields()
                 if(this.group){
-                    group.id=this.group._id
+                    group._id=this.group._id
                 }
-                /*const result=await reqAddorUpdateGroup(group)
+                const result=await couGroup(group)
                 if(result.status===0){
-                    message.success('${this.group? '新增':'编辑'}成功')
+                    message.success('操作成功')
                     this.getGroups()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(group)
+                }
             }
         })
     }
@@ -107,13 +106,13 @@ export default class Group extends Component{
         Modal.confirm({
             title:'确认删除 '+group.name+' 吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteGroup(group._id)
+                const result=await dGroup(group._id)
                 if(result.status===0){
                     message.success('删除成功！')
                     this.getUsers()
-                }*/
-                console.log(group.name)
-                message.error(group.name)
+                }else{
+                    message.error(result.msg)
+                }
             }
         })
     } 
@@ -137,9 +136,8 @@ export default class Group extends Component{
         group.menu=menus
         group.operation=operations
         
-        /*
-        const result=await reqUpdateGroup(group)
-        if(result.status===0){
+        const result=await couGroup(group)
+        if(result.status===1){
             //给自己角色授权，强制退出
             if(group._id===memUtils.user.group_id){
                 memUtils.user={}
@@ -154,8 +152,7 @@ export default class Group extends Component{
             }
         }else{
             message.error(result.msg)
-        }*/
-        console.log(group)
+        }
     }
     
     GroupOperationAuth=async()=>{

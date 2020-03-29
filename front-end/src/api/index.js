@@ -7,7 +7,7 @@ export const cLogin=(username,password)=>fetchreq(HOST+'/api/account/auth/',{use
 //读取组
 export const rGroups=(group)=>fetchreq(HOST+'/api/account/group/',group)
 //增加或更新组
-export const cGroup=(group)=>fetchreq(HOST+'/api/account/group/',group,(group._id ? 'PATCH' : 'POST'))
+export const couGroup=(group)=>fetchreq(HOST+'/api/account/group/',group,(group._id ? 'PATCH' : 'POST'))
 //删除组
 export const dGroup=(groupId)=>fetchreq(HOST+'/api/account/group/',{'_id':groupId},'DELETE')
 
