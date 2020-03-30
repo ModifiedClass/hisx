@@ -69,14 +69,10 @@ class GroupView(APIView):
         pb=request.body
         res=json.loads(pb)
         name=res['name']
-        menu=res['menu']
-        operation=res['operation']
         try:
             with transaction.atomic():
                 obj=Group()
                 obj.name=name
-                obj.menu=menu
-                obj.operation=operation
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -91,11 +87,11 @@ class GroupView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            Group.objects.filter(id=_id).delete()
+            Group.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
             return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
@@ -109,7 +105,7 @@ class GroupView(APIView):
         operation=res['operation']
         try:
             with transaction.atomic():
-                obj=Group.objects.get(id=_id)
+                obj=Group.objects.get(_id=_id)
                 obj.name=name
                 obj.menu=menu
                 obj.operation=operation
@@ -117,7 +113,7 @@ class GroupView(APIView):
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
-        except:
+        except Exception as e:
             ret['msg']=str(e)
             return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 

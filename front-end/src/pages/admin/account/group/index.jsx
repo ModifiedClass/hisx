@@ -87,7 +87,7 @@ export default class Group extends Component{
                     group._id=this.group._id
                 }
                 const result=await couGroup(group)
-                if(result.status===0){
+                if(result.status===1){
                     message.success('操作成功')
                     this.getGroups()
                 }else{
@@ -107,9 +107,9 @@ export default class Group extends Component{
             title:'确认删除 '+group.name+' 吗？',
             onOk:async()=>{
                 const result=await dGroup(group._id)
-                if(result.status===0){
+                if(result.status===1){
                     message.success('删除成功！')
-                    this.getUsers()
+                    this.getGroups()
                 }else{
                     message.error(result.msg)
                 }
@@ -130,16 +130,15 @@ export default class Group extends Component{
         this.setState({
             isShowGM:false
         })
-        const group=this.state.group
+        const group=this.state.selectedGroup
         const menus=this.auth.current.getMenus()
-        const operations=this.auth.current.getOperations()
+        console.log(JSON.stringify(menus).substr(2))
         group.menu=menus
-        group.operation=operations
         
-        const result=await couGroup(group)
+        /*const result=await couGroup(group)
         if(result.status===1){
             //给自己角色授权，强制退出
-            if(group._id===memUtils.user.group_id){
+            /*if(group._id===memUtils.user.group_id){
                 memUtils.user={}
                 storeUtils.removeUser()
                 this.props.history.replace('/login')
@@ -149,16 +148,39 @@ export default class Group extends Component{
                 this.setState({
                     groups:[...this.state.groups]
                 })
-            }
+            }*/
+             /*message.success('授权成功！')
         }else{
             message.error(result.msg)
-        }
+        }*/
     }
     
     GroupOperationAuth=async()=>{
         this.setState({
             isShowGO:false
         })
+        const group=this.state.selectedGroup
+        const operations=this.auth.current.getOperations()
+        group.operation=operations
+        
+        const result=await couGroup(group)
+        if(result.status===1){
+            //给自己角色授权，强制退出
+            /*if(group._id===memUtils.user.group_id){
+                memUtils.user={}
+                storeUtils.removeUser()
+                this.props.history.replace('/login')
+                message.success('当前用户组权限更改，需重新登录！')
+            }else{
+                message.success('授权成功！')
+                this.setState({
+                    groups:[...this.state.groups]
+                })
+            }*/
+             message.success('授权成功！')
+        }else{
+            message.error(result.msg)
+        }
     }
     
     componentWillMount(){
@@ -199,7 +221,7 @@ export default class Group extends Component{
                 <Modal
                   title={group._id ? "编辑组" : '新增组'}
                   visible={isShowAdd}
-                  onOk={this.addGroup}
+                  onOk={this.addOrUpdateGroup}
                   onCancel={()=>{
                       this.form.resetFields()
                       this.setState({isShowAdd:false}) 
