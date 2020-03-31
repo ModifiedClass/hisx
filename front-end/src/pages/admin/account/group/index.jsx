@@ -132,10 +132,9 @@ export default class Group extends Component{
         })
         const group=this.state.selectedGroup
         const menus=this.auth.current.getMenus()
-        console.log(JSON.stringify(menus).substr(2))
-        group.menu=menus
+        group.menu=menus?menus.join(','):''
         
-        /*const result=await couGroup(group)
+        const result=await couGroup(group)
         if(result.status===1){
             //给自己角色授权，强制退出
             /*if(group._id===memUtils.user.group_id){
@@ -149,10 +148,10 @@ export default class Group extends Component{
                     groups:[...this.state.groups]
                 })
             }*/
-             /*message.success('授权成功！')
+             message.success('授权成功！')
         }else{
             message.error(result.msg)
-        }*/
+        }
     }
     
     GroupOperationAuth=async()=>{
@@ -161,7 +160,7 @@ export default class Group extends Component{
         })
         const group=this.state.selectedGroup
         const operations=this.auth.current.getOperations()
-        group.operation=operations
+        group.operation=operations?operations.join(','):''
         
         const result=await couGroup(group)
         if(result.status===1){

@@ -14,7 +14,7 @@ export default class AuthMenuForm extends Component{
         //根据组权限初始化菜单
         const {menu}=this.props.group
         this.state={
-            checkedKeys:menu
+            checkedKeys:menu.split(',')
         }
     }
     static propTypes={
@@ -47,9 +47,9 @@ export default class AuthMenuForm extends Component{
     
     //组建收到新属性时调用
     componentWillReceiveProps(nextProps){//根据新传入group更新选中菜单
-        const menus=nextProps.group.menu
+        const menus=nextProps.group.menu.split(',')
         this.setState({
-            checkedKeys:menus
+            checkedKeys:menus?menus.split(','):menus
         })
     }
     
@@ -71,9 +71,7 @@ export default class AuthMenuForm extends Component{
                     checkedKeys={checkedKeys}
                     onCheck={this.onCheck}
                 >
-                    <TreeNode title='组菜单' key='all'>
                     {this.treeNodes}
-                    </TreeNode>
                 </Tree>
             </div>
         )

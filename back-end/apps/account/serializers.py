@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
         department_obj_list=row.department.all()
         ret=[]
         for item in department_obj_list:
-            ret.append({'id':item.id,'name':item.name})
+            ret.append({'_id':item._id,'name':item.name})
         return ret
         
     class Meta:

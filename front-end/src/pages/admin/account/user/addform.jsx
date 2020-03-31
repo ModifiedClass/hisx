@@ -1,7 +1,7 @@
 import React,{PureComponent} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,Input,Select} from 'antd'
+import {Form,Input,Select,Switch} from 'antd'
 
 const Item=Form.Item
 const Option=Select.Option
@@ -35,7 +35,7 @@ class AddForm extends PureComponent{
                         {required:true,message:'用户名不能为空!'}
                         ]
                     })(
-                        <Input placeholder='请输入用户名!'/>
+                        user.username==='admin'?<Input disabled/>:<Input placeholder='请输入用户名!'/>
                     )
                 }
                 </Item>
@@ -53,7 +53,7 @@ class AddForm extends PureComponent{
                     }
                 </Item>
                 )}
-                 <Item label='姓名' {...formItemLayout}>
+                <Item label='姓名' {...formItemLayout}>
                 {
                     getFieldDecorator('name',{
                         initialValue:user.name,
@@ -67,16 +67,28 @@ class AddForm extends PureComponent{
                 </Item>
                 <Item label='用户组' {...formItemLayout}>
                 {
-                    getFieldDecorator('group_id',{
-                        initialValue:user.group_id,
+                    getFieldDecorator('group',{
+                        initialValue:user.group,
+                        rules:[
+                        {required:true,message:'请选择用户组!'}
+                        ]
                     })(
-                        <Select>
+                        <Select mode='multiple'>
                         {
                             groups.map(group=><Option key={group._id} value={group._id}>{group.name}</Option>)
                         }
                         </Select>
                     )
                 }
+                </Item>
+                <Item label='超级用户' {...formItemLayout}>
+                    {
+                    getFieldDecorator('issuper', { 
+                        valuePropName: 'checked',
+                        initialValue:user.issuper?user.issuper:false
+                    })(
+                        <Switch />
+                    )}
                 </Item>
             </Form>
         )

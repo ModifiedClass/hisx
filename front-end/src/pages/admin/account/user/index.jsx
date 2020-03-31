@@ -5,20 +5,24 @@ import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
 import {formateDate} from '../../../../utils/dateUtils'
-import reqUsers from '../../../../api/json/user'
+import {rUsers,rGroups,couUser,dUser,rDepartments} from '../../../../api'
 import AddForm from './addform'
 import DepartmentForm from './departmentform'
 import Highlighter from 'react-highlight-words'
 
 export default class User extends Component{
-    
+    constructor(props){
+        super(props)
+        this.auth=React.createRef()
+    }
     state={
         isShow:false,
         udShow:false,
         loading:false,
         users:[],  //所有用户
         groups:[],   //用户组
-        selectedUser:{}    //选中用户
+        selectedUser:{},    //选中用户
+        initDepartment:{}   //传给子组件初始化tree
     }
     
     getColumnSearchProps = dataIndex => ({
@@ -105,8 +109,18 @@ export default class User extends Component{
         },
         {
             title:'所在组',
-            dataIndex:'group_id',
-            render:(group_id)=>this.groupNames[group_id]
+            dataIndex:'group',
+            render:(group)=>{
+                let result=[]
+                for(let i=0;i<group.length;i++){
+                    for(let key in this.groupNames){
+                        if(key.toString()===group[i].toString()){
+                            result.push(this.groupNames[key]+' ')
+                        }
+                    }
+                }
+                return result
+            }
         },
         {
             title:'创建时间',
@@ -127,36 +141,36 @@ export default class User extends Component{
     }
     
     initGroupNames=(groups)=>{
-        const groupNames= groups.reduce((pre,group)=>{
+        const groupNames=groups? groups.reduce((pre,group)=>{
             pre[group._id]=group.name
             return pre
-        },{})
+        },{}):[]
         this.groupNames=groupNames
     }
     
     getUsers=async()=>{
-        /*const result=await reqUsers()
-        if(result.status===0){
-        const {users，groups}=result.data
+        const result=await rUsers()
+        if(result.status===1){
+            const users=result.data
+            this.setState({
+                users
+            })
+        }
+        const gresult=await rGroups()
+        if(gresult.status===1){
+            const groups=gresult.data
             this.initGroupNames(groups)
             this.setState({
-                users,
                 groups
             })
-        }*/
-        const {users,groups}=reqUsers.data
-        this.initGroupNames(groups)
-        this.setState({
-            users,
-            groups
-        })
+        }
     }
     
     onRow=(user)=>{
         return{
             onClick:event=>{
                 this.setState({
-                    selectedUser:user
+                    selectedUser:user,
                 })
             }
         }
@@ -170,16 +184,15 @@ export default class User extends Component{
                 const user=values
                 this.form.resetFields()
                 if(this.user){
-                    user.id=this.user._id
+                    user._id=this.user._id
                 }
-                /*const result=await reqAddorUpdateUser(user)
-                if(result.status===9){
-                    message.success('${this.user? '新增':'编辑'}成功')
+                const result=await couUser(user)
+                if(result.status===1){
+                    message.success('操作成功')
                     this.getUsers()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(user)
+                }
             }
         })
     }
@@ -195,53 +208,45 @@ export default class User extends Component{
     }
     
     deleteUser=(user)=>{
-        Modal.confirm({
-            title:'确认删除 '+user.username+' 吗？',
-            onOk:async()=>{
-                /*const result=await reqDeleteUser(user._id)
-                if(result.status===0){
-                    message.success('删除成功！')
-                    this.getUsers()
-                }*/
-                console.log(user.username)
-                message.error(user.username)
-            }
-        })
+        if(user.username==='admin'){
+            message.error('不允许删除管理员！')
+        }else{
+            Modal.confirm({
+                title:'确认删除 '+user.username+' 吗？',
+                onOk:async()=>{
+                    const result=await dUser(user._id)
+                    if(result.status===1){
+                        message.success('删除成功！')
+                        this.getUsers()
+                    }
+                }
+            })
+        }
     }
     
-    showDepartment=()=>{
+    showDepartment=async()=>{
+        const result=await rDepartments()
         this.setState({
-            udShow:true
+            udShow:true,
+            initDepartment:result?result.data:{}
         })
     }
     
-    UserDepartment=()=>{
+    UserDepartment=async()=>{
         this.setState({
             udShow:false
         })
-        const user=this.state.user
+        const user=this.state.selectedUser
         const departments=this.auth.current.getDepartments()
         user.department=departments
-        
-        /*
-        const result=await reqUpdateGroup(group)
-        if(result.status===0){
-            //给自己角色授权，强制退出
-            if(group._id===memUtils.user.group_id){
-                memUtils.user={}
-                storeUtils.removeUser()
-                this.props.history.replace('/login')
-                message.success('当前用户组权限更改，需重新登录！')
-            }else{
-                message.success('授权成功！')
-                this.setState({
-                    groups:[...this.state.groups]
-                })
-            }
+
+        const result=await couUser(user)
+        if(result.status===1){
+            message.success('操作成功！')
+            this.getUsers()
         }else{
             message.error(result.msg)
-        }*/
-        console.log(user)
+        }
     }
     
     componentWillMount(){
@@ -252,7 +257,7 @@ export default class User extends Component{
         this.getUsers()
     }
     render(){
-        const {users,groups,selectedUser,loading,isShow,udShow}=this.state
+        const {users,groups,selectedUser,initDepartment,loading,isShow,udShow}=this.state
         const user=this.user||{}
         const title=(
             <span>
@@ -274,7 +279,7 @@ export default class User extends Component{
                     selectedRowKeys:[selectedUser._id],
                     onSelect:(user)=>{
                         this.setState({
-                            selectedUser:user
+                            selectedUser:user,
                         })
                     }
                     }}
@@ -300,10 +305,10 @@ export default class User extends Component{
                   visible={udShow}
                   onOk={this.UserDepartment}
                   onCancel={()=>{
-                      this.setState({udShow:false})
+                      this.setState({udShow:false,initDepartment:{}})
                   }}
                 >
-                    <DepartmentForm ref={this.auth} user={selectedUser}/>
+                    <DepartmentForm ref={this.auth} initDepartment={initDepartment} user={selectedUser}/>
                 </Modal>
             </Card>
         )

@@ -68,11 +68,10 @@ class GroupView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
         try:
             with transaction.atomic():
                 obj=Group()
-                obj.name=name
+                obj.name=res['name']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -85,9 +84,8 @@ class GroupView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id = res['_id']
         try:
-            Group.objects.filter(_id=_id).delete()
+            Group.objects.filter(_id=res['_id']).delete()
             ret['status']=1
             ret['msg']="操作成功!"
             return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
@@ -99,16 +97,15 @@ class GroupView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        name=res['name']
-        menu=res['menu']
-        operation=res['operation']
         try:
             with transaction.atomic():
-                obj=Group.objects.get(_id=_id)
-                obj.name=name
-                obj.menu=menu
-                obj.operation=operation
+                obj=Group.objects.get(_id=res['_id'])
+                if "name" in res:
+                    obj.name=res['name']
+                if "menu" in res:
+                    obj.menu=res['menu']
+                if "operation" in res:
+                    obj.operation=res['operation']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -191,19 +188,18 @@ class DepartmentView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        name=res['name']
-        code=res['code']
         parent=res['_parent']
-        status=res['status']
         try:
             with transaction.atomic():
-                obj=Department.objects.get(_id=_id)
-                obj.name=name
-                obj.code=code
+                obj=Department.objects.get(_id=res['_id'])
+                if "name" in res:
+                    obj.name=res['name']
+                if "code" in res:
+                    obj.code=res['code']
                 if parent:
                     obj.parent=Department.objects.get(_id=parent)
-                obj.status=status
+                if "status" in res:
+                    obj.status=res['status']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -240,11 +236,11 @@ class UserView(APIView):
                 ser=UserSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -253,25 +249,25 @@ class UserView(APIView):
         username=res['username']
         password=res['password']
         name=res['name']
-        isSuper=res['isSuper']
+        issuper=res['issuper']
         group=res['group']
-        department=res['department']
         try:
             with transaction.atomic():
                 obj=User()
                 obj.username=username
                 obj.password=pwdenc(password)
                 obj.name=name
-                obj.isSuper=isSuper
-                obj.group=Group.objects.get(id=group)
-                obj.department=Department.objects.get(id=department)
+                obj.issuper=issuper
                 obj.save()
+                groups=Group.objects.filter(_id__in=group)
+                obj.group.clear()
+                obj.group.add(*groups)
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -279,37 +275,41 @@ class UserView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            User.objects.filter(id=_id).delete()
+            User.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
-        except:
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        username=res['username']
-        password=res['password']
-        name=res['name']
-        isSuper=res['isSuper']
-        group=res['group']
-        department=res['department']
         try:
             with transaction.atomic():
-                obj=User.objects.get(id=_id)
-                obj.username=username
-                obj.password=pwdenc(password)
-                obj.name=name
-                obj.isSuper=isSuper
-                obj.group=Group.objects.get(id=group)
-                obj.department=Department.objects.get(id=department)
+                obj=User.objects.get(_id=res['_id'])
+                if "username" in res:
+                    obj.username=res['username']
+                if "password" in res:
+                    obj.password=pwdenc(res['password'])
+                if "name" in res:
+                    obj.name=res['name']
+                if "issuper" in res:
+                    obj.isSuper=res['issuper']
+                if "group" in res:
+                    groups=Group.objects.filter(_id__in=res['group'])
+                    obj.group.clear()
+                    obj.group.add(*groups)
+                if "department" in res:
+                    departments=Department.objects.filter(_id__in=res['department'])
+                    obj.department.clear()
+                    obj.department.add(*departments)
+                obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
-        except:
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))

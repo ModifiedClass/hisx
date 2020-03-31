@@ -14,7 +14,7 @@ export default class AuthOperationForm extends Component{
         //根据组权限初始化操作
         const {operation}=this.props.group
         this.state={
-            checkedKeys:operation
+            checkedKeys:operation?operation.split(','):operation
         }
     }
     static propTypes={
@@ -44,8 +44,9 @@ export default class AuthOperationForm extends Component{
     //组建收到新属性时调用
     componentWillReceiveProps(nextProps){//根据新传入group更新选中菜单
         const opers=nextProps.group.operation
+        
         this.setState({
-            checkedKeys:opers
+            checkedKeys:opers?opers.split(','):opers
         })
     }
     
@@ -67,9 +68,7 @@ export default class AuthOperationForm extends Component{
                     checkedKeys={checkedKeys}
                     onCheck={this.onCheck}
                 >
-                    <TreeNode title='操作选项' key='all'>
                     {this.treeNodes}
-                    </TreeNode>
                 </Tree>
             </div>
         )
