@@ -132,7 +132,7 @@ export default class Group extends Component{
         })
         const group=this.state.selectedGroup
         const menus=this.auth.current.getMenus()
-        group.menu=menus?menus.join(','):''
+        group.menu=menus?menus.join(','):menus
         
         const result=await couGroup(group)
         if(result.status===1){
@@ -160,7 +160,7 @@ export default class Group extends Component{
         })
         const group=this.state.selectedGroup
         const operations=this.auth.current.getOperations()
-        group.operation=operations?operations.join(','):''
+        group.operation=operations?operations.join(','):operations
         
         const result=await couGroup(group)
         if(result.status===1){

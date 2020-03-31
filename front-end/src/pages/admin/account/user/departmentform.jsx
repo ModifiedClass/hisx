@@ -25,8 +25,8 @@ export default class DepartmentForm extends Component{
     //为父组件提供选中节点
     getDepartments=()=>this.state.checkedKeys
     
-    getTreeNodes=departmentList=>{
-        return departmentList?departmentList.reduce((pre,item)=>{
+    getTreeNodes=list=>{
+        return list?list.reduce((pre,item)=>{
             pre.push(
                 <TreeNode title={item.name} key={item._id}>
                     {item.children ? this.getTreeNodes(item.children):null}
@@ -48,8 +48,12 @@ export default class DepartmentForm extends Component{
         const departments=nextProps.user.department
         let keys=[]
         for(let key in departments){
-            keys.push(departments[key]._id)
+            if(typeof(departments[key])==='number'||typeof(departments[key])==='string')
+                keys.push(Number(departments[key]))
+            else
+                keys.push(Number(departments[key]._id))
         }
+        
         this.setState({
             checkedKeys:keys
         })

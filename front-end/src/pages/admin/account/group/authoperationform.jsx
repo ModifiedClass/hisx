@@ -44,7 +44,6 @@ export default class AuthOperationForm extends Component{
     //组建收到新属性时调用
     componentWillReceiveProps(nextProps){//根据新传入group更新选中菜单
         const opers=nextProps.group.operation
-        
         this.setState({
             checkedKeys:opers?opers.split(','):opers
         })
