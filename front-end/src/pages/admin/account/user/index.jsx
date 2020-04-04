@@ -149,7 +149,9 @@ export default class User extends Component{
     }
     
     getUsers=async()=>{
+        this.setState({loading:true})
         const result=await rUsers()
+        this.setState({loading:false})
         if(result.status===1){
             const users=result.data
             this.setState({

@@ -85,7 +85,7 @@ class AddForm extends PureComponent{
                     {
                     getFieldDecorator('issuper', { 
                         valuePropName: 'checked',
-                        initialValue:user.issuper?user.issuper:false
+                        initialValue:user.isSuper?user.isSuper:false
                     })(
                         <Switch />
                     )}

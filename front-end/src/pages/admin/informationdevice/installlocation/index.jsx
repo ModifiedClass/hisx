@@ -4,7 +4,11 @@ import {Card,Table,Button,Icon,message,Modal} from 'antd'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import reqInstallLocations from '../../../../api/json/installlocation'
+import {
+    rInstallLocations,
+    couInstallLocation,
+    dInstallLocation
+} from '../../../../api'
 import AddForm from './addform'
 import {formateDate} from '../../../../utils/dateUtils'
 
@@ -40,27 +44,14 @@ export default class InstallLocation extends Component{
         ]
     }
     getInstallLocations=async ()=>{
-        /*const result=await reqInstallLocations()
-        if(result.status===0){
+        this.setState({loading:true})
+        const result=await rInstallLocations()
+        this.setState({loading:false})
+        if(result.status===1){
             const installlocations=result.data
             this.setState({
-                installlocations:installlocations
+                installlocations
             })
-        }*/
-        const installlocations=reqInstallLocations.data
-        this.setState({
-            installlocations
-        })
-    }
-    
-    //设置选中
-    onRow=(installlocation)=>{
-        return{
-            onClick:event=>{
-                this.setState({
-                    selectedInstallLocation:installlocation
-                })
-            }
         }
     }
 
@@ -77,16 +68,15 @@ export default class InstallLocation extends Component{
                 const installlocation=values
                 this.form.resetFields()
                 if(this.installlocation){
-                    installlocation.id=this.installlocation._id
+                    installlocation._id=this.installlocation._id
                 }
-                /*const result=await reqAddorUpdateInstallLocation(installlocation)
-                if(result.status===0){
-                    message.success('${this.installlocation? '新增':'编辑'}成功')
+                const result=await couInstallLocation(installlocation)
+                if(result.status===1){
+                    message.success('操作成功')
                     this.getInstallLocations()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(installlocation)
+                }
             }
         })
     }
@@ -100,13 +90,11 @@ export default class InstallLocation extends Component{
         Modal.confirm({
             title:'确认删除 '+installlocation.name+' 吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteInstallLocation(installlocation._id)
+                const result=await dInstallLocation(installlocation._id)
                 if(result.status===0){
                     message.success('删除成功！')
-                    this.getUsers()
-                }*/
-                console.log(installlocation.name)
-                message.error(installlocation.name)
+                    this.getInstallLocations()
+                }
             }
         })
     } 
@@ -133,21 +121,11 @@ export default class InstallLocation extends Component{
                 dataSource={installlocations}
                 columns={this.columns}
                 pagination={{defaultPageSize:PAGE_SIZE}}
-                rowSelection={{
-                    type:'radio',
-                    selectedRowKeys:[selectedInstallLocation._id],
-                    onSelect:(installlocation)=>{
-                        this.setState({
-                            selectedInstallLocation:installlocation
-                        })
-                    }
-                    }}
-                onRow={this.onRow}
                 />
                 <Modal
                   title={installlocation._id ? "编辑安装地点" : '新增安装地点'}
                   visible={isShowAdd}
-                  onOk={this.addInstallLocation}
+                  onOk={this.addOrUpdateInstallLocation}
                   onCancel={()=>{
                       this.form.resetFields()
                       this.setState({isShowAdd:false}) 

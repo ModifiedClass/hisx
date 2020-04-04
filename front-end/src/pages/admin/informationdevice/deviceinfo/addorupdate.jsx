@@ -1,11 +1,12 @@
 import React,{Component} from 'react';
 
-import {Card,Form,Input,Select,Cascader,Button,Icon,DatePicker} from 'antd'
+import {Card,Form,Input,Select,Cascader,Button,Icon,DatePicker,message} from 'antd'
 import BackBtn from '../../../../components/backbtn'
 
 import reqCascaderDepartments from '../../../../api/json/cascaderdepartment.js'
 import {shortDate} from '../../../../utils/dateUtils'
 import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
+import {rDeviceCategorys,rDeviceModels,rInstallLocations,rDeviceInfos,couDeviceInfo} from '../../../../api'
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
@@ -24,44 +25,51 @@ class AddOrUpdate extends Component{
         installlocations:[]
     }
 
-    getDeviceCategorys=async ()=>{
-        const result=reqCascaderDepartments
-        if(result.status==='1'){
-            this.setState({devicecategorys:result.data})            
-        }
-    }
-    getDeviceModels=async (dcid)=>{
-        const result=reqCascaderDepartments
-        if(result.status==='1'){
-            this.setState({devicemodels:result.data})            
-        } 
-    }
-    getParents=async ()=>{
-        const result=reqCascaderDepartments
-        if(result.status==='1'){
-            this.setState({parents:result.data})            
+    getDM=async value =>{
+        this.setState({devicemodels:[]})
+        const result=await rDeviceModels({'_id':value})
+        if(result.status===1){
+            this.setState({devicemodels:result.data})
         }  
     }
-    getInstallLocations=async ()=>{
-        const result=reqCascaderDepartments
-        if(result.status==='1'){
-            this.setState({installlocations:result.data})            
+    
+    initSelect=async()=>{
+        const devicecategorys=await rDeviceCategorys()
+        if(devicecategorys.status===1){
+            this.setState({devicecategorys:devicecategorys.data})
+        }
+        
+        const installlocations=await rInstallLocations()
+        if(installlocations.status===1){
+            this.setState({installlocations:installlocations.data})
+        }
+        
+        const deviceinfos=await rDeviceInfos({'isPage':false})
+        if(deviceinfos.status===1){
+            this.setState({parents:deviceinfos.data.list})            
         }
     }
     
+
     submit=()=>{
-        this.props.form.validateFields((error,values)=>{
+        this.props.form.validateFields(async (error,values)=>{
             if(!error){
-                console.log(values)
+                const deviceinfo=values
+                if(this.deviceinfo){
+                    deviceinfo._id=this.deviceinfo.deviceinfo._id
+                }
+                const result=await couDeviceInfo(deviceinfo)
+                if(result.status===1){
+                    message.success('操作成功')
+                }else{
+                    message.error(result.msg)
+                }
             }
         })
     }
     
     componentDidMount(){
-        this.getDeviceCategorys()
-        this.getDeviceModels('0')
-        this.getParents()
-        this.getInstallLocations()
+        this.initSelect()
     }
     
     componentWillMount(){
@@ -72,6 +80,7 @@ class AddOrUpdate extends Component{
     }
     render(){
         const {isUpdate,deviceinfo}=this
+        const {devicecategorys,devicemodels,installlocations,parents} =this.state
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:2},
@@ -87,50 +96,61 @@ class AddOrUpdate extends Component{
         return(
             <Card title={title}>
                 <Form {...formItemLayout}>
+                    <Item label="上级设备">
+                    {getFieldDecorator('parent',{
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.parent :'',
+                    })(
+                        <Select onChange={this.getDM}>
+                            {
+                                parents.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
+                            }
+                        </Select>
+                    )}
+                    </Item>
                     <Item label="设备类别">
                     {getFieldDecorator('devicecategory',{
-                        initialValue:isUpdate ? deviceinfo.devicecategory :'1',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.devicemodel.devicecategory._id :'1',
                         rules:[
                         {
                             required:true,message:'设备类别不能为空!'
                         }
                         ]
                     })(
-                        <Select onChange={value=>this.getDeviceModels(value)}>
-                        {
-                            this.state.devicecategorys.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
-                        }
+                        <Select onChange={this.getDM}>
+                            {
+                                devicecategorys.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
+                            }
                         </Select>
                     )}
                     </Item>
                     <Item label="设备型号">
                     {getFieldDecorator('devicemodel',{
-                        initialValue:isUpdate ? deviceinfo.devicemodel :'1',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.devicemodel._id :1,
                     })(
                         <Select>
-                        {
-                            this.state.devicemodels.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
-                        }
+                            {
+                                devicemodels.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
+                            }
                         </Select>
                     )}
                     </Item>
                     <Item label="序列号">
                     {getFieldDecorator('sn',{
-                        initialValue:isUpdate ? deviceinfo.sn : '',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.sn : '',
                     })(
                         <Input placeholder='序列号' />
                     )}
                     </Item>
                     <Item label="设备名称">
                     {getFieldDecorator('name',{
-                        initialValue:isUpdate ? deviceinfo.name : '',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.name : '',
                     })(
                         <Input placeholder='设备名称' />
                     )}
                     </Item>
                     <Item label="运行系统">
                     {getFieldDecorator('runos',{
-                        initialValue:isUpdate ? deviceinfo.runos : '2',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.runos : 2,
                     })(
                         <Select>
                         {
@@ -141,7 +161,7 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item label="安装地点">
                     {getFieldDecorator('installlocation',{
-                        initialValue:isUpdate ? deviceinfo.installlocation : '1',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.installlocation._id : 1,
                         rules:[
                         {
                             required:true,message:'安装地点不能为空!'
@@ -149,29 +169,29 @@ class AddOrUpdate extends Component{
                         ]
                     })(
                         <Select>
-                        {
-                            this.state.installlocations.map(item=><Option key={item._id} value={item._id}>{item.name}</Option>)
-                        }
+                            {
+                                installlocations.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
+                            }
                         </Select>
                     )}
                     </Item>
                     <Item label="设备IP">
                     {getFieldDecorator('ip',{
-                        initialValue:isUpdate ? deviceinfo.ip : '',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.ip : '',
                     })(
                         <Input placeholder='多个ip用/隔开' />
                     )}
                     </Item>
                     <Item label="设备MAC">
                     {getFieldDecorator('mac',{
-                        initialValue:isUpdate ? deviceinfo.mac : '',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.mac : '',
                     })(
                         <Input placeholder='多个mac用/隔开' />
                     )}
                     </Item>
                     <Item label="安装时间">
                     {getFieldDecorator('create_time',{
-                        initialValue:isUpdate ? moment(deviceinfo.create_time,'YYYY-MM-DD') : moment(thisDate,'YYYY-MM-DD'),
+                        initialValue:isUpdate ? moment(deviceinfo.deviceinfo.create_time,'YYYY-MM-DD') : moment(thisDate,'YYYY-MM-DD'),
                         rules:[
                         {
                             required:true,message:'安装时间不能为空!'
@@ -183,7 +203,7 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item label="设备状态">
                     {getFieldDecorator('status',{
-                        initialValue:isUpdate ? deviceinfo.status : '1',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.status : 1,
                         rules:[
                         {
                             required:true,message:'设备状态不能为空!'
@@ -198,7 +218,7 @@ class AddOrUpdate extends Component{
                     )}
                     </Item>
                     <Item>
-                        <Button type='primary'><Icon type="save" onClick={this.submit}/>提交</Button>&nbsp;&nbsp;
+                        <Button type='primary' onClick={this.submit}><Icon type="save"/>提交</Button>&nbsp;&nbsp;
                         <Button type='danger'><Icon type="close" />取消</Button>
                     </Item>
                 </Form>

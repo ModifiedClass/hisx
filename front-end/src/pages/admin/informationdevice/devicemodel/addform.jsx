@@ -1,9 +1,10 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,Input} from 'antd'
+import {Form,Input,Select} from 'antd'
 
 const Item=Form.Item
+const Option=Select.Option
 
 class AddForm extends Component{
     
@@ -17,7 +18,7 @@ class AddForm extends Component{
     }
     
     render(){
-        const {devicemodel}=this.props
+        const {devicemodel,devicecategorys}=this.props
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:5},
@@ -25,6 +26,21 @@ class AddForm extends Component{
         }
         return(
             <Form>
+                <Item label='设备类别' {...formItemLayout}>
+                    {
+                    getFieldDecorator('devicecategory',{
+                        initialValue:devicemodel.devicecategory,
+                        rules:[
+                        {required:true,message:'类别不能为空!'}
+                        ]
+                    })(
+                        <Select>
+                        {
+                            devicecategorys.map(devicecategory=><Option key={devicecategory._id} value={devicecategory._id}>{devicecategory.name}</Option>)
+                        }
+                        </Select>
+                    )}
+                </Item>
                 <Item label='型号名称' {...formItemLayout}>
                 {
                     getFieldDecorator('name',{

@@ -17,8 +17,8 @@ import PreviewBtn from '../../../../components/previewbtn'
 import SearchForm from './searchform'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
-//import {reqDeviceInfos} from '../../../../../api'
-import reqDeviceInfos from '../../../../api/json/processedrecord.js'
+import {rDeviceInfos,couDeviceInfo,dDeviceInfo} from '../../../../api'
+import {deviceRunSystem} from '../../../../config/selectConfig'
 const { Panel } = Collapse
 
 export default class Home extends Component{
@@ -34,7 +34,7 @@ export default class Home extends Component{
         name:'',
         ip:'',
         mac:'',
-        status:''
+        status:'',
     }
     
     initColums=()=>{
@@ -44,17 +44,19 @@ export default class Home extends Component{
             dataIndex:'_id',
             width: 80,
         },{
-            title:'设备类别',
-            dataIndex:'devicecategory',
-            width: 100,
-        },{
-            title:'设备型号',
+            title:'设备类别型号',
             dataIndex:'devicemodel',
             width: 250,
+            render:(devicemodel)=>{
+               return devicemodel.devicecategory.name+' | '+devicemodel.name
+            }
         },{
             title:'上级',
             dataIndex:'parent',
             width: 80,
+            render:(parent)=>{
+               return parent?parent.name:'无'
+            }
         },{
             title:'设备名称',
             dataIndex:'name',
@@ -63,6 +65,9 @@ export default class Home extends Component{
             title:'安装位置',
             dataIndex:'installlocation',
             width: 200,
+            render:(installlocation)=>{
+                return installlocation.name
+            }
         },{
             title:'序列号',
             dataIndex:'sn',
@@ -71,6 +76,15 @@ export default class Home extends Component{
             title:'系统',
             dataIndex:'runos',
             width: 250,
+            render:(runos)=>{
+                let runosdisplay=''
+                deviceRunSystem.map(item=>{
+                    if(item.value===String(runos)){
+                        runosdisplay= item.label
+                    }
+                })
+                return runosdisplay
+            }
         },{
             title:'ip',
             dataIndex:'ip',
@@ -84,19 +98,19 @@ export default class Home extends Component{
             width: 80,
             dataIndex:'status',
             render:(status)=>{
-                if(status==='2'){
+                if(status===2){
                     return (
                         <span>
                             <Tag color={BASE_RED}>维修</Tag>
                         </span>
                     )
-                }else if(status==='1'){
+                }else if(status===1){
                     return (
                         <span>
                             <Tag color={BASE_GREEN}>正常</Tag>
                         </span>
                     )
-                }else if(status==='3'){
+                }else if(status===3){
                     return (
                         <span>
                             <Tag color={BASE_BLUE}>停用</Tag>
@@ -120,7 +134,7 @@ export default class Home extends Component{
             render:(deviceinfo)=>(
             <span>
                 <PreviewBtn onClick={()=>this.props.history.push('/deviceinfo/detail',{deviceinfo})}/>&nbsp;&nbsp;&nbsp;
-                <EditBtn onClick={()=>this.props.history.push('/deviceinfo/addorupdate',deviceinfo)}/>&nbsp;&nbsp;&nbsp;
+                <EditBtn onClick={()=>this.props.history.push('/deviceinfo/addorupdate',{deviceinfo})}/>&nbsp;&nbsp;&nbsp;
                 <DeleteBtn onClick={()=>this.deleteDeviceInfo(deviceinfo)}/>
             </span>
             )
@@ -129,7 +143,8 @@ export default class Home extends Component{
     }
     
     getDeviceInfos= async(pageNum)=>{
-        /*this.pageNum=pageNum
+        this.pageNum=pageNum
+        const isPage=true
         this.setState({loading:true})
         const{
             devicecategory, 
@@ -141,7 +156,8 @@ export default class Home extends Component{
             mac,
             status
         }=this.state
-        let result=reqDeviceInfos({
+        let result=await rDeviceInfos({
+            isPage,
             pageNum,
             pageSize:PAGE_SIZE,
             devicecategory, 
@@ -155,14 +171,12 @@ export default class Home extends Component{
         })
         
         this.setState({loading:false})
-        if(result.status===0){
-        const {total,list}=result.data
-            this.setState(deviceinfos:list,total)
+        if(result.status===1){
+            const {total,list}=result.data
+            this.setState({deviceinfos:list,total})
         }else{
-            message.error("获取数据失败!")
-        }*/
-        const deviceinfos=reqDeviceInfos.data
-        this.setState({deviceinfos})
+            message.error(result.msg)
+        }
     }
 
     showAdd=()=>{
@@ -178,37 +192,16 @@ export default class Home extends Component{
     resetForm=()=>{
         this.form.resetFields()
     }
-    addOrUpdateDeviceInfo=()=>{
-        this.form.validateFields(async(err,values)=>{
-            if(!err){
-                this.setState({isShow:false})
-                const deviceinfo=values
-                this.form.resetFields()
-                if(this.deviceinfo){
-                    deviceinfo.id=this.deviceinfo._id
-                }
-                /*const result=await reqAddorUpdateUser(deviceinfo)
-                if(result.status===9){
-                    message.success('${this.deviceinfo? '新增':'编辑'}成功')
-                    this.getDeviceInfos()
-                }else{
-                    message.error(result.msg)
-                }*/
-                console.log(deviceinfo)
-            }
-        })
-    }
     
     deleteDeviceInfo=(deviceinfo)=>{
         Modal.confirm({
             title:'确认删除'+deviceinfo.name+'吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteDeviceInfo(deviceinfo._id)
-                if(result.status===0){
+                const result=await dDeviceInfo(deviceinfo._id)
+                if(result.status===1){
                     message.success('删除成功！')
-                    this.getDeviceInfos()
-                }*/
-                message.error(deviceinfo.name)
+                    this.getDeviceInfos(this.pageNum)
+                }
             }
         })
     }
@@ -223,19 +216,15 @@ export default class Home extends Component{
             mac:searchItem.mac,
             status:searchItem.status
         },()=>{  //解决setState延迟
-            this.consoleitem(this.state)
-            //this.getDeviceInfos()
+            this.getDeviceInfos(this.pageNum)
         })
-        console.log(searchItem.devicecategory)
     }
-    consoleitem=(item)=>{
-        console.log(item.devicecategory)
-    }
+
     componentWillMount(){
         this.initColums()
     }
     componentDidMount(){
-        this.getDeviceInfos()
+        this.getDeviceInfos(1)
     }
     
     render(){
@@ -259,7 +248,7 @@ export default class Home extends Component{
                     defaultPageSize:PAGE_SIZE,
                     ShowQuickJumper:true,
                     total,
-                    onChange:this.getDeviceInfos
+                    onChange:this.getDeviceInfos //(pageNum)=>{this.getDeviceInfos(pageNum)}
                     }}
                 />
             </Card>

@@ -4,7 +4,7 @@ import {Card,Table,Button,Icon,message,Modal} from 'antd'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import reqDeviceCategorys from '../../../../api/json/devicecategory'
+import {rDeviceCategorys,couDeviceCategory,dDeviceCategory} from '../../../../api'
 import AddForm from './addform'
 import {formateDate} from '../../../../utils/dateUtils'
 
@@ -19,6 +19,9 @@ export default class DeviceCategory extends Component{
     initColums=()=>{
         this.columns=[
         {
+            title:'编号',
+            dataIndex:'_id',
+        },{
             title:'名称',
             dataIndex:'name',
         },
@@ -40,27 +43,14 @@ export default class DeviceCategory extends Component{
         ]
     }
     getDeviceCategorys=async ()=>{
-        /*const result=await reqDeviceCategorys()
-        if(result.status===0){
+        this.setState({loading:true})
+        const result=await rDeviceCategorys()
+        this.setState({loading:false})
+        if(result.status===1){
             const devicecategorys=result.data
             this.setState({
                 devicecategorys:devicecategorys
             })
-        }*/
-        const devicecategorys=reqDeviceCategorys.data
-        this.setState({
-            devicecategorys
-        })
-    }
-    
-    //设置选中
-    onRow=(devicecategory)=>{
-        return{
-            onClick:event=>{
-                this.setState({
-                    selectedDeviceCategory:devicecategory
-                })
-            }
         }
     }
 
@@ -77,16 +67,15 @@ export default class DeviceCategory extends Component{
                 const devicecategory=values
                 this.form.resetFields()
                 if(this.devicecategory){
-                    devicecategory.id=this.devicecategory._id
+                    devicecategory._id=this.devicecategory._id
                 }
-                /*const result=await reqAddorUpdateDeviceCategory(devicecategory)
-                if(result.status===0){
-                    message.success('${this.devicecategory? '新增':'编辑'}成功')
+                const result=await couDeviceCategory(devicecategory)
+                if(result.status===1){
+                    message.success('操作成功')
                     this.getDeviceCategorys()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(devicecategory)
+                }
             }
         })
     }
@@ -100,13 +89,11 @@ export default class DeviceCategory extends Component{
         Modal.confirm({
             title:'确认删除 '+devicecategory.name+' 吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteDeviceCategory(devicecategory._id)
-                if(result.status===0){
+                const result=await dDeviceCategory(devicecategory._id)
+                if(result.status===1){
                     message.success('删除成功！')
-                    this.getUsers()
-                }*/
-                console.log(devicecategory.name)
-                message.error(devicecategory.name)
+                    this.getDeviceCategorys()
+                }
             }
         })
     } 
@@ -133,21 +120,11 @@ export default class DeviceCategory extends Component{
                 dataSource={devicecategorys}
                 columns={this.columns}
                 pagination={{defaultPageSize:PAGE_SIZE}}
-                rowSelection={{
-                    type:'radio',
-                    selectedRowKeys:[selectedDeviceCategory._id],
-                    onSelect:(devicecategory)=>{
-                        this.setState({
-                            selectedDeviceCategory:devicecategory
-                        })
-                    }
-                    }}
-                onRow={this.onRow}
                 />
                 <Modal
                   title={devicecategory._id ? "编辑类别" : '新增类别'}
                   visible={isShowAdd}
-                  onOk={this.addDeviceCategory}
+                  onOk={this.addOrUpdateDeviceCategory}
                   onCancel={()=>{
                       this.form.resetFields()
                       this.setState({isShowAdd:false}) 

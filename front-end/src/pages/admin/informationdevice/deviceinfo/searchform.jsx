@@ -11,11 +11,17 @@ import {
     } from 'antd'
 
 import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
+import {rDeviceCategorys,rDeviceModels,rInstallLocations} from '../../../../api'
 
 const Option=Select.Option
 const Item=Form.Item
 
 class SearchForm extends PureComponent{
+    state={
+        devicecategorys:[],
+        devicemodels:[],
+        installlocations:[]
+    }
     static propTypes={
         setForm:PropTypes.func.isRequired
     }
@@ -28,11 +34,35 @@ class SearchForm extends PureComponent{
         })
         
     }
+    
+    getDM=async value =>{
+        this.setState({devicemodels:[]})
+        const result=await rDeviceModels({'_id':value})
+        if(result.status===1){
+            this.setState({devicemodels:result.data})
+        }  
+    }
+    
+    initSelect=async()=>{
+        const devicecategorys=await rDeviceCategorys()
+        if(devicecategorys.status===1){
+            this.setState({devicecategorys:devicecategorys.data})
+        }
+        const installlocations=await rInstallLocations()
+        if(installlocations.status===1){
+            this.setState({installlocations:installlocations.data})
+        }
+    }
+    
     componentWillMount(){
+        this.initSelect()
         this.props.setForm(this.props.form)
     }
+    
     render(){
         const {getFieldDecorator}=this.props.form
+        const {devicecategorys,devicemodels,installlocations} =this.state
+
         return(
             <Form className="ant-advanced-search-form" >
                 <Row gutter={24}>
@@ -42,9 +72,9 @@ class SearchForm extends PureComponent{
                         getFieldDecorator('devicecategory',{
                         initialValue:''})
                         (
-                            <Select>
+                            <Select onChange={this.getDM}>
                                 {
-                                    deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                                    devicecategorys.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
                                 }
                             </Select>
                             )
@@ -59,7 +89,7 @@ class SearchForm extends PureComponent{
                         (
                             <Select>
                                 {
-                                    deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                                    devicemodels.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
                                 }
                             </Select>
                             )
@@ -74,7 +104,7 @@ class SearchForm extends PureComponent{
                         (
                             <Select>
                                 {
-                                    deviceRunSystem.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
+                                    installlocations.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
                                 }
                             </Select>
                             )

@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
-import {withRouter} from 'react-router-dom'
+import {withRouter,Link} from 'react-router-dom'
 import {connect} from 'react-redux'
+import {Icon} from 'antd'
 
 import menuList from '../../config/menuConfig'
 import './index.less'
@@ -27,6 +28,12 @@ class BreadCrumBar extends Component{
         return(
             <div className="breadcrum">
                 <span>后台管理/{title}</span>
+                <Link to='/setting'>
+                <Icon 
+                type="setting" 
+                style={{float:'right',fontSize:'20px',lineHeight:'40px',marginRight:'10px'}}
+                />
+                </Link>
             </div>
         )
     }
