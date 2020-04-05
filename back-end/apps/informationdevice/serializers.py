@@ -22,7 +22,7 @@ class InstallLocationSerializer(serializers.ModelSerializer):
 class DeviceInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model=DeviceInfo
-        depth = 2
+        depth = 3
         fields = "__all__"
 
 

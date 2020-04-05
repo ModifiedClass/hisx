@@ -4,7 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework import exceptions
 from django.db import transaction
-import json
+
+from .models import *
+from .serializers import *
+from utils.globalutilitys import *
 
 class TimelineView(APIView):
     '''
@@ -15,72 +18,70 @@ class TimelineView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
-        if request.GET.get("name"):
-            searchdict['details']=request.GET.get("details")
+            searchdict['name__icontains']=request.GET.get("name")
+        if request.GET.get("details"):
+            searchdict['details__icontains']=request.GET.get("details")
         ret={'status':0,'msg':None,'data':None}
         try:
-            obj=Timeline.objects.filter(**searchdict).order_by('name')
+            obj=Timeline.objects.filter(**searchdict).order_by('create_time')
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
                 ser=TimelineSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
-        details=res['details']
         try:
             with transaction.atomic():
                 obj=Timeline()
-                obj.name=name
-                obj.details=details
+                if 'name' in res:
+                    obj.name=res['name']
+                if 'details' in res:
+                    obj.details=res['details']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id = res['_id']
         try:
-            Timeline.objects.filter(id=_id).delete()
+            Timeline.objects.filter(_id=res['_id']).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        name=res['name']
-        details=res['details']
         try:
             with transaction.atomic():
-                obj=Timeline.objects.get(id=_id)
-                obj.name=name
-                details=details
+                obj=Timeline.objects.get(_id=res['_id'])
+                if 'name' in res:
+                    obj.name=res['name']
+                if 'details' in res:
+                    obj.details=res['details']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))

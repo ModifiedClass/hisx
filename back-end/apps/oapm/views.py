@@ -22,7 +22,7 @@ class ProblemCategoryView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
+            searchdict['name__icontains']=request.GET.get("name")
         ret={'status':0,'msg':None,'data':None}
         try:
             obj=ProblemCategory.objects.filter(**searchdict).order_by('name')
@@ -106,9 +106,9 @@ class ProcessedRecordView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("situation"):
-            searchdict['situation']=request.GET.get("situation")
+            searchdict['situation__icontains']=request.GET.get("situation")
         if request.GET.get("solution"):
-            searchdict['solution']=request.GET.get("solution")
+            searchdict['solution__icontains']=request.GET.get("solution")
         if request.GET.get("department"):
             searchdict['department']=request.GET.get("department")
         if request.GET.get("processing_mode"):
@@ -425,7 +425,7 @@ class ApplicationSoftWareView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
+            searchdict['name__icontains']=request.GET.get("name")
         if request.GET.get("framework"):
             searchdict['framework']=request.GET.get("framework")
         if request.GET.get("database"):

@@ -7,9 +7,9 @@ import reqCascaderDepartments from '../../../../api/json/cascaderdepartment.js'
 import {shortDate} from '../../../../utils/dateUtils'
 import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
 import {rDeviceCategorys,rDeviceModels,rInstallLocations,rDeviceInfos,couDeviceInfo} from '../../../../api'
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-moment.locale('zh-cn');
+import moment from 'moment'
+import 'moment/locale/zh-cn'
+moment.locale('zh-cn')
 
 const Item=Form.Item
 const Option=Select.Option
@@ -219,7 +219,7 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item>
                         <Button type='primary' onClick={this.submit}><Icon type="save"/>提交</Button>&nbsp;&nbsp;
-                        <Button type='danger'><Icon type="close" />取消</Button>
+                        <Button type='danger' onClick={()=>this.props.history.goBack()}><Icon type="close" />取消</Button>
                     </Item>
                 </Form>
             </Card>

@@ -48,7 +48,7 @@ class GroupView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
+            searchdict['name__icontains']=request.GET.get("name")
         ret={'status':0,'msg':None,'data':None}
         try:
             obj=Group.objects.filter(**searchdict).order_by('name')
@@ -124,9 +124,9 @@ class DepartmentView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
+            searchdict['name__icontains']=request.GET.get("name")
         if request.GET.get("code"):
-            searchdict['code']=request.GET.get("code")
+            searchdict['code__icontains']=request.GET.get("code")
         if request.GET.get("status"):
             searchdict['status']=request.GET.get("status")
         if request.GET.get("_parent"):
@@ -218,9 +218,9 @@ class UserView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("username"):
-            searchdict['username']=request.GET.get("username")
+            searchdict['username__icontains']=request.GET.get("username")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
+            searchdict['name__icontains']=request.GET.get("name")
         if request.GET.get("status"):
             searchdict['status']=request.GET.get("status")
         if request.GET.get("group"):

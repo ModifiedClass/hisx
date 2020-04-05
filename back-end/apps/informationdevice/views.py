@@ -20,38 +20,38 @@ class DeviceCategoryView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
+            searchdict['name__icontains']=request.GET.get("name")
         ret={'status':0,'msg':None,'data':None}
         try:
             obj=DeviceCategory.objects.filter(**searchdict).order_by('name')
             if not obj:
                 ret['msg']="没有获取到数据!"
+                ret['status']=2
             else:
                 ser=DeviceCategorySerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
         try:
             with transaction.atomic():
                 dc=DeviceCategory()
-                dc.name=name
+                dc.name=name=res['name']
                 dc.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -59,31 +59,30 @@ class DeviceCategoryView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            DeviceCategory.objects.filter(id=_id).delete()
+            DeviceCategory.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
-        except:
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        name=res['name']
         try:
             with transaction.atomic():
-                dc=DeviceCategory.objects.get(id=_id)
-                dc.name=name
-                dc.save()
+                obj=DeviceCategory.objects.get(_id=res['_id'])
+                if "name" in res:
+                    obj.name=res['name']
+                obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
-        except:
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 class DeviceModelView(APIView):
     '''
@@ -94,43 +93,43 @@ class DeviceModelView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
-        if request.GET.get("dcid"):
-            searchdict['devicectegory_id']=request.GET.get("dcid")
+            searchdict['name__icontains']=request.GET.get("name")
+        if request.GET.get("devicecategory"):
+            searchdict['devicecategory_id']=request.GET.get("devicecategory")
         ret={'status':0,'msg':None,'data':None}
         try:
             obj=DeviceModel.objects.filter(**searchdict).order_by('name')
             if not obj:
                 ret['msg']="没有获取到数据!"
+                ret['status']=2
             else:
                 ser=DeviceModelSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
-        devicectegory_id=res['devicectegory_id']
         try:
             with transaction.atomic():
-                dm=DeviceModel()
-                dm.name=name
-                devicectegory=DeviceCategory.objects.get(id=devicectegory_id)
-                dm.devicectegory=devicectegory
-                dm.save()
+                obj=DeviceModel()
+                obj.name=res['name']
+                if "devicecategory" in res:
+                    devicecategory=DeviceCategory.objects.get(_id=res['devicecategory'])
+                obj.devicecategory=devicecategory
+                obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -138,33 +137,34 @@ class DeviceModelView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            DeviceModel.objects.filter(id=_id).delete()
+            DeviceModel.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
         name=res['name']
         devicectegory_id=res['devicectegory_id']
         try:
             with transaction.atomic():
-                dm=DeviceModel.objects.get(id=_id)
-                dm.name=name
-                devicectegory=DeviceCategory.objects.get(id=devicectegory_id)
-                dm.save()
+                obj=DeviceModel.objects.get(_id=res['_id'])
+                if "name" in res:
+                    obj.name=res['name']
+                if "devicecategory" in res:
+                    devicecategory=DeviceCategory.objects.get(_id=res['devicecategory'])
+                obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class InstallLocationView(APIView):
@@ -176,70 +176,68 @@ class InstallLocationView(APIView):
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
+            searchdict['name__icontains']=request.GET.get("name")
         ret={'status':0,'msg':None,'data':None}
         try:
             obj=InstallLocation.objects.filter(**searchdict).order_by('name')
             if not obj:
                 ret['msg']="没有获取到数据!"
+                ret['status']=2
             else:
                 ser=InstallLocationSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
         try:
             with transaction.atomic():
-                il=InstallLocation()
-                il.name=name
-                il.save()
+                obj=InstallLocation()
+                obj.name=name=res['name']
+                obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id = res['_id']
         try:
-            InstallLocation.objects.filter(id=_id).delete()
+            InstallLocation.objects.filter(_id=res['_id']).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        name=res['name']
         try:
             with transaction.atomic():
-                il=InstallLocation.objects.get(id=_id)
-                il.name=name
-                il.save()
+                obj=InstallLocation.objects.get(_id=res['_id'])
+                if "name" in res:
+                    obj.name=res['name']
+                obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 
@@ -248,129 +246,141 @@ class DeviceInfoView(APIView):
     设备信息
     '''
     def get(self,request,*args,**kwargs):
+        isPage=request.GET.get("isPage")
         pageSize=int(request.GET.get("pageSize")) if request.GET.get("pageSize") else 2
-        pageNumber=int(request.GET.get("pageNumber")) if request.GET.get("pageNumber") else 1
+        pageNum=int(request.GET.get("pageNum")) if request.GET.get("pageNum") else 1
         searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("devicecategory"):
-            searchdict['devicecategory']=request.GET.get("devicecategory")
+            searchdict['devicecategory_id']=request.GET.get("devicecategory")
         if request.GET.get("devicemodel"):
-            searchdict['devicemodel']=request.GET.get("devicemodel")
+            searchdict['devicemodel_id']=request.GET.get("devicemodel")
         if request.GET.get("installlocation"):
-            searchdict['installlocation']=request.GET.get("installlocation")
+            searchdict['installlocation_id']=request.GET.get("installlocation")
         if request.GET.get("runos"):
             searchdict['runos']=request.GET.get("runos")
         if request.GET.get("name"):
-            searchdict['name']=request.GET.get("name")
+            searchdict['name__icontains']=request.GET.get("name")
         if request.GET.get("ip"):
-            searchdict['ip']=request.GET.get("ip")
+            searchdict['ip__icontains']=request.GET.get("ip")
         if request.GET.get("mac"):
-            searchdict['mac']=request.GET.get("mac")
+            searchdict['mac__icontains']=request.GET.get("mac")
         if request.GET.get("status"):
             searchdict['status']=request.GET.get("status")
         ret={'status':0,'msg':None,'data':None}
         try:
-            obj=DeviceInfo.objects.filter(**searchdict).order_by('name')
-            if not obj:
-                ret['msg']="没有获取到数据!"
+            if isPage:
+                obj=DeviceInfo.objects.filter(**searchdict).order_by('name')
+                if not obj:
+                    ret['msg']="没有获取到数据!"
+                else:
+                    nums=DeviceInfo.objects.filter(**searchdict).count()
+                    start=(pageNum - 1) * pageSize
+                    end=nums if nums<pageNum*pageSize else pageNum*pageSize
+                    DeviceInfos = DeviceInfo.objects.filter(**searchdict).order_by('name')[start:end]
+                    ser=DeviceInfoSerializer(instance=obj,many=True).data#many 单个对象False
+                    objs = { "list" : ser, "total" : nums }
+                    ret['status']=1
+                    ret['data']=objs
             else:
-                nums=DeviceInfo.objects.filter(**searchdict).count()
-                start=(pageNumber - 1) * pageSize
-                end=nums if nums<pageNumber*pageSize else pageNumber*pageSize
-                DeviceInfos = DeviceInfo.objects.filter(**searchdict).order_by(order)[start:end]
-                ser=DeviceInfoSerializer(instance=obj,many=True).data#many 单个对象False
-                obj = { "rows" : ser, "total" : nums }
-                ret['status']=1
-                ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+                obj=DeviceInfo.objects.filter(status=1).order_by('name')
+                if not obj:
+                    ret['msg']="没有获取到数据!"
+                else:
+                    nums=DeviceInfo.objects.filter(status=1).count()
+                    ser=DeviceInfoSerializer(instance=obj,many=True).data#many 单个对象False
+                    objs = { "list" : ser, "total" : nums }
+                    ret['status']=1
+                    ret['data']=objs
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
-    
+        ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
-        sn=res['sn']
-        status=res["status"]
-        devicemodel=res["devicemodel"]
-        ip=res["ip"]
-        mac=res["mac"]
-        installdate=res["installdate"]
-        parent=res["parent"]
-        runos=res["runos"]
-        installlocation=res["installlocation"]
         try:
             with transaction.atomic():
-                di=DeviceInfo()
-                di.name=name
-                di.sn=sn
-                di.status=status
-                di.devicemodel=DeviceModel.objects.get(id=devicemodel)
-                di.ip=ip
-                di.mac=mac
-                di.installdate=installdate
-                di.parent=DeviceInfo.objects.get(id=parent)
-                di.runos=runos
-                di.installlocation=InstallLocation.objects.get(id=installlocation)
-                di.save()
+                obj=DeviceInfo()
+                if "name" in res and res["name"]:
+                    obj.name=res['name']
+                if "sn" in res and res["sn"]:
+                    obj.sn=res['sn']
+                if "status" in res and res["status"]:
+                    obj.status=res["status"]
+                if "devicemodel" in res and res["devicemodel"]:
+                    obj.devicemodel=DeviceModel.objects.get(_id=int(res["devicemodel"]))
+                if "ip" in res and res["ip"]:
+                    obj.ip=res["ip"]
+                if "mac" in res and res["mac"]:
+                    obj.mac=res["mac"]
+                if "installdate" in res and res["installdate"]:
+                    obj.installdate=res["installdate"]
+                if "parent" in res and res["parent"]:
+                    obj.parent=DeviceInfo.objects.get(_id=int(res["parent"]))
+                if "runos" in res and res["runos"]:
+                    obj.runos=res["runos"]
+                if "installlocation" in res and res["installlocation"]:
+                    obj.installlocation=InstallLocation.objects.get(_id=int(res["installlocation"]))
+                obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
     def delete(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id = res['_id']
         try:
-            DeviceInfo.objects.filter(id=_id).delete()
+            DeviceInfo.objects.filter(_id=res['_id']).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
-        except:
-            ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
-        
-    def patch(self,request,*args,**kwargs):
-        pb=request.body
-        res=json.loads(pb)
-        _id=res['_id']
-        name=res['name']
-        sn=res['sn']
-        status=res["status"]
-        devicemodel=res["devicemodel"]
-        ip=res["ip"]
-        mac=res["mac"]
-        installdate=res["installdate"]
-        parent=res["parent"]
-        runos=res["runos"]
-        installlocation=res["installlocation"]
-        try:
-            with transaction.atomic():
-                di=DeviceInfo.objects.get(id=_id)
-                di.name=name
-                di.sn=sn
-                di.status=status
-                di.devicemodel=DeviceModel.objects.get(id=devicemodel)
-                di.ip=ip
-                di.mac=mac
-                di.installdate=installdate
-                di.parent=DeviceInfo.objects.get(id=parent)
-                di.runos=runos
-                di.installlocation=InstallLocation.objects.get(id=installlocation)
-                di.save()
-                ret['status']=1
-                ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        
+    def patch(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':None}
+        pb=request.body
+        res=json.loads(pb)
+        try:
+            with transaction.atomic():
+                obj=DeviceInfo.objects.get(_id=res['_id'])
+                if "name" in res and res["name"]:
+                    obj.name=res['name']
+                if "sn" in res and res["sn"]:
+                    obj.sn=res['sn']
+                if "status" in res and res["status"]:
+                    obj.status=res["status"]
+                if "devicemodel" in res and res["devicemodel"]:
+                    obj.devicemodel=DeviceModel.objects.get(_id=int(res["devicemodel"]))
+                if "ip" in res and res["ip"]:
+                    obj.ip=res["ip"]
+                if "mac" in res and res["mac"]:
+                    obj.mac=res["mac"]
+                if "installdate" in res and res["installdate"]:
+                    obj.installdate=res["installdate"]
+                if "parent" in res and res["parent"] and res["parent"]!=res['_id']:
+                    obj.parent=DeviceInfo.objects.get(_id=int(res["parent"]))
+                if "runos" in res and res["runos"]:
+                    obj.runos=res["runos"]
+                if "installlocation" in res and res["installlocation"]:
+                    obj.installlocation=InstallLocation.objects.get(_id=int(res["installlocation"]))
+                obj.save()
+                ret['status']=1
+                ret['msg']="操作成功!"
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        except Exception as e:
+            ret['msg']=str(e)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class DeviceTopoView(APIView):
@@ -386,6 +396,7 @@ class DeviceTopoView(APIView):
             InstallLocations=InstallLocation.objects.all().order_by('name')
             if not deviceinfos or not InstallLocations:
                 ret['msg']="没有获取到数据!"
+                ret['status']=2
             else:
                 ilser=InstallLocationSerializer(instance=InstallLocations,many=True).data
                 result['ls']=ilser
@@ -412,11 +423,11 @@ class DeviceTopoView(APIView):
                 result['ts']=ts
                 ret['status']=1
                 ret['data']=result
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -432,7 +443,7 @@ class DeviceTopoView(APIView):
                     devicetopo.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))

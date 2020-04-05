@@ -4,7 +4,7 @@ import {Card,Table,Button,Icon,message,Modal} from 'antd'
 import EditBtn from '../../../components/editbtn'
 import DeleteBtn from '../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../utils/constants'
-import reqTimeLines from '../../../api/json/timeline'
+import {rTimeLines,couTimeLine,dTimeLine} from '../../../api'
 import AddForm from './addform'
 import {formateDate} from '../../../utils/dateUtils'
 
@@ -44,27 +44,12 @@ export default class TimeLine extends Component{
         ]
     }
     getTimeLines=async ()=>{
-        /*const result=await reqTimeLines()
-        if(result.status===0){
+        const result=await rTimeLines()
+        if(result.status===1){
             const timelines=result.data
             this.setState({
                 timelines:timelines
             })
-        }*/
-        const timelines=reqTimeLines.data
-        this.setState({
-            timelines
-        })
-    }
-    
-    //设置选中
-    onRow=(timeline)=>{
-        return{
-            onClick:event=>{
-                this.setState({
-                    selectedTimeLine:timeline
-                })
-            }
         }
     }
 
@@ -81,16 +66,15 @@ export default class TimeLine extends Component{
                 const timeline=values
                 this.form.resetFields()
                 if(this.timeline){
-                    timeline.id=this.timeline._id
+                    timeline._id=this.timeline._id
                 }
-                /*const result=await reqAddorUpdateTimeLine(timeline)
-                if(result.status===0){
-                    message.success('${this.timeline? '新增':'编辑'}成功')
+                const result=await couTimeLine(timeline)
+                if(result.status===1){
+                    message.success('操作成功')
                     this.getTimeLines()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(timeline)
+                }
             }
         })
     }
@@ -104,13 +88,11 @@ export default class TimeLine extends Component{
         Modal.confirm({
             title:'确认删除 '+timeline.name+' 吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteTimeLine(timeline._id)
-                if(result.status===0){
+                const result=await dTimeLine(timeline._id)
+                if(result.status===1){
                     message.success('删除成功！')
-                    this.getUsers()
-                }*/
-                console.log(timeline.name)
-                message.error(timeline.name)
+                    this.getTimeLines()
+                }
             }
         })
     } 
@@ -137,21 +119,11 @@ export default class TimeLine extends Component{
                 dataSource={timelines}
                 columns={this.columns}
                 pagination={{defaultPageSize:PAGE_SIZE}}
-                rowSelection={{
-                    type:'radio',
-                    selectedRowKeys:[selectedTimeLine._id],
-                    onSelect:(timeline)=>{
-                        this.setState({
-                            selectedTimeLine:timeline
-                        })
-                    }
-                    }}
-                onRow={this.onRow}
                 />
                 <Modal
                   title={timeline._id ? "编辑时间轴" : '新增时间轴'}
                   visible={isShowAdd}
-                  onOk={this.addTimeLine}
+                  onOk={this.addOrUpdateTimeLine}
                   onCancel={()=>{
                       this.form.resetFields()
                       this.setState({isShowAdd:false}) 

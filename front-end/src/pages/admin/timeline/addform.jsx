@@ -2,11 +2,13 @@ import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 
 import {Form,Input,DatePicker} from 'antd'
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-moment.locale('zh-cn');
+import {shortDate} from '../../../utils/dateUtils'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
+moment.locale('zh-cn')
 const Item=Form.Item
 const {TextArea}=Input
+const thisDate=shortDate(Date.now())
 
 class AddForm extends Component{
     
@@ -27,10 +29,10 @@ class AddForm extends Component{
             wrapperCol:{span:16}
         }
         return(
-            <Form>
+            <Form {...formItemLayout}>
                 <Item label="时间">
                     {getFieldDecorator('create_time',{
-                        initialValue: moment(timeline.create_time,'YYYY-MM-DD'),
+                        initialValue: timeline.create_time?moment(timeline.create_time,'YYYY-MM-DD'):moment(thisDate,'YYYY-MM-DD'),
                         rules:[
                         {
                             required:true,message:'时间不能为空!'
