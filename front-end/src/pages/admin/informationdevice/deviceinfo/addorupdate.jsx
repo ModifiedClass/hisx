@@ -55,12 +55,13 @@ class AddOrUpdate extends Component{
         this.props.form.validateFields(async (error,values)=>{
             if(!error){
                 const deviceinfo=values
-                if(this.deviceinfo){
+                if(this.deviceinfo.deviceinfo){
                     deviceinfo._id=this.deviceinfo.deviceinfo._id
                 }
                 const result=await couDeviceInfo(deviceinfo)
                 if(result.status===1){
-                    message.success('操作成功')
+                    message.success(result.msg)
+                    this.props.history.goBack()
                 }else{
                     message.error(result.msg)
                 }
@@ -109,7 +110,7 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item label="设备类别">
                     {getFieldDecorator('devicecategory',{
-                        initialValue:isUpdate ? deviceinfo.deviceinfo.devicemodel.devicecategory._id :'1',
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.devicemodel.devicecategory._id :1,
                         rules:[
                         {
                             required:true,message:'设备类别不能为空!'
@@ -150,7 +151,7 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item label="运行系统">
                     {getFieldDecorator('runos',{
-                        initialValue:isUpdate ? deviceinfo.deviceinfo.runos : 2,
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.runos : '2',
                     })(
                         <Select>
                         {
@@ -203,7 +204,7 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item label="设备状态">
                     {getFieldDecorator('status',{
-                        initialValue:isUpdate ? deviceinfo.deviceinfo.status : 1,
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.status : '1',
                         rules:[
                         {
                             required:true,message:'设备状态不能为空!'

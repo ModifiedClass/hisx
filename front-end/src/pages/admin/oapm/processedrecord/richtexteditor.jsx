@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import {EditorState,convertToRaw,ContentState} from 'draft-js'
 import {Editor} from 'react-draft-wysiwyg'
 import draftToHtml from 'draftjs-to-html'
-import htmlToDraft from 'html-to-draftjs';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import htmlToDraft from 'html-to-draftjs'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
 export default class RichTextEditor extends Component{
     static propTypes={
@@ -21,7 +21,8 @@ export default class RichTextEditor extends Component{
             const contentBlock=htmlToDraft(html)
             if(contentBlock){
                 const contentState=ContentState.createFromBlockArray(contentBlock.contentBlocks)
-                const editorState=EditorState.createWillContent(contentState)
+                console.log(contentState)
+                const editorState=EditorState.createWithContent(contentState)
                 this.state={
                     editorState
                 }
@@ -30,17 +31,16 @@ export default class RichTextEditor extends Component{
             this.state={
                 editorState:EditorState.createEmpty()
             }
-            /*const html='医保管理-医保项目管理-对码'
+            const html='<p>医保管理-医保项目管理-对码</p>'
             const contentBlock=htmlToDraft(html)
             if(contentBlock){
                 const contentState=ContentState.createFromBlockArray(contentBlock.contentBlocks)
-                const editorState=EditorState.createWillContent(contentState)
+                const editorState=EditorState.createWithContent(contentState)
                 this.state={
                      editorState
                 }
-            }*/
+            }
         }
-        
     }
     
     onEditorStateChange=(editorState)=>{
@@ -76,7 +76,6 @@ export default class RichTextEditor extends Component{
     
     render(){
         const {editorState}=this.state
-        
         return(
             <div>
             <Editor 
@@ -86,9 +85,9 @@ export default class RichTextEditor extends Component{
             toolbar={{
                 image:{uploadCallback:this.upLoadImageCallBack,alt:{present:true,mandatory:true}}
             }}/>
-            <textarea disabled
+            {/*<textarea disabled
             value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-            />
+            />*/}
             </div>
         )
     }

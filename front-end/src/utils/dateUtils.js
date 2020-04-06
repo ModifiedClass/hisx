@@ -11,6 +11,12 @@ export function shortDate(time){
     return date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()
 }
 
+export function formateYear(time){
+    if(!time) return ''
+    let date=new Date(time)
+    return date.getFullYear()
+}
+
 //获取当月号数
 export function mGetDate(){
      var date = new Date()

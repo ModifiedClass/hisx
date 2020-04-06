@@ -14,19 +14,13 @@ class AddForm extends PureComponent{
         setForm:PropTypes.func.isRequired,
         applicationsoftware:PropTypes.object
     }
-    state={
-        deviceinfos:[]
-    }
-    getDeviceInfos=()=>{
-        const deviceinfos=[]
-        this.setState({deviceinfos})
-    }
+
     componentWillMount(){
         this.props.setForm(this.props.form)
     }
     
     render(){
-        const {applicationsoftware}=this.props
+        const {applicationsoftware,deviceinfos}=this.props
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:5},
@@ -74,12 +68,12 @@ class AddForm extends PureComponent{
                 </Item>
                 <Item label='安装设备' {...formItemLayout}>
                 {
-                    getFieldDecorator('device_id',{
-                        initialValue:applicationsoftware.device_id,
+                    getFieldDecorator('device',{
+                        initialValue:applicationsoftware.device,
                     })(
                         <Select>
                         {
-                            this.state.deviceinfos.map(item=><Option key={item._id} value={item._id}>{item.name}</Option>)
+                            deviceinfos.map(item=><Option key={item._id} value={item._id}>{'名称:'+item.name+' ip:'+item.ip}</Option>)
                         }
                         </Select>
                     )

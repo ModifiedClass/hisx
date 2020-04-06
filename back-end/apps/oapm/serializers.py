@@ -10,6 +10,7 @@ class ProblemCategorySerializer(serializers.ModelSerializer):
 class ProcessedRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model=ProcessedRecord
+        depth = 2
         fields = "__all__"
 
 
@@ -27,5 +28,5 @@ class CartridaySerializer(serializers.ModelSerializer):
 
 class ApplicationSoftWareSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Department
+        model=ApplicationSoftWare
         fields = "__all__"

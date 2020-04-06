@@ -278,8 +278,8 @@ class DeviceInfoView(APIView):
                     nums=DeviceInfo.objects.filter(**searchdict).count()
                     start=(pageNum - 1) * pageSize
                     end=nums if nums<pageNum*pageSize else pageNum*pageSize
-                    DeviceInfos = DeviceInfo.objects.filter(**searchdict).order_by('name')[start:end]
-                    ser=DeviceInfoSerializer(instance=obj,many=True).data#many 单个对象False
+                    dis = obj[start:end]
+                    ser=DeviceInfoSerializer(instance=dis,many=True).data#many 单个对象False
                     objs = { "list" : ser, "total" : nums }
                     ret['status']=1
                     ret['data']=objs

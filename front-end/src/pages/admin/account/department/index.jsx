@@ -5,6 +5,7 @@ import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
+import {ptoc} from '../../../../utils/departmentUtils'
 import {rDepartments,couDepartment,dDepartment} from '../../../../api'
 import AddForm from './addform'
 import Highlighter from 'react-highlight-words'
@@ -132,59 +133,6 @@ export default class Department extends Component{
         }
         ]
     }
-    ptoc=(data)=>{
-        let resData = data.slice()
-        let tree = []
-
-        for (let i = 0; i < resData.length; i++) {
-            if (resData[i]._parent === null) {
-                let obj = {
-                    _id: resData[i]._id,
-                    value: resData[i]._id,
-                    key: resData[i]._id,
-                    name: resData[i].name,
-                    title: resData[i].name,
-                    code: resData[i].code,
-                    create_time: resData[i].create_time,
-                    status: resData[i].status,
-                    _parent: resData[i]._parent,
-                    children: []
-                }
-                tree.push(obj)
-                resData.splice(i, 1)
-                i--
-            }
-        }
-        
-        run(tree)
-        function run(chiArr){
-            if (resData.length !== 0) {
-                for (let i = 0; i < chiArr.length; i++) {
-                    for (let j = 0; j < resData.length; j++) {
-                        if (chiArr[i]._id === resData[j]._parent) {
-                            let obj = {
-                                _id: resData[j]._id,
-                                key: resData[j]._id,
-                                value: resData[j]._id,
-                                title: resData[j].name,
-                                name: resData[j].name,
-                                code: resData[j].code,
-                                create_time: resData[j].create_time,
-                                status: resData[j].status,
-                                _parent: resData[j]._parent,
-                                children: []
-                            }
-                            chiArr[i].children.push(obj)
-                            resData.splice(j, 1)
-                            j--
-                        }
-                    }
-                    run(chiArr[i].children)
-                }
-            }
-        }
-        return tree;
-    }
    
     getDepartments= async()=>{
         this.setState({loading:true})
@@ -192,7 +140,7 @@ export default class Department extends Component{
         const result=await rDepartments()
         this.setState({loading:false})
         if(result.status===1){
-            const departments=this.ptoc(result.data)
+            const departments=ptoc(result.data)
             this.setState({departments})
             
         }else{

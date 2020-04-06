@@ -24,7 +24,7 @@ class ProcessedRecord(models.Model):
     create_time=models.DateTimeField(auto_now_add=True)
     situation=models.TextField()
     solution=models.TextField()
-    department=models.ForeignKey(Department,on_delete=models.CASCADE)
+    department=models.ManyToManyField(Department)
     processing_mode=models.IntegerField(default=1)
     problem_state=models.IntegerField(default=1)
     discoverer=models.ForeignKey(User,on_delete=models.CASCADE,related_name='discoverer')

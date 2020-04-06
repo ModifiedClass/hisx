@@ -40,10 +40,10 @@ class ProblemCategoryView(APIView):
                 #    list.append(dic)
                 #ret['data']=list
                 ret['data']=ser
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         #for k, v in request._request.environ.items():
@@ -51,18 +51,17 @@ class ProblemCategoryView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
         try:
             with transaction.atomic():
                 obj=ProblemCategory()
-                obj.name=name
+                obj.name=res['name']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -70,31 +69,30 @@ class ProblemCategoryView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            ProblemCategory.objects.filter(id=_id).delete()
+            ProblemCategory.objects.filter(_id = res['_id']).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        name=res['name']
         try:
             with transaction.atomic():
-                obj=ProblemCategory.objects.get(id=_id)
-                obj.name=name
+                obj=ProblemCategory.objects.get(_id=res['_id'])
+                if 'name' in res:
+                    obj.name=res['name']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class ProcessedRecordView(APIView):
@@ -102,13 +100,16 @@ class ProcessedRecordView(APIView):
     处理记录
     '''
     def get(self,request,*args,**kwargs):
+        pageSize=int(request.GET.get("pageSize")) if request.GET.get("pageSize") else 2
+        pageNum=int(request.GET.get("pageNum")) if request.GET.get("pageNum") else 1
         searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
-        if request.GET.get("situation"):
-            searchdict['situation__icontains']=request.GET.get("situation")
-        if request.GET.get("solution"):
-            searchdict['solution__icontains']=request.GET.get("solution")
+        if request.GET.get("searchName") and request.GET.get("searchType"):
+            if request.GET.get("searchType")=='situation':
+                searchdict['situation__icontains']=request.GET.get("searchName")
+            else:
+                searchdict['solution__icontains']=request.GET.get("searchName")
         if request.GET.get("department"):
             searchdict['department']=request.GET.get("department")
         if request.GET.get("processing_mode"):
@@ -123,45 +124,53 @@ class ProcessedRecordView(APIView):
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:
-                ser=ProcessedRecordSerializer(instance=obj,many=True).data#many 单个对象False
+                nums=ProcessedRecord.objects.filter(**searchdict).count()
+                start=(pageNum - 1) * pageSize
+                end=nums if nums<pageNum*pageSize else pageNum*pageSize
+                prs=obj[start:end]
+                ser=ProcessedRecordSerializer(instance=prs,many=True).data#many 单个对象False
+                objs = { "list" : ser, "total" : nums }
                 ret['status']=1
-                ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+                ret['data']=objs
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        situation=res['situation']
-        solution=res['solution']
-        department=res['department']
-        processing_mode=res['processing_mode']
-        problem_state=res['problem_state']
-        discoverer=res['discoverer']
-        problem_category=res['problem_category']
-        handler=res['handler']
         try:
             with transaction.atomic():
                 obj=ProcessedRecord()
-                obj.situation=situation
-                obj.solution=solution
-                obj.department=Department.objects.get(id=department)
-                obj.processing_mode=processing_mode
-                obj.problem_state=problem_state
-                obj.discoverer=User.objects.get(id=discoverer)
-                obj.problem_category=ProblemCategory.objects.get(id=problem_category)
-                obj.handler=User.objects.get(id=handler)
+                if 'situation' in res:
+                    obj.situation=res['situation']
+                if 'solution' in res:
+                    obj.solution=res['solution']
+                if 'processing_mode' in res:
+                    obj.processing_mode=res['processing_mode']
+                if 'problem_state' in res:
+                    obj.problem_state=res['problem_state']
+                if 'discoverer' in res:
+                    obj.discoverer=User.objects.get(_id=res['discoverer'])
+                if 'problem_category' in res:
+                    obj.problem_category=ProblemCategory.objects.get(_id=res['problem_category'])
+                if 'handler' in res:
+                    obj.handler=User.objects.get(_id=res['handler'])
+                obj.save()
+                if "department" in res:
+                    departments=Department.objects.filter(_id__in=res['department'])
+                    obj.department.clear()
+                    obj.department.add(*departments)
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -169,45 +178,46 @@ class ProcessedRecordView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            ProcessedRecord.objects.filter(id=_id).delete()
+            ProcessedRecord.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        situation=res['situation']
-        solution=res['solution']
-        department=res['department']
-        processing_mode=res['processing_mode']
-        problem_state=res['problem_state']
-        discoverer=res['discoverer']
-        problem_category=res['problem_category']
-        handler=res['handler']
         try:
             with transaction.atomic():
-                obj=ProcessedRecord.objects.get(id=_id)
-                obj.situation=situation
-                obj.solution=solution
-                obj.department=Department.objects.get(id=department)
-                obj.processing_mode=processing_mode
-                obj.problem_state=problem_state
-                obj.discoverer=User.objects.get(id=discoverer)
-                obj.problem_category=ProblemCategory.objects.get(id=problem_category)
-                obj.handler=User.objects.get(id=handler)
+                obj=ProcessedRecord.objects.get(_id=res['_id'])
+                if 'situation' in res:
+                    obj.situation=res['situation']
+                if 'solution' in res:
+                    obj.solution=res['solution']
+                if 'department' in res:
+                    departments=Department.objects.filter(_id__in=res['department'])
+                    obj.department.clear()
+                    obj.department.add(*departments)
+                if 'processing_mode' in res:
+                    obj.processing_mode=res['processing_mode']
+                if 'problem_state' in res:
+                    obj.problem_state=res['problem_state']
+                if 'discoverer' in res:
+                    obj.discoverer=User.objects.get(_id=res['discoverer'])
+                if 'problem_category' in res:
+                    obj.problem_category=ProblemCategory.objects.get(_id=res['problem_category'])
+                if 'handler' in res:
+                    obj.handler=User.objects.get(_id=res['handler'])
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class PrinterRepairView(APIView):
@@ -231,11 +241,11 @@ class PrinterRepairView(APIView):
                 ser=PrinterRepairSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -249,14 +259,14 @@ class PrinterRepairView(APIView):
                 obj=PrinterRepair()
                 obj.printer=printer
                 obj.create_time=create_time
-                obj.handler=User.objects.get(id=handler)
+                obj.handler=User.objects.get(_id=handler)
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -264,13 +274,13 @@ class PrinterRepairView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            PrinterRepair.objects.filter(id=_id).delete()
+            PrinterRepair.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -283,18 +293,18 @@ class PrinterRepairView(APIView):
         status=res['status']
         try:
             with transaction.atomic():
-                obj=PrinterRepair.objects.get(id=_id)
+                obj=PrinterRepair.objects.get(_id=_id)
                 obj.printer=printer
                 obj.create_time=create_time
-                obj.handler=User.objects.get(id=handler)
+                obj.handler=User.objects.get(_id=handler)
                 obj.status=status if True else False
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
             
     def put(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -308,10 +318,10 @@ class PrinterRepairView(APIView):
                 PrinterRepair.objects.filter(**searchdict).update(status=True)
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class CartridayView(APIView):
@@ -335,11 +345,11 @@ class CartridayView(APIView):
                 ser=CartridaySerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -352,15 +362,15 @@ class CartridayView(APIView):
             with transaction.atomic():
                 obj=Cartriday()
                 obj.create_time=create_time
-                obj.handler=User.objects.get(id=handler)
+                obj.handler=User.objects.get(_id=handler)
                 obj.nums=nums
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -368,13 +378,13 @@ class CartridayView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            Cartriday.objects.filter(id=_id).delete()
+            Cartriday.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -386,17 +396,17 @@ class CartridayView(APIView):
         nums=res['nums']
         try:
             with transaction.atomic():
-                obj=Cartriday.objects.get(id=_id)
+                obj=Cartriday.objects.get(_id=_id)
                 obj.create_time=create_time
-                obj.handler=User.objects.get(id=handler)
+                obj.handler=User.objects.get(_id=handler)
                 obj.nums=nums
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
             
     def put(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -410,10 +420,10 @@ class CartridayView(APIView):
                 Cartriday.objects.filter(**searchdict).update(status=True)
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class ApplicationSoftWareView(APIView):
@@ -441,38 +451,38 @@ class ApplicationSoftWareView(APIView):
                 ser=ApplicationSoftWareSerializer(instance=obj,many=True).data#many 单个对象False
                 ret['status']=1
                 ret['data']=ser
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3
             ret['msg']=str(e)
-            return JsonResponse(json.dumps(ret,ensure_ascii=False))
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
     
     def post(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
-        framework=res['framework']
-        database=res['database']
-        device=res['device']
-        deployment=res['deployment']
-        create_time=res['create_time']
         try:
             with transaction.atomic():
                 obj=ApplicationSoftWare()
-                obj.name=name
-                obj.framework=framework
-                obj.database=database
-                obj.device=DeviceInfo.objects.get(id=device)
-                obj.deployment=deployment
-                obj.create_time=create_time
+                if 'name' in res:
+                    obj.name=res['name']
+                if 'framework' in res:
+                    obj.framework=res['framework']
+                if 'database' in res:
+                    obj.database=res['database']
+                if 'device' in res:
+                    obj.device=DeviceInfo.objects.get(_id=res['device'])
+                if 'deployment' in res:
+                    obj.deployment=res['deployment']
+                if 'create_time' in res:
+                    obj.create_time=res['create_time']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def delete(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
@@ -480,41 +490,40 @@ class ApplicationSoftWareView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            ApplicationSoftWare.objects.filter(id=_id).delete()
+            ApplicationSoftWare.objects.filter(_id=_id).delete()
             ret['status']=1
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         
     def patch(self,request,*args,**kwargs):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        name=res['name']
-        framework=res['framework']
-        database=res['database']
-        device=res['device']
-        deployment=res['deployment']
-        create_time=res['create_time']
         try:
             with transaction.atomic():
-                obj=ApplicationSoftWare.objects.get(id=_id)
-                obj.name=name
-                obj.framework=framework
-                obj.database=database
-                obj.device=DeviceInfo.objects.get(id=device)
-                obj.deployment=deployment
-                obj.create_time=create_time
+                obj=ApplicationSoftWare.objects.get(_id=res['_id'])
+                if 'name' in res:
+                    obj.name=res['name']
+                if 'framework' in res:
+                    obj.framework=res['framework']
+                if 'database' in res:
+                    obj.database=res['database']
+                if 'device' in res:
+                    obj.device=DeviceInfo.objects.get(_id=res['device'])
+                if 'deployment' in res:
+                    obj.deployment=res['deployment']
+                if 'create_time' in res:
+                    obj.create_time=res['create_time']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
-                return setzhJsonResponseHeader(ret)
+                return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class ImgView(APIView):
@@ -532,6 +541,6 @@ class ImgView(APIView):
             ret['status']=1
             ret['data']=f_name
             ret['msg']="操作成功!"
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
-            return setzhJsonResponseHeader(ret)
+            return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))

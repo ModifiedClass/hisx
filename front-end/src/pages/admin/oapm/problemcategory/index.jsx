@@ -5,8 +5,7 @@ import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
-//import {reqProblemCategorys} from '../../../../../api'
-import reqProblemCategorys from '../../../../api/json/problemcategory.js'
+import {rProblemCategorys,couProblemCategory,dProblemCategory} from '../../../../api'
 import AddForm from './addform'
 
 export default class ProblemCategory extends Component{
@@ -18,6 +17,9 @@ export default class ProblemCategory extends Component{
     initColums=()=>{
         this.columns=[
         {
+            title:'id',
+            dataIndex:'_id',
+        },{
             title:'名称',
             dataIndex:'name',
         },
@@ -40,18 +42,16 @@ export default class ProblemCategory extends Component{
     }
     
     getProblemCategorys= async()=>{
-        /*this.setState({loading:true})
+        this.setState({loading:true})
         const {parentId}=this.state
-        const result=await reqProblemCategorys('0')
+        const result=await rProblemCategorys()
         this.setState({loading:false})
-        if(result.status===0){
+        if(result.status===1){
             const problemcategorys=result.data
-            this.setState(problemcategorys)
+            this.setState({problemcategorys})
         }else{
-            message.error("获取数据失败!")
-        }*/
-        const problemcategorys=reqProblemCategorys.data
-        this.setState({problemcategorys})
+            message.error(result.msg)
+        }
     }
 
     showAdd=()=>{
@@ -71,16 +71,15 @@ export default class ProblemCategory extends Component{
                 const problemcategory=values
                 this.form.resetFields()
                 if(this.problemcategory){
-                    problemcategory.id=this.problemcategory._id
+                    problemcategory._id=this.problemcategory._id
                 }
-                /*const result=await reqAddorUpdateUser(problemcategory)
-                if(result.status===9){
-                    message.success('${this.problemcategory? '新增':'编辑'}成功')
+                const result=await couProblemCategory(problemcategory)
+                if(result.status===1){
+                    message.success('操作成功')
                     this.getProblemCategorys()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(problemcategory)    
+                }
             }
         })
         
@@ -90,12 +89,11 @@ export default class ProblemCategory extends Component{
         Modal.confirm({
             title:'确认删除'+problemcategory.name+'吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteProblemCategory(problemcategory._id)
-                if(result.status===0){
+                const result=await dProblemCategory(problemcategory._id)
+                if(result.status===1){
                     message.success('删除成功！')
                     this.getProblemCategorys()
-                }*/
-                message.error(problemcategory.name)
+                }
             }
         })
     }

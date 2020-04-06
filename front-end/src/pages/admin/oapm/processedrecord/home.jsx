@@ -6,9 +6,10 @@ import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import PreviewBtn from '../../../../components/previewbtn'
 import {formateDate} from '../../../../utils/dateUtils'
+import {problemState,processingMode} from '../../../../config/selectConfig'
 import {PAGE_SIZE} from '../../../../utils/constants'
-//import {reqProcessedRecords} from '../../../../../api'
-import reqProcessedRecords from '../../../../api/json/processedrecord.js'
+import {rProcessedRecords,dProcessedRecord} from '../../../../api'
+import htmlToDraft from 'html-to-draftjs'
 
 const Option=Select.Option
 const { Search } = Input
@@ -63,25 +64,43 @@ export default class Home extends Component{
                     }
                 }
             },
-            render: (text) => <Tooltip placement="topLeft" title={text}>{text}</Tooltip>
+            render: (text) => {
+                const contentBlock=htmlToDraft(text)
+                if(contentBlock){
+                    let temp=''
+                    contentBlock.contentBlocks.forEach(t=>{
+                        temp+=t.text
+                    })
+                    return <Tooltip placement="topLeft" title={temp}>{temp}</Tooltip>
+                }
+            }
         },
         {
             title:'处理方式',
             dataIndex:'processing_mode',
             width: 150,
+            render:(processing_mode)=>{
+                let display=''
+                processingMode.forEach(pm=>{
+                    if(pm.value===processing_mode.toString()){
+                        display= pm.label
+                    }
+                })
+                return display
+            }
         },
         {
             title:'问题状态',
             width: 100,
             dataIndex:'problem_state',
             render:(problem_state)=>{
-                if(problem_state==='0'){
+                if(problem_state==='1'){
                     return (
                         <span>
                             <Tag color={BASE_RED}>待处理</Tag>
                         </span>
                     )
-                }else if(problem_state==='1'){
+                }else if(problem_state==='2'){
                     return (
                         <span>
                             <Tag color={BASE_GREEN}>已处理</Tag>
@@ -100,23 +119,39 @@ export default class Home extends Component{
         },
         {
             title:'发生部门',
-            dataIndex:'departmentId',
+            dataIndex:'department',
             width: 200,
+            render:(department)=>{
+                let result=[]
+                for(let i=0;i<department.length;i++){
+                    result.push(department[i].name+'/')
+                }
+                return result
+            }
         },
         {
             title:'发现人',
             dataIndex:'discoverer',
             width: 80,
+            render:(discoverer)=>{
+                return discoverer.name
+            }
         },
         {
             title:'问题类别',
             dataIndex:'problem_category',
             width: 200,
+            render:(problem_category)=>{
+                return problem_category.name
+            }
         },        
         {
             title:'处理人',
             width: 80,
             dataIndex:'handler',
+            render:(handler)=>{
+                return handler.name
+            }
         },          
         {
             title:'操作',
@@ -133,30 +168,28 @@ export default class Home extends Component{
         ]
     }
     getProcessedRecords= async(pageNum)=>{
-        /*this.pageNum=pageNum
+        this.pageNum=pageNum
         this.setState({loading:true})
         const{searchName,searchType}=this.state
         let result
         if(searchName){
-            result=reqProcessedRecords({
+            result=await rProcessedRecords({
                 pageNum,
                 pageSize:PAGE_SIZE,
                 searchName,
                 searchType
                 })
         }else{
-            result=await reqProcessedRecords(pageNum,PAGE_SIZE)
+            result=await rProcessedRecords({pageNum,pageSize:PAGE_SIZE})
         }
         
         this.setState({loading:false})
-        if(result.status===0){
-        const {total,list}=result.data
-            this.setState(processedrecords:list,total)
+        if(result.status===1){
+            const {total,list}=result.data
+            this.setState({processedrecords:list,total})
         }else{
-            message.error("获取数据失败!")
-        }*/
-        const processedrecords=reqProcessedRecords.data
-        this.setState({processedrecords})
+            message.error(result.msg)
+        }
     }
 
     showAdd=()=>{
@@ -169,37 +202,15 @@ export default class Home extends Component{
         this.setState({isShow:true})
     }
     
-    addOrUpdateProcessedRecord=()=>{
-        this.form.validateFields(async(err,values)=>{
-            if(!err){
-                this.setState({isShow:false})
-                const processedrecord=values
-                this.form.resetFields()
-                if(this.processedrecord){
-                    processedrecord.id=this.processedrecord._id
-                }
-                /*const result=await reqAddorUpdateUser(processedrecord)
-                if(result.status===9){
-                    message.success('${this.processedrecord? '新增':'编辑'}成功')
-                    this.getProcessedRecords()
-                }else{
-                    message.error(result.msg)
-                }*/
-                console.log(processedrecord)
-            }
-        })
-    }
-    
     deleteProcessedRecord=(processedrecord)=>{
         Modal.confirm({
             title:'确认删除'+processedrecord.name+'吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteProcessedRecord(processedrecord._id)
-                if(result.status===0){
+                const result=await dProcessedRecord(processedrecord._id)
+                if(result.status===1){
                     message.success('删除成功！')
-                    this.getProcessedRecords()
-                }*/
-                message.error(processedrecord.name)
+                    this.getProcessedRecords(1)
+                }
             }
         })
     }
@@ -208,7 +219,7 @@ export default class Home extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getProcessedRecords()
+        this.getProcessedRecords(1)
     }
     
     render(){

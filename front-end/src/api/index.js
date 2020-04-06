@@ -70,11 +70,7 @@ export const couProblemCategory=(problemcategory)=>fetchreq(HOST+'/api/oapm/prob
 export const dProblemCategory=(problemcategoryId)=>fetchreq(HOST+'/api/oapm/problemcategory/',{'_id':problemcategoryId},'DELETE')
 
 //读取运维记录
-export const rProcessedRecords=({pageNum,pageSize,searchName,searchType})=>fetchreq(HOST+'/oapm/processedrecord/',{
-    pageNum,
-    pageSize,
-    [searchType]:searchName
-    })
+export const rProcessedRecords=(ProcessedRecord)=>fetchreq(HOST+'/api/oapm/processedrecord/',ProcessedRecord)
 //增加或更新运维记录
 export const couProcessedRecord=(processedrecord)=>fetchreq(HOST+'/api/oapm/processedrecord/',processedrecord,(processedrecord._id ? 'PATCH' : 'POST'))
 //删除运维记录

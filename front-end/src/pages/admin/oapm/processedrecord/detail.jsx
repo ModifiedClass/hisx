@@ -4,20 +4,22 @@ import {Card,Icon,Descriptions, Badge,Empty} from 'antd'
 import {BASE_GREEN,BASE_RED,BASE_BLUE} from '../../../../utils/colors'
 import {BASE_IMG_URL} from '../../../../utils/constants'
 import BackBtn from '../../../../components/backbtn'
+import {processingMode} from '../../../../config/selectConfig'
+import {formateDate} from '../../../../utils/dateUtils'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
+moment.locale('zh-cn')
 
 const Item=Descriptions.Item
 
 export default class ProcessedRecordDetail extends Component{
     state={
-        stateDisplay:''
+        stateDisplay:'',
+        processing_modeDisplay:''
     }
-     
-    componentDidMount(){
+    
+    getstateDisplay=()=>{
         const {problem_state}=this.props.location.state.processedrecord
-         /*const result=await reqState(pstateId)
-         const pstate=result.data.name
-         this.setState({pstate})*/
-         
         const stateDisplay=problem_state==='1' ? (
             <Badge color={BASE_RED} text="待处理" />
         ) :(problem_state==='2' ? (
@@ -27,24 +29,39 @@ export default class ProcessedRecordDetail extends Component{
         ))
         this.setState({stateDisplay})
     }
+    
+    getprocessingModeDisplay=()=>{
+        const {processing_mode}=this.props.location.state.processedrecord
+        processingMode.forEach(pm=>{
+            if(processing_mode.toString()===pm.value){
+                this.setState({processing_modeDisplay:pm.label})
+            }
+        })
+    }
+    
+    componentDidMount(){
+        this.getstateDisplay()
+        this.getprocessingModeDisplay()
+    }
     /*
     HashRouter
-    卸载之前清楚保存数据
+    卸载之前清除保存数据
     componentDidUnMount(){
         memUtils.processedrecord={}
     }
     */
     render(){
-        const {create_time,
-        situation,
-        solution,
-        processing_mode,
-        departmentId,
-        discoverer,
-        problem_category,
-        handler,
-        pics
+        const {
+            create_time,
+            situation,
+            solution,
+            department,
+            discoverer,
+            problem_category,
+            handler,
+            pics
         }=this.props.location.state.processedrecord
+
         /*
         HashRouter
         const {create_time,
@@ -58,7 +75,11 @@ export default class ProcessedRecordDetail extends Component{
         pics
         }=memUtils.processedrecord
         */
-        const {stateDisplay}=this.state
+        let departmentNames=''
+        department.forEach(dep=>{
+            departmentNames+=dep.name+'/'
+        })
+        const {stateDisplay,processing_modeDisplay}=this.state
         const title=(
             <span>
                 <BackBtn onClick={()=>this.props.history.goBack()}/>
@@ -78,13 +99,13 @@ export default class ProcessedRecordDetail extends Component{
         return(
             <Card title={title}>
               <Descriptions bordered>
-                <Item label={icreate_time} span={2}>{create_time}</Item>
+                <Item label={icreate_time} span={2}>{formateDate(create_time)}</Item>
                 <Item label={istateDisplay}>{stateDisplay}</Item>
-                <Item label={idepartmentId} span={2}>{departmentId}</Item>
-                <Item label={idiscoverer}>{discoverer}</Item>
-                <Item label={iproblem_category}>{problem_category}</Item>
-                <Item label={iprocessing_mode}>{processing_mode}</Item>
-                <Item label={ihandler}>{handler}</Item>
+                <Item label={idepartmentId} span={2}>{departmentNames.substring(0,departmentNames.length-1)}</Item>
+                <Item label={idiscoverer}>{discoverer.name}</Item>
+                <Item label={iproblem_category}>{problem_category.name}</Item>
+                <Item label={iprocessing_mode}>{processing_modeDisplay}</Item>
+                <Item label={ihandler}>{handler.name}</Item>
                 <Item label={isituation} span={3}>{situation}</Item>
                 <Item label={isolution} span={3}><span dangerouslySetInnerHTML={{__html:solution}}></span></Item>
                 <Item label={ipic} span={3}>
