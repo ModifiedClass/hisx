@@ -1,11 +1,9 @@
 import React,{Component} from 'react';
-import {Card,Button,Col,Row,Timeline,Select} from 'antd'
-import ReactEcharts from 'echarts-for-react'
+import {Col,Row} from 'antd'
 
 import Chart from './chart'
 import DTimeLine from './timeline'
 
-const Option=Select.Option
 
 export default class Dashboard extends Component{
 

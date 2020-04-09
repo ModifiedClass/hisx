@@ -132,7 +132,6 @@ class AddOrUpdate extends Component{
             solution,
             imgs
         }=processedrecord
-
         //级联id数组     
         const departmentIds=[]
         if(isUpdate){

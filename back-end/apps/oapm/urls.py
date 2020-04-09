@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,re_path
 from oapm import views
 
 urlpatterns = [
@@ -13,5 +13,6 @@ urlpatterns = [
     #应用软件
     path('applicationsoftware/',views.ApplicationSoftWareView.as_view()),
     #图片
+    #上传
     path('img/',views.ImgView.as_view()),
 ]

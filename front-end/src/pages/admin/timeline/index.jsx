@@ -6,7 +6,7 @@ import DeleteBtn from '../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../utils/constants'
 import {rTimeLines,couTimeLine,dTimeLine} from '../../../api'
 import AddForm from './addform'
-import {formateDate} from '../../../utils/dateUtils'
+import {formateDate,shortDate} from '../../../utils/dateUtils'
 
 export default class TimeLine extends Component{
 
@@ -14,7 +14,6 @@ export default class TimeLine extends Component{
         isShowAdd:false,
         loading:false,
         timelines:[],  //所有时间轴,用于显示table数据
-        selectedTimeLine:''
     }
     initColums=()=>{
         this.columns=[
@@ -64,6 +63,7 @@ export default class TimeLine extends Component{
             if(!err){
                 this.setState({isShowAdd:false})
                 const timeline=values
+                timeline.create_time=shortDate(values['create_time'])
                 this.form.resetFields()
                 if(this.timeline){
                     timeline._id=this.timeline._id
@@ -104,7 +104,7 @@ export default class TimeLine extends Component{
         this.getTimeLines()
     }
     render(){
-        const {timelines,loading,selectedTimeLine,isShowAdd}=this.state
+        const {timelines,loading,isShowAdd}=this.state
         const timeline=this.timeline||{}
         const title=(
              <span>

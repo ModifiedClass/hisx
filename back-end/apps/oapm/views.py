@@ -159,6 +159,8 @@ class ProcessedRecordView(APIView):
                     obj.problem_category=ProblemCategory.objects.get(_id=res['problem_category'])
                 if 'handler' in res:
                     obj.handler=User.objects.get(_id=res['handler'])
+                if 'imgs' in res:
+                    obj.imgs=res['imgs']
                 obj.save()
                 if "department" in res:
                     departments=Department.objects.filter(_id__in=res['department'])
@@ -211,6 +213,8 @@ class ProcessedRecordView(APIView):
                     obj.problem_category=ProblemCategory.objects.get(_id=res['problem_category'])
                 if 'handler' in res:
                     obj.handler=User.objects.get(_id=res['handler'])
+                if 'imgs' in res:
+                    obj.imgs=res['imgs']
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -231,8 +235,12 @@ class PrinterRepairView(APIView):
         if request.GET.get("handler"):
             searchdict['handler']=request.GET.get("handler")
         if request.GET.get("status"):
-            searchdict['status']=request.GET.get("status")
+            if str(request.GET.get("status"))=='true':
+                searchdict['status']=True
+            else:
+                searchdict['status']=False
         ret={'status':0,'msg':None,'data':None}
+        print(searchdict)
         try:
             obj=PrinterRepair.objects.filter(**searchdict).order_by('-create_time')
             if not obj:
@@ -251,15 +259,15 @@ class PrinterRepairView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        printer=res['printer']
-        create_time=res['create_time']
-        handler=res['handler']
         try:
             with transaction.atomic():
                 obj=PrinterRepair()
-                obj.printer=printer
-                obj.create_time=create_time
-                obj.handler=User.objects.get(_id=handler)
+                if 'printer' in res:
+                    obj.printer=DeviceInfo.objects.get(_id=res['printer'])
+                if 'create_time' in res:
+                    obj.create_time= res['create_time']
+                if 'handler' in res:
+                    obj.handler=User.objects.get(_id=res['handler'])
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -286,18 +294,15 @@ class PrinterRepairView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        printer=res['printer']
-        create_time=res['create_time']
-        handler=res['handler']
-        status=res['status']
         try:
             with transaction.atomic():
-                obj=PrinterRepair.objects.get(_id=_id)
-                obj.printer=printer
-                obj.create_time=create_time
-                obj.handler=User.objects.get(_id=handler)
-                obj.status=status if True else False
+                obj=PrinterRepair.objects.get(_id=res['_id'])
+                if 'printer' in res:
+                    obj.printer=DeviceInfo.objects.get(_id=res['printer'])
+                if 'create_time' in res:
+                    obj.create_time= res['create_time']
+                if 'handler' in res:
+                    obj.handler=User.objects.get(_id=res['handler'])
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -311,7 +316,7 @@ class PrinterRepairView(APIView):
         pb=request.body
         res=json.loads(pb)
         searchdict={}
-        searchdict['handler']=request.GET.get("handler")
+        searchdict['handler']=res['handler']
         searchdict['status']=False
         try:
             with transaction.atomic():
@@ -325,6 +330,7 @@ class PrinterRepairView(APIView):
 
 
 class CartridayView(APIView):
+    import datetime
     '''
     硒鼓加粉
     '''
@@ -332,10 +338,13 @@ class CartridayView(APIView):
         searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
-        if request.GET.get("handler"):
-            searchdict['handler']=request.GET.get("handler")
+        if request.GET.get("_handler"):
+            searchdict['_handler']=request.GET.get("_handler")
         if request.GET.get("status"):
-            searchdict['status']=request.GET.get("status")
+            if str(request.GET.get("status"))=='true':
+                searchdict['status']=True
+            else:
+                searchdict['status']=False
         ret={'status':0,'msg':None,'data':None}
         try:
             obj=Cartriday.objects.filter(**searchdict).order_by('-create_time')
@@ -355,15 +364,16 @@ class CartridayView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        create_time=res['create_time']
-        handler=res['handler']
-        nums=res['nums']
+        print(res)
         try:
             with transaction.atomic():
                 obj=Cartriday()
-                obj.create_time=create_time
-                obj.handler=User.objects.get(_id=handler)
-                obj.nums=nums
+                if 'create_time' in res:
+                    obj.create_time= res['create_time']
+                if '_handler' in res:
+                    obj._handler=User.objects.get(_id=res['_handler'])
+                if 'nums' in res:
+                    obj.nums=int(res['nums'])
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -390,16 +400,15 @@ class CartridayView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        _id=res['_id']
-        create_time=res['create_time']
-        handler=res['handler']
-        nums=res['nums']
         try:
             with transaction.atomic():
-                obj=Cartriday.objects.get(_id=_id)
-                obj.create_time=create_time
-                obj.handler=User.objects.get(_id=handler)
-                obj.nums=nums
+                obj=Cartriday.objects.get(_id=res['_id'])
+                if 'create_time' in res:
+                    obj.create_time= res['create_time']
+                if '_handler' in res:
+                    obj._handler=User.objects.get(_id=res['_handler'])
+                if 'nums' in res:
+                    obj.nums=int(res['nums'])
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -413,11 +422,12 @@ class CartridayView(APIView):
         pb=request.body
         res=json.loads(pb)
         searchdict={}
-        searchdict['_handler']=request.GET.get("_handler")
+        searchdict['_handler']=res['_handler']
         searchdict['status']=False
         try:
             with transaction.atomic():
-                Cartriday.objects.filter(**searchdict).update(status=True)
+                obj=Cartriday.objects.filter(**searchdict).update(status=True)
+                ret['data']=obj
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
@@ -528,18 +538,13 @@ class ApplicationSoftWareView(APIView):
 
 class ImgView(APIView):
     def post(self, request):
-        from utils.globalutilitys import pwdenc
-        import datetime
+        from utils.globalutilitys import save_image
         ret={'status':0,'msg':None,'data':None}
-        f = request.FILES['img']#request.FILES.get('img')
-        f_name = pwdenc(datetime.datetime.now())
+        f = request.FILES['image']
         try:
-            img = Img()
-            img.name = f_name
-            img.path = f
-            img.save()
+            filename,full_filename,url=save_image(f)
             ret['status']=1
-            ret['data']=f_name
+            ret['data']=[filename,full_filename,url]
             ret['msg']="操作成功!"
             return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:

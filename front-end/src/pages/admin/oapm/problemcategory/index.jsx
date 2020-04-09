@@ -43,7 +43,6 @@ export default class ProblemCategory extends Component{
     
     getProblemCategorys= async()=>{
         this.setState({loading:true})
-        const {parentId}=this.state
         const result=await rProblemCategorys()
         this.setState({loading:false})
         if(result.status===1){

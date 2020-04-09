@@ -18,7 +18,6 @@ export default class InstallLocation extends Component{
         isShowAdd:false,
         loading:false,
         installlocations:[],  //所有安装地点,用于显示table数据
-        selectedInstallLocation:''
     }
     initColums=()=>{
         this.columns=[
@@ -106,7 +105,7 @@ export default class InstallLocation extends Component{
         this.getInstallLocations()
     }
     render(){
-        const {installlocations,loading,selectedInstallLocation,isShowAdd}=this.state
+        const {installlocations,loading,isShowAdd}=this.state
         const installlocation=this.installlocation||{}
         const title=(
              <span>

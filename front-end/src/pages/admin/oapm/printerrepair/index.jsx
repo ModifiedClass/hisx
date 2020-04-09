@@ -1,22 +1,27 @@
 import React,{Component} from 'react';
 
-import {Card,Table,Button,Icon,message,Modal} from 'antd'
+import {Card,Table,Button,Icon,message,Modal,Tag} from 'antd'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
-import {formateDate} from '../../../../utils/dateUtils'
+import {formateDate,shortDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
-//import {reqPrinterRepairs} from '../../../../../api'
-//import reqPrinterRepairs from '../../../../api/json/printerrepair.js'
+import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
+import {rPrinterRepairs,couPrinterRepair,dPrinterRepair,rePrinterRepair,rUsers,rDeviceInfos} from '../../../../api'
 import AddForm from './addform'
 import ReviewForm from './reviewform'
 
 export default class PrinterRepair extends Component{
+    constructor(props){
+        super(props)
+        this.rev=React.createRef()
+    }
     state={
         printerrepairs:[],
         loading:false,
         isShow:false,
         reviewShow:false,
-        users:[]
+        users:[],
+        deviceinfos:[]
     }
     initColums=()=>{
         this.columns=[
@@ -25,17 +30,47 @@ export default class PrinterRepair extends Component{
             dataIndex:'create_time',
             render:(create_time)=>formateDate(create_time)
         },{
-            title:'型号',
+            title:'类别/型号/编号',
             dataIndex:'printer',
-        },{
-            title:'部门',
-            dataIndex:'printer',
+            render:(printer)=>{
+                let display=''
+                this.state.deviceinfos.forEach(di=>{
+                    if(printer===di.id){
+                        display=di.text
+                    }
+                })
+                return display
+            }
         },{
             title:'处理人员',
-            dataIndex:'_handler',
+            dataIndex:'handler',
+            render:(_handler)=>{
+                let display=''
+                this.state.users.forEach(user=>{
+                    if(_handler===user._id){
+                        display=user.name
+                    }
+                })
+                return display
+            }
         },{
             title:'状态',
             dataIndex:'status',
+            render:(status)=>{
+                if(status){
+                    return (
+                        <span>
+                            <Tag color={BASE_GREEN}>已审核</Tag>
+                        </span>
+                    )
+                }else{
+                    return (
+                        <span>
+                            <Tag color={BASE_YELLOW}>未审核</Tag>
+                        </span>
+                    )
+                }
+            }
         },{
             title:'操作',
             width:300,
@@ -48,20 +83,38 @@ export default class PrinterRepair extends Component{
         }
         ]
     }
+    //初始化table设备类别/型号/sn列显示
+    initDeviceinfos=async()=>{
+        this.setState({deviceinfos:[]})
+        const result=await rDeviceInfos({'isPage':false})
+        const list=[]
+        if(result.status===1){
+           const obj=result.data.list
+           for(let i=0;i<obj.length;i++){
+               list.push({'id':obj[i]._id,'text':obj[i].devicemodel.devicecategory.name+'/'+obj[i].devicemodel.name+'/'+obj[i].sn})
+           }
+           this.setState({deviceinfos:list})
+        }
+    }
+    //初始化用户用于传子控件
+    initUsers=async()=>{
+        const result=await rUsers()
+        if(result.status===1){
+            const users=result.data
+            this.setState({users})
+        }
+    }
     
     getPrinterRepairs= async()=>{
-        /*this.setState({loading:true})
-        const {parentId}=this.state
-        const result=await reqPrinterRepairs('0')
+        this.setState({loading:true})
+        const result=await rPrinterRepairs()
         this.setState({loading:false})
-        if(result.status===0){
+        if(result.status===1){
             const printerrepairs=result.data
-            this.setState(printerrepairs)
+            this.setState({printerrepairs})
         }else{
-            message.error("获取数据失败!")
-        }*/
-        /*const printerrepairs=reqPrinterRepairs.data
-        this.setState({printerrepairs})*/
+            message.error(result.msg)
+        }
     }
 
     showAdd=()=>{
@@ -83,18 +136,18 @@ export default class PrinterRepair extends Component{
             if(!err){
                 this.setState({isShow:false})
                 const printerrepair=values
+                printerrepair.create_time=shortDate(values['create_time'])
                 this.form.resetFields()
                 if(this.printerrepair){
-                    printerrepair.id=this.printerrepair._id
+                    printerrepair._id=this.printerrepair._id
                 }
-                /*const result=await reqAddorUpdateUser(printerrepair)
-                if(result.status===9){
-                    message.success('${this.printerrepair? '新增':'编辑'}成功')
+                const result=await couPrinterRepair(printerrepair)
+                if(result.status===1){
+                    message.success(result.msg)
                     this.getPrinterRepairs()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(printerrepair)    
+                }   
             }
         })
         
@@ -104,48 +157,41 @@ export default class PrinterRepair extends Component{
         Modal.confirm({
             title:'确认删除'+printerrepair.name+'吗？',
             onOk:async()=>{
-                /*const result=await reqdeletePrinterRepair(printerrepair._id)
-                if(result.status===0){
-                    message.success('删除成功！')
+                const result=await dPrinterRepair(printerrepair._id)
+                if(result.status===1){
+                    message.success(result.msg)
                     this.getPrinterRepairs()
-                }*/
-                message.error(printerrepair.name)
+                }
             }
         })
     }
     
-    reviewPrinterRepair=()=>{
-        this.form.validateFields(async(err,values)=>{
-            if(!err){
-                this.setState({reviewShow:false})
-                const _handler=values._handler
-                console.log(_handler)
-                this.form.resetFields()
-
-                /*const result=await rePrinterRepair(_handler)
-                if(result.status===1){
-                    message.success('审核成功')
-                    this.getPrinterRepairs()
-                }else{
-                    message.error(result.msg)
-                }*/  
-            }
-        })
-        
+    reviewPrinterRepair=async()=>{
+        this.setState({reviewShow:false})
+        const handler=this.rev.current.gethandler()
+        const result=await rePrinterRepair(handler)
+        if(result.status===1){
+            message.success(result.msg)
+            this.getPrinterRepairs()
+        }else{
+            message.error(result.msg)
+        }
     }
     
     componentWillMount(){
+        this.initDeviceinfos()
         this.initColums()
     }
     componentDidMount(){
         this.getPrinterRepairs()
+        this.initUsers()
     }
     render(){
         const {printerrepairs,loading,isShow,reviewShow,users}=this.state
         const printerrepair=this.printerrepair||{}
         const title=<span>
-            <Button type='primary' onClick={this.showAdd}><Icon type='block'/>新增</Button>
-            <Button type='primary' onClick={this.showReview}><Icon type='block'/>审核</Button>
+            <Button type='primary' onClick={this.showAdd}><Icon type='tool'/>新增</Button>&nbsp;&nbsp;
+            <Button type='primary' onClick={this.showReview}><Icon type='file-done'/>审核</Button>
         </span>
         return(
             <Card title={title}>
@@ -169,7 +215,7 @@ export default class PrinterRepair extends Component{
                 >
                     <AddForm 
                     setForm={(form)=>{this.form=form}} 
-                    handlers={users}
+                    users={users}
                     printerrepair={printerrepair}
                     />
                 </Modal>
@@ -178,13 +224,12 @@ export default class PrinterRepair extends Component{
                   visible={reviewShow}
                   onOk={this.reviewPrinterRepair}
                   onCancel={()=>{
-                      this.form.resetFields()
                       this.setState({reviewShow:false})
                   }}
                 >
                     <ReviewForm
-                    handlers={users}
-                    setForm={(form)=>{this.form=form}} 
+                    users={users}
+                    ref={this.rev} 
                     />
                 </Modal>
             </Card>

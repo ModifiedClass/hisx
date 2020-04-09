@@ -14,7 +14,6 @@ export default class DeviceCategory extends Component{
         isShowAdd:false,
         loading:false,
         devicecategorys:[],  //所有类别,用于显示table数据
-        selectedDeviceCategory:''
     }
     initColums=()=>{
         this.columns=[
@@ -105,7 +104,7 @@ export default class DeviceCategory extends Component{
         this.getDeviceCategorys()
     }
     render(){
-        const {devicecategorys,loading,selectedDeviceCategory,isShowAdd}=this.state
+        const {devicecategorys,loading,isShowAdd}=this.state
         const devicecategory=this.devicecategory||{}
         const title=(
              <span>

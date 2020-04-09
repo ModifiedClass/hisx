@@ -59,7 +59,7 @@ export default class ProcessedRecordDetail extends Component{
             discoverer,
             problem_category,
             handler,
-            pics
+            imgs
         }=this.props.location.state.processedrecord
 
         /*
@@ -110,7 +110,7 @@ export default class ProcessedRecordDetail extends Component{
                 <Item label={isolution} span={3}><span dangerouslySetInnerHTML={{__html:solution}}></span></Item>
                 <Item label={ipic} span={3}>
                 {
-                    pics ? pics.map(img=>(
+                    imgs ? imgs.map(img=>(
                             <img
                            key={img}
                             className="processedrecord-img"

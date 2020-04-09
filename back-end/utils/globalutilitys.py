@@ -60,3 +60,26 @@ def setzhJsonResponseHeader(res):
     response["Access-Control-Allow-Methods"] = "POST,GET,OPTIONS,PUT,DELETE,PATCH"
     response["Access-Control-Max-Age"] = "1000"
     return response
+
+#获取时间戳字符串
+def get_time_stamp():
+    import time
+    ct = time.time()
+    local_time = time.localtime(ct)
+    data_head = time.strftime("%Y-%m-%d %H:%M:%S", local_time)
+    data_secs = (ct - int(ct)) * 1000
+    time_stamp = "%s.%03d" % (data_head, data_secs)
+    stamp = ("".join(time_stamp.split()[0].split("-"))+"".join(time_stamp.split()[1].split(":"))).replace('.', '')
+    return stamp
+
+#上传图片
+def save_image(files):
+    from django.conf import settings
+    filename = "%s.%s" % (get_time_stamp(), files.name.split('.')[-1])
+    full_filename = "%s\\%s" % (settings.MEDIA_ROOT+'\\img', filename)
+    #url="%s/%s" % ('media/img', filename)
+    url='http://127.0.0.1:8000/media/img/'+filename
+    with open(full_filename, 'wb+') as destination:
+        for chunk in files.chunks():
+            destination.write(chunk)
+    return filename, full_filename,url

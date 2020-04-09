@@ -1,7 +1,7 @@
 import React,{PureComponent} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,Input,Select,TreeSelect,Switch} from 'antd'
+import {Form,Input,TreeSelect,Switch} from 'antd'
 
 const Item=Form.Item
 

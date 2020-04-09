@@ -9,7 +9,7 @@ const Item=Descriptions.Item
 export default class DeviceInfoDetail extends Component{
     runosdisplay=para=>{
         let display=''
-        deviceRunSystem.map(item=>{
+        deviceRunSystem.forEach(item=>{
             if(item.value===String(para)){
                 display= item.label
             }
@@ -19,7 +19,7 @@ export default class DeviceInfoDetail extends Component{
     
     statusdisplay=para=>{
         let display=''
-        deviceStatus.map(item=>{
+        deviceStatus.forEach(item=>{
             if(item.value===String(para)){
                 display= item.label
             }

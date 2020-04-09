@@ -18,7 +18,6 @@ export default class DeviceModel extends Component{
         loading:false,
         devicemodels:[],  //所有型号,用于显示table数据
         devicecategorys:[],
-        selectedDeviceModel:'',
         searchName:'',  //搜素关键字
         searchType:''    //搜素类型
     }
@@ -147,7 +146,7 @@ export default class DeviceModel extends Component{
         this.getDeviceModels()
     }
     render(){
-        const {devicemodels,devicecategorys,loading,selectedDeviceModel,isShowAdd,searchName,searchType}=this.state
+        const {devicemodels,devicecategorys,loading,isShowAdd,searchName,searchType}=this.state
         const devicemodel=this.devicemodel||{}
         const title=(
              <span>

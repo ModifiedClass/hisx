@@ -73,7 +73,7 @@ export default class ApplicationSoftWare extends Component{
     
     getFramework=framework=>{
         let display=''
-        appFrameWork.map((item)=>{
+        appFrameWork.forEach((item)=>{
             if(item.value===String(framework)){
                 display= item.label
             }
@@ -82,7 +82,7 @@ export default class ApplicationSoftWare extends Component{
     }
     getDatabase=database=>{
         let display=''
-        dataBase.map((item)=>{
+        dataBase.forEach((item)=>{
             if(item.value===String(database)){
                 display= item.label
             }

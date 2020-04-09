@@ -30,6 +30,7 @@ class ProcessedRecord(models.Model):
     discoverer=models.ForeignKey(User,on_delete=models.CASCADE,related_name='discoverer')
     problem_category=models.ForeignKey(ProblemCategory,on_delete=models.CASCADE)
     handler=models.ForeignKey(User,on_delete=models.CASCADE,related_name='handler')
+    imgs=models.TextField(blank=True,null=True)
 
     def __str__(self):
         return self.situation

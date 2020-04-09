@@ -39,9 +39,12 @@ class TimelineView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
+        print(res)
         try:
             with transaction.atomic():
                 obj=Timeline()
+                if 'create_time' in res:
+                    obj.create_time= res['create_time']
                 if 'name' in res:
                     obj.name=res['name']
                 if 'details' in res:
@@ -74,6 +77,8 @@ class TimelineView(APIView):
         try:
             with transaction.atomic():
                 obj=Timeline.objects.get(_id=res['_id'])
+                if 'create_time' in res:
+                    obj.create_time= res['create_time']
                 if 'name' in res:
                     obj.name=res['name']
                 if 'details' in res:

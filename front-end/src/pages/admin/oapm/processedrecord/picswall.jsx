@@ -12,14 +12,21 @@ export default class PicsWall extends Component{
     state={
         previewVisble:false,//显示大图
         previewImage:'', //大图
-        fileList:[]
+        fileList:[
+        /*
+        uid:'',
+        name:'',
+        status:'done',
+        url:''
+        */
+        ]
     }
     
     constructor(props){
         super(props)
         let fileList=[]
         const {imgs}=this.props
-        if(imgs&&imgs.length>0){
+        /*if(imgs&&imgs.length>0){
             fileList=imgs.map((img,index)=>({
                     uid:-index,
                     name:img,
@@ -27,7 +34,7 @@ export default class PicsWall extends Component{
                     url:BASE_IMG_URL+img
                 }
             ))
-        }
+        }*/
         this.state={
             previewVisble:false,//显示大图
             previewImage:'', //大图
@@ -40,6 +47,8 @@ export default class PicsWall extends Component{
     }
     
     handleCancel=()=>this.setState({previewVisble:false})
+    
+    //预览
     handlePreview=file=>{
         this.setState({
             previewImage:file.url||file.thumbUrl,
@@ -49,12 +58,13 @@ export default class PicsWall extends Component{
     handleChange=({file,fileList})=>{
         if(file.status==='done'){
             const result=file.response
-            if(result.status===0){
+            if(result.status===1){
                 message.success('上传成功!')
-                const {name,url}=result.data
+                const {data}=result
                 file=fileList[fileList.length-1]
-                file.name=name
-                file.url=url
+                file.name=data[0]
+                file.url=data[2]
+                console.log(fileList)
             }else{
                 message.error('上传失败!')
             }
@@ -81,7 +91,7 @@ export default class PicsWall extends Component{
         return(
             <div>
                 <Upload
-                 action='/upload'//django后台https://blog.csdn.net/jjw_zyfx/article/details/95944471
+                 action='/api/oapm/img/'
                  accept='image/*'
                  name='image'
                  listType='picture-card'

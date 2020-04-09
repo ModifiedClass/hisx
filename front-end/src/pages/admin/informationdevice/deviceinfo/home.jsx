@@ -17,7 +17,7 @@ import PreviewBtn from '../../../../components/previewbtn'
 import SearchForm from './searchform'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rDeviceInfos,couDeviceInfo,dDeviceInfo} from '../../../../api'
+import {rDeviceInfos,dDeviceInfo} from '../../../../api'
 import {deviceRunSystem} from '../../../../config/selectConfig'
 const { Panel } = Collapse
 
@@ -78,7 +78,7 @@ export default class Home extends Component{
             width: 250,
             render:(runos)=>{
                 let runosdisplay=''
-                deviceRunSystem.map(item=>{
+                deviceRunSystem.forEach(item=>{
                     if(item.value===String(runos)){
                         runosdisplay= item.label
                     }

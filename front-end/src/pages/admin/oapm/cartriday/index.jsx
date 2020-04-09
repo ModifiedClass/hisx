@@ -1,16 +1,21 @@
 import React,{Component} from 'react';
 
-import {Card,Table,Button,Icon,message,Modal} from 'antd'
+import {Card,Table,Button,Icon,message,Modal,Tag} from 'antd'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
-import {formateDate} from '../../../../utils/dateUtils'
+import {formateDate,shortDate} from '../../../../utils/dateUtils'
+import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
 import {PAGE_SIZE} from '../../../../utils/constants'
-//import {reqCartridays} from '../../../../../api'
-//import reqCartridays from '../../../../api/json/cartriday.js'
+import {rCartridays,couCartriday,dCartriday,reCartriday,rUsers} from '../../../../api'
+
 import AddForm from './addform'
 import ReviewForm from './reviewform'
 
 export default class Cartriday extends Component{
+    constructor(props){
+        super(props)
+        this.rev=React.createRef()
+    }
     state={
         cartridays:[],
         loading:false,
@@ -27,12 +32,36 @@ export default class Cartriday extends Component{
         },{
             title:'处理人员',
             dataIndex:'_handler',
+            render:(_handler)=>{
+                let display=''
+                this.state.users.forEach(user=>{
+                    if(_handler===user._id){
+                        display=user.name
+                    }
+                })
+                return display
+            }
         },{
             title:'数量',
             dataIndex:'nums',
         },{
             title:'状态',
             dataIndex:'status',
+            render:(status)=>{
+                if(status){
+                    return (
+                        <span>
+                            <Tag color={BASE_GREEN}>已审核</Tag>
+                        </span>
+                    )
+                }else{
+                    return (
+                        <span>
+                            <Tag color={BASE_YELLOW}>未审核</Tag>
+                        </span>
+                    )
+                }
+            }
         },
         {
             title:'操作',
@@ -47,19 +76,24 @@ export default class Cartriday extends Component{
         ]
     }
     
+    initUsers=async()=>{
+        const result=await rUsers()
+        if(result.status===1){
+            const users=result.data
+            this.setState({users})
+        }
+    }
+    
     getCartridays= async()=>{
-        /*this.setState({loading:true})
-        const {parentId}=this.state
-        const result=await reqCartridays('0')
+        this.setState({loading:true})
+        const result=await rCartridays()
         this.setState({loading:false})
-        if(result.status===0){
+        if(result.status===1){
             const cartridays=result.data
-            this.setState(cartridays)
+            this.setState({cartridays})
         }else{
-            message.error("获取数据失败!")
-        }*/
-        /*const cartridays=reqCartridays.data
-        this.setState({cartridays})*/
+            message.error(result.msg)
+        }
     }
 
     showAdd=()=>{
@@ -81,18 +115,18 @@ export default class Cartriday extends Component{
             if(!err){
                 this.setState({isShow:false})
                 const cartriday=values
+                cartriday.create_time=shortDate(values['create_time'])
                 this.form.resetFields()
                 if(this.cartriday){
-                    cartriday.id=this.cartriday._id
+                    cartriday._id=this.cartriday._id
                 }
-                /*const result=await reqAddorUpdateUser(cartriday)
-                if(result.status===9){
-                    message.success('${this.cartriday? '新增':'编辑'}成功')
+                const result=await couCartriday(cartriday)
+                if(result.status===1){
+                    message.success(result.msg)
                     this.getCartridays()
                 }else{
                     message.error(result.msg)
-                }*/
-                console.log(cartriday)    
+                }
             }
         })
         
@@ -102,34 +136,25 @@ export default class Cartriday extends Component{
         Modal.confirm({
             title:'确认删除'+cartriday.name+'吗？',
             onOk:async()=>{
-                /*const result=await reqdeleteCartriday(cartriday._id)
-                if(result.status===0){
-                    message.success('删除成功！')
+                const result=await dCartriday(cartriday._id)
+                if(result.status===1){
+                    message.success(result.msg)
                     this.getCartridays()
-                }*/
-                message.error(cartriday.name)
+                }
             }
         })
     }
     
-    reviewCartriday=()=>{
-        this.form.validateFields(async(err,values)=>{
-            if(!err){
-                this.setState({reviewShow:false})
-                const _handler=values._handler
-                console.log(_handler)
-                this.form.resetFields()
-
-                /*const result=await reCartriday(_handler)
-                if(result.status===1){
-                    message.success('审核成功')
-                    this.getCartridays()
-                }else{
-                    message.error(result.msg)
-                }*/  
-            }
-        })
-        
+    reviewCartriday=async()=>{
+        this.setState({reviewShow:false})
+        const _handler=this.rev.current.gethandler()
+        const result=await reCartriday(_handler)
+        if(result.status===1){
+            message.success(result.msg)
+            this.getCartridays()
+        }else{
+            message.error(result.msg)
+        }
     }
     
     componentWillMount(){
@@ -137,13 +162,14 @@ export default class Cartriday extends Component{
     }
     componentDidMount(){
         this.getCartridays()
+        this.initUsers()
     }
     render(){
         const {cartridays,loading,isShow,reviewShow,users}=this.state
         const cartriday=this.cartriday||{}
         const title=<span>
-            <Button type='primary' onClick={this.showAdd}><Icon type='block'/>新增</Button>
-            <Button type='primary' onClick={this.showReview}><Icon type='block'/>审核</Button>
+            <Button type='primary' onClick={this.showAdd}><Icon type='download'/>新增</Button>&nbsp;&nbsp;
+            <Button type='primary' onClick={this.showReview}><Icon type='file-done'/>审核</Button>
         </span>
         return(
             <Card title={title}>
@@ -167,7 +193,7 @@ export default class Cartriday extends Component{
                 >
                     <AddForm 
                     setForm={(form)=>{this.form=form}} 
-                    handlers={users}
+                    users={users}
                     cartriday={cartriday}
                     />
                 </Modal>
@@ -176,13 +202,12 @@ export default class Cartriday extends Component{
                   visible={reviewShow}
                   onOk={this.reviewCartriday}
                   onCancel={()=>{
-                      this.form.resetFields()
                       this.setState({reviewShow:false})
                   }}
                 >
                     <ReviewForm
-                    handlers={users}
-                    setForm={(form)=>{this.form=form}} 
+                    ref={this.rev}
+                    users={users}
                     />
                 </Modal>
             </Card>

@@ -83,7 +83,7 @@ const menuList=[
         key:'/processedrecord',
         icon:'unordered-list'
     },{
-        title:'打印机维修',
+        title:'设备维修',
         key:'/printerrepair',
         icon:'tool'
     },{

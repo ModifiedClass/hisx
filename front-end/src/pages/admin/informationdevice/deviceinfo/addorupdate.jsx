@@ -1,9 +1,8 @@
 import React,{Component} from 'react';
 
-import {Card,Form,Input,Select,Cascader,Button,Icon,DatePicker,message} from 'antd'
+import {Card,Form,Input,Select,Button,Icon,DatePicker,message} from 'antd'
 import BackBtn from '../../../../components/backbtn'
 
-import reqCascaderDepartments from '../../../../api/json/cascaderdepartment.js'
 import {shortDate} from '../../../../utils/dateUtils'
 import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
 import {rDeviceCategorys,rDeviceModels,rInstallLocations,rDeviceInfos,couDeviceInfo} from '../../../../api'
@@ -13,7 +12,6 @@ moment.locale('zh-cn')
 
 const Item=Form.Item
 const Option=Select.Option
-const {TextArea}=Input
 const thisDate=shortDate(Date.now())
 
 class AddOrUpdate extends Component{
