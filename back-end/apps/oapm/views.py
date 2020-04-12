@@ -100,6 +100,7 @@ class ProcessedRecordView(APIView):
     处理记录
     '''
     def get(self,request,*args,**kwargs):
+        isPage=False
         pageSize=int(request.GET.get("pageSize")) if request.GET.get("pageSize") else 2
         pageNum=int(request.GET.get("pageNum")) if request.GET.get("pageNum") else 1
         searchdict={}
@@ -118,20 +119,36 @@ class ProcessedRecordView(APIView):
             searchdict['problem_state']=request.GET.get("problem_state")
         if request.GET.get("problem_category"):
             searchdict['problem_category']=request.GET.get("problem_category")
+        if request.GET.get("isPage"):
+            if str(request.GET.get("isPage"))=='true':
+                isPage=True
+            else:
+                isPage=False
         ret={'status':0,'msg':None,'data':None}
         try:
-            obj=ProcessedRecord.objects.filter(**searchdict).order_by('-create_time')
-            if not obj:
-                ret['msg']="没有获取到数据!"
+            if isPage:
+                obj=ProcessedRecord.objects.filter(**searchdict).order_by('-create_time')
+                if not obj:
+                    ret['msg']="没有获取到数据!"
+                else:
+                    nums=ProcessedRecord.objects.filter(**searchdict).count()
+                    start=(pageNum - 1) * pageSize
+                    end=nums if nums<pageNum*pageSize else pageNum*pageSize
+                    prs=obj[start:end]
+                    ser=ProcessedRecordSerializer(instance=prs,many=True).data#many 单个对象False
+                    objs = { "list" : ser, "total" : nums }
+                    ret['status']=1
+                    ret['data']=objs
             else:
-                nums=ProcessedRecord.objects.filter(**searchdict).count()
-                start=(pageNum - 1) * pageSize
-                end=nums if nums<pageNum*pageSize else pageNum*pageSize
-                prs=obj[start:end]
-                ser=ProcessedRecordSerializer(instance=prs,many=True).data#many 单个对象False
-                objs = { "list" : ser, "total" : nums }
-                ret['status']=1
-                ret['data']=objs
+                obj=ProcessedRecord.objects.filter(**searchdict).order_by('-create_time')
+                if not obj:
+                    ret['msg']="没有获取到数据!"
+                else:
+                    nums=ProcessedRecord.objects.filter(**searchdict).count()
+                    ser=ProcessedRecordSerializer(instance=obj,many=True).data#many 单个对象False
+                    objs = { "list" : ser, "total" : nums }
+                    ret['status']=1
+                    ret['data']=objs
             return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['status']=3

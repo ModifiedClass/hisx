@@ -3,6 +3,8 @@ import {HOST} from '../utils/constants'
 /**account**/
 //登陆
 export const cLogin=(username,password)=>fetchreq(HOST+'/api/account/auth/',{username,password},'POST')
+//重置密码
+export const cReset=(username)=>fetchreq(HOST+'/api/account/auth/',{username},'PATCH')
 
 //读取组
 export const rGroups=(group)=>fetchreq(HOST+'/api/account/group/',group)

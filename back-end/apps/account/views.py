@@ -23,8 +23,7 @@ class AuthView(APIView):
         username=res['username']
         password=pwdenc(res['password'])
         try:
-            #password=pwdenc(request._request.POST.get('password'))
-            obj=User.objects.filter(username=username,password=password)
+            obj=User.objects.filter(username=res['username'],password=password)
             if not obj:
                 ret['msg']="用户名或密码不正确！"
             else:    
@@ -36,7 +35,27 @@ class AuthView(APIView):
                 ret['status']=1
         except Exception as e:
             ret['msg']=str(e)
-        return setzhJsonResponseHeader(ret)
+        return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
+        
+    authentication_classes=[]
+    def patch(self,request,*args,**kwargs):
+        ret={'status':0,'msg':None,'data':[]}
+        pb=request.body
+        res=json.loads(pb)
+        try:
+            obj=User.objects.filter(username=res['username'])
+            if not obj:
+                ret['msg']="用户不存在！"
+            else:    
+                obj.password='e10adc3949ba59abbe56e057f20f883e'
+                obj.save()
+                ser=UserSerializer(instance=obj,many=True)
+                ret['data']=ser.data
+                ret['msg']='密码已重置为123456'
+                ret['status']=1
+        except Exception as e:
+            ret['msg']=str(e)
+        return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
 
 class GroupView(APIView):

@@ -21,7 +21,6 @@ export const receiveUser=(user)=>({type:RECEIVE_USER,data:user})
 export const login=(username,password)=>{
     return async dispatch=>{
         const result=await cLogin(username,password)
-        console.log(result.data[0])
         if(result.status===1){
             const user=result.data[0]
             storeUtils.saveUser(user)

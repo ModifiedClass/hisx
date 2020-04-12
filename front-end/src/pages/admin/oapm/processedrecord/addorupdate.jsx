@@ -90,7 +90,7 @@ class AddOrUpdate extends Component{
                     imgs
                 }
                 if(this.isUpdate){
-                    processedrecord._id=this.processedrecord.processedrecord._id
+                    processedrecord._id=this.processedrecord._id
                 }
                 const result=await couProcessedRecord(processedrecord)
                 if(result.status===1){
@@ -234,7 +234,7 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item label="处理方式">
                     {getFieldDecorator('processing_mode',{
-                        initialValue:isUpdate ? processing_mode.toString() : '1',
+                        initialValue:isUpdate ? processing_mode.toString() : '3',
                         rules:[
                         {
                             required:true,message:'处理方式不能为空!'

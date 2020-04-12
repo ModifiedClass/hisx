@@ -31,10 +31,10 @@ const { Header, Footer, Sider, Content } = Layout;
 
 class Admin extends Component{
     render(){
-        /*const user=this.props.user
+        const user=this.props.user
         if(!user||!user._id){
             return <Redirect to='/login'/>
-        }*/
+        }
         return(
             <Layout className="layout-main">
                 <Header className="layout-main-top">

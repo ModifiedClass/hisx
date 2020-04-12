@@ -246,7 +246,7 @@ class DeviceInfoView(APIView):
     设备信息
     '''
     def get(self,request,*args,**kwargs):
-        isPage=request.GET.get("isPage")
+        isPage=False
         pageSize=int(request.GET.get("pageSize")) if request.GET.get("pageSize") else 2
         pageNum=int(request.GET.get("pageNum")) if request.GET.get("pageNum") else 1
         searchdict={}
@@ -268,6 +268,11 @@ class DeviceInfoView(APIView):
             searchdict['mac__icontains']=request.GET.get("mac")
         if request.GET.get("status"):
             searchdict['status']=request.GET.get("status")
+        if request.GET.get("isPage"):
+            if str(request.GET.get("isPage"))=='true':
+                isPage=True
+            else:
+                isPage=False
         ret={'status':0,'msg':None,'data':None}
         try:
             if isPage:

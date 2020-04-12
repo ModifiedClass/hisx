@@ -25,7 +25,7 @@ class AddOrUpdate extends Component{
 
     getDM=async value =>{
         this.setState({devicemodels:[]})
-        const result=await rDeviceModels({'_id':value})
+        const result=await rDeviceModels({'devicecategory':value})
         if(result.status===1){
             this.setState({devicemodels:result.data})
         }  
@@ -99,7 +99,7 @@ class AddOrUpdate extends Component{
                     {getFieldDecorator('parent',{
                         initialValue:isUpdate ? deviceinfo.deviceinfo.parent :'',
                     })(
-                        <Select onChange={this.getDM}>
+                        <Select>
                             {
                                 parents.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
                             }

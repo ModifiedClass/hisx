@@ -29,7 +29,7 @@ export default class Home extends Component{
         {
             title:'记录时间',
             dataIndex:'create_time',
-            width: 150,
+            width: 180,
             render:(create_time)=>formateDate(create_time)
         },
         {
@@ -94,13 +94,13 @@ export default class Home extends Component{
             width: 100,
             dataIndex:'problem_state',
             render:(problem_state)=>{
-                if(problem_state==='1'){
+                if(problem_state===1){
                     return (
                         <span>
                             <Tag color={BASE_RED}>待处理</Tag>
                         </span>
                     )
-                }else if(problem_state==='2'){
+                }else if(problem_state===2){
                     return (
                         <span>
                             <Tag color={BASE_GREEN}>已处理</Tag>
@@ -122,11 +122,11 @@ export default class Home extends Component{
             dataIndex:'department',
             width: 200,
             render:(department)=>{
-                let result=[]
+                let result=''
                 for(let i=0;i<department.length;i++){
-                    result.push(department[i].name+'/')
+                    result+=department[i].name+'/'
                 }
-                return result
+                return result.substring(0,result.length-1)
             }
         },
         {
@@ -169,18 +169,20 @@ export default class Home extends Component{
     }
     getProcessedRecords= async(pageNum)=>{
         this.pageNum=pageNum
+        const isPage=true
         this.setState({loading:true})
         const{searchName,searchType}=this.state
         let result
         if(searchName){
             result=await rProcessedRecords({
+                isPage,
                 pageNum,
                 pageSize:PAGE_SIZE,
                 searchName,
                 searchType
                 })
         }else{
-            result=await rProcessedRecords({pageNum,pageSize:PAGE_SIZE})
+            result=await rProcessedRecords({isPage,pageNum,pageSize:PAGE_SIZE})
         }
         
         this.setState({loading:false})

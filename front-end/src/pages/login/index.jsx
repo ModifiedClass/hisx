@@ -20,7 +20,7 @@ class Login extends Component {
                 message.error('校验失败!')
                 //
             }
-            this.props.history.replace('/admin')
+            this.props.history.replace('/')
         });
     }
     validatePwd=(rule,value,callback)=>{
@@ -39,7 +39,7 @@ class Login extends Component {
     render(){
         const user=this.props.user
         if(user && user._id){
-            return <Redirect to='/admin'/>
+            return <Redirect to='/'/>
         }
         const { getFieldDecorator } = this.props.form;
         return(

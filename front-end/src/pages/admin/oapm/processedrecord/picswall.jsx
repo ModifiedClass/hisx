@@ -9,32 +9,21 @@ export default class PicsWall extends Component{
     static proTypes={
         imgs:PropTypes.array
     }
-    state={
-        previewVisble:false,//显示大图
-        previewImage:'', //大图
-        fileList:[
-        /*
-        uid:'',
-        name:'',
-        status:'done',
-        url:''
-        */
-        ]
-    }
     
     constructor(props){
         super(props)
         let fileList=[]
         const {imgs}=this.props
-        /*if(imgs&&imgs.length>0){
-            fileList=imgs.map((img,index)=>({
+        if(imgs&&imgs.length>0){
+            let imgarr=imgs.split(',')
+            fileList=imgarr.map((ia,index)=>({
                     uid:-index,
-                    name:img,
+                    name:ia,
                     statur:'done',
-                    url:BASE_IMG_URL+img
+                    url:BASE_IMG_URL+ia
                 }
             ))
-        }*/
+        }
         this.state={
             previewVisble:false,//显示大图
             previewImage:'', //大图
@@ -43,7 +32,12 @@ export default class PicsWall extends Component{
     }
     //已上传图片数组
     getImgs=()=>{
-        return this.state.fileList.map(file=>file.name)
+        //return this.state.fileList.map(file=>file.name)
+        let obj=''
+        this.state.fileList.map(file=>
+            obj+=file.name+','
+        )
+        return obj.substring(0,obj.length-1)
     }
     
     handleCancel=()=>this.setState({previewVisble:false})
@@ -64,7 +58,6 @@ export default class PicsWall extends Component{
                 file=fileList[fileList.length-1]
                 file.name=data[0]
                 file.url=data[2]
-                console.log(fileList)
             }else{
                 message.error('上传失败!')
             }
@@ -101,8 +94,8 @@ export default class PicsWall extends Component{
                 >
                 {fileList.length>=3?null:uploadButton}
                 </Upload>
-                <Modal visible={previewVisble} footer={null} onCancel={this.handleCancel}>
-                    <img alt='' style={{width:'100%'}} src={previewImage}/>
+                <Modal width='80%' visible={previewVisble} footer={null} onCancel={this.handleCancel}>
+                    <img alt='' style={{width:'auto'}} src={previewImage}/>
                 </Modal>
             </div>
         )

@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 
 import LinkBtn from '../../components/linkbtn'
 import {formateDate} from '../../utils/dateUtils'
-//import {logout} from '../../redux/actions'
+import {logout} from '../../redux/actions'
 //import memUtils from '../../utils/memUtils'
 //import storeUtils from '../../utils/storeUtils'
 
@@ -24,10 +24,9 @@ class HeaderBar extends Component{
     logout=()=>{
         Modal.confirm({
             content:'确定退出吗?',
-            onOk(){
-                /*
+            onOk:()=>{
                 this.props.logout()
-                storeUtils.removeUser()
+                /*storeUtils.removeUser()
                 memUtils.user={}
                 this.props.history.replace('/login')*/
             }
@@ -41,7 +40,7 @@ class HeaderBar extends Component{
     }
     render(){
         const {currentTime} =this.state
-        //const user=this.props.user.username
+        const username=this.props.user.username
         return(
             <div className="header">
                     
@@ -52,7 +51,7 @@ class HeaderBar extends Component{
                     </div>
                 <div className="header-right">
                     <span>{currentTime}&nbsp;&nbsp;欢迎,</span>
-                    <span>root{/*username*/}</span>
+                    <span>{username}</span>
                     <LinkBtn onClick={this.logout}><Icon type="logout" style={{color:'#479761'}}/></LinkBtn>
                 </div>    
             </div>
@@ -60,6 +59,6 @@ class HeaderBar extends Component{
     }
 }
 export default connect(
-    state=>({}),
-    {}
+    state=>({user:state.user}),
+    {logout}
 )(HeaderBar)

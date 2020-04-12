@@ -35,7 +35,7 @@ class AddForm extends PureComponent{
     //根据类别初始化select型号
     getDM=async value =>{
         this.setState({devicemodels:[]})
-        const result=await rDeviceModels({'_id':value})
+        const result=await rDeviceModels({'devicecategory':value})
         if(result.status===1){
             this.setState({devicemodels:result.data})
         }  

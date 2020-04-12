@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 
-import {Card,Icon,Descriptions, Badge,Empty} from 'antd'
+import {Card,Icon,Descriptions, Badge,Empty,Modal} from 'antd'
 import {BASE_GREEN,BASE_RED,BASE_BLUE} from '../../../../utils/colors'
 import {BASE_IMG_URL} from '../../../../utils/constants'
 import BackBtn from '../../../../components/backbtn'
@@ -14,15 +14,17 @@ const Item=Descriptions.Item
 
 export default class ProcessedRecordDetail extends Component{
     state={
+        previewVisble:false,//显示大图
+        previewImage:'', //大图
         stateDisplay:'',
         processing_modeDisplay:''
     }
     
     getstateDisplay=()=>{
         const {problem_state}=this.props.location.state.processedrecord
-        const stateDisplay=problem_state==='1' ? (
+        const stateDisplay=problem_state===1 ? (
             <Badge color={BASE_RED} text="待处理" />
-        ) :(problem_state==='2' ? (
+        ) :(problem_state===2 ? (
             <Badge color={BASE_GREEN} text="已处理" />
         ):(
             <Badge color={BASE_BLUE} text="需跟进" />
@@ -36,6 +38,16 @@ export default class ProcessedRecordDetail extends Component{
             if(processing_mode.toString()===pm.value){
                 this.setState({processing_modeDisplay:pm.label})
             }
+        })
+    }
+    
+    handleCancel=()=>this.setState({previewVisble:false})
+    
+    //预览
+    handlePreview=img=>{
+        this.setState({
+            previewImage:BASE_IMG_URL+img,
+            previewVisble:true,
         })
     }
     
@@ -61,7 +73,6 @@ export default class ProcessedRecordDetail extends Component{
             handler,
             imgs
         }=this.props.location.state.processedrecord
-
         /*
         HashRouter
         const {create_time,
@@ -79,7 +90,7 @@ export default class ProcessedRecordDetail extends Component{
         department.forEach(dep=>{
             departmentNames+=dep.name+'/'
         })
-        const {stateDisplay,processing_modeDisplay}=this.state
+        const {previewImage,previewVisble,stateDisplay,processing_modeDisplay}=this.state
         const title=(
             <span>
                 <BackBtn onClick={()=>this.props.history.goBack()}/>
@@ -110,17 +121,22 @@ export default class ProcessedRecordDetail extends Component{
                 <Item label={isolution} span={3}><span dangerouslySetInnerHTML={{__html:solution}}></span></Item>
                 <Item label={ipic} span={3}>
                 {
-                    imgs ? imgs.map(img=>(
+                    imgs ? imgs.split(',').map(img=>(
+                            <a key={img} onClick={()=>{this.handlePreview(img)}}>
                             <img
-                           key={img}
+                            key={img}
                             className="processedrecord-img"
                             src={BASE_IMG_URL+img}
                             alt="img"/>
+                            </a>
                         )
                     ):<Empty />
                 }
                 </Item>
               </Descriptions>
+              <Modal width='80%' visible={previewVisble} footer={null} onCancel={this.handleCancel}>
+                    <img alt='' style={{width:'auto'}} src={previewImage}/>
+                </Modal>
             </Card>  
         )
     }

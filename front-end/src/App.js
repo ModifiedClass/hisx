@@ -3,8 +3,6 @@ import {BrowserRouter,Route,Switch} from 'react-router-dom'
 
 import Login from './pages/login'
 import Admin from './pages/admin'
-import NotFound from './pages/status/404'
-
 
 
 export default class App extends Component{
@@ -12,9 +10,8 @@ export default class App extends Component{
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route path='/' component={Admin}></Route>
                     <Route path='/login' component={Login}></Route>
-                    <Route component={NotFound}/>
+                    <Route path='/' component={Admin}></Route>
                 </Switch>
             </BrowserRouter>
         )

@@ -1,16 +1,19 @@
 import React,{Component} from 'react';
-import {Card,Button,Timeline,Select,Icon} from 'antd'
+import {Card,Button,Timeline,Select,Icon,Typography,Modal} from 'antd'
 
 import {rTimeLines} from '../../../api'
 import {shortDate,formateYear} from '../../../utils/dateUtils'
 
 const Option=Select.Option
+const { Text } = Typography
 
 export default class DTimeLine extends Component{
     state={
-        reverse: false,
+        isShow:false,
+        reverse: true,
         years:[],
-        tls:[]
+        tls:[],
+        ytls:[]
     }
     
     handleClick = () => {
@@ -18,22 +21,42 @@ export default class DTimeLine extends Component{
     }
     
     selectYear=value=>{
-        console.log(value)
+        const ytls=[]
+        if(value!=='all'){
+            this.state.tls.forEach(tl=>{
+                if(tl.create_time.substring(0, 4)===value.toString()){
+                    ytls.push(tl)
+                }
+            })
+            this.setState({ytls})
+        }else{
+            this.setState({ytls:this.state.tls})
+        }
     }
     
     initTimelines=async()=>{
         const result=await rTimeLines()
         if(result.status===1){
             const tls=result.data
-            const years=['all']
+            const arr=['all']
             tls.forEach(tl=>{
-                years.push(formateYear(tl.create_time))
+                arr.push(formateYear(tl.create_time))
             })
+            const years=Array.from(new Set(arr))
             this.setState({
-                tls,years
+                tls,years,ytls:tls
             })
             
         }
+    }
+    
+    showDetails=tlid=>{
+        this.state.tls.forEach(tl=>{
+            if(tl._id===tlid){
+                this.details=tl.details
+            }
+        })
+        this.setState({isShow:true})
     }
     
     componentWillMount(){
@@ -41,30 +64,43 @@ export default class DTimeLine extends Component{
     }
     
     render(){
-        const{years,reverse,tls}=this.state
+        const{years,reverse,ytls,isShow}=this.state
         const title='时间轴'
-        const menu=(
-            <Select className="searchbar-select" onChange={this.selectYear}>
-                {years.map(year=><Option key={year} value={year}>{year}</Option>)}
-            </Select>
-        )
         return(
-            <Card title={title} extra={menu} bordered={false}>
+            <Card title={title}>
                 <div>
+                    <div style={{ marginBottom: 16 }}>
+                        <Button type="primary"  onClick={this.handleClick}>
+                             排序
+                        </Button>
+                        <Select className="searchbar-select" onChange={this.selectYear} style={{float:'right'}}>
+                            {years.map(year=><Option key={year} value={year}>{year}</Option>)}
+                        </Select>
+                    </div>
                     <Timeline pending="读取..." reverse={reverse}>
                         {
-                            tls.map(tl=>
+                            ytls.map(tl=>
                                 <Timeline.Item key={tl._id}>
                                 {tl.name+' '+shortDate(tl.create_time)}
-                                {tl.details?  <span>&nbsp;<Icon type="profile" theme="twoTone" /></span>:<span></span>}
+                                {tl.details?  <span>&nbsp;<Icon onClick={()=>{this.showDetails(tl._id)}} type="profile" theme="twoTone" /></span>:<span></span>}
                                 </Timeline.Item>
                             )
                         }
                     </Timeline>
-                    <Button type="primary" style={{ marginTop: 16 }} onClick={this.handleClick}>
-                         排序
-                    </Button>
+                    
                 </div>
+                <Modal
+                  title={"详情"}
+                  visible={isShow}
+                  onOk={()=>{
+                      this.setState({isShow:false}) 
+                  }}
+                  onCancel={()=>{
+                      this.setState({isShow:false}) 
+                  }}
+                >
+                    <Text>{this.details}</Text>
+                </Modal>
             </Card>
         )
     }
