@@ -119,6 +119,11 @@ class ProcessedRecordView(APIView):
             searchdict['problem_state']=request.GET.get("problem_state")
         if request.GET.get("problem_category"):
             searchdict['problem_category']=request.GET.get("problem_category")
+        if request.GET.get("startdate"):#__range=(startdate, enddate)
+            searchdict['create_time__gte']=request.GET.get("startdate")
+        if request.GET.get("enddate"):
+            searchdict['create_time__lte']=request.GET.get("enddate")
+        __range=(start_date, end_date)
         if request.GET.get("isPage"):
             if str(request.GET.get("isPage"))=='true':
                 isPage=True
