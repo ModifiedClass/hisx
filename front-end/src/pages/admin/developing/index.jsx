@@ -1,59 +1,88 @@
 import React,{Component} from 'react'
 
-import {Button} from 'antd'
+import {Card,Calendar,Badge } from 'antd'
 
-import './index.less'
-import {
-    BASE_BLUE,
-    BASE_GREY,
-    BASE_RED,
-    EyeProtectionGreen,
-    BASE_BLACK,
-    BASE_GREEN,
-    BASE_YELLOW,
-    BASE_VIOLET,
-    BASE_PINK
-    } 
-    from '../../../utils/colors'
-const data=[
-  {title: '基色蓝',color:BASE_BLUE},
-  {title: '基色灰',color:BASE_GREY},
-  {title: '基色红',color:BASE_RED},
-  {title: '护眼绿',color:EyeProtectionGreen},
-  {title: '基色黑',color:BASE_BLACK},
-  {title: '基色绿',color:BASE_GREEN},
-  {title: '基色黄',color:BASE_YELLOW},
-  {title: '基色紫',color:BASE_VIOLET},
-  {title: '基色粉',color:BASE_PINK}
-];
+import {getDaysInMonth} from '../../../utils/dateUtils'
+import moment from 'moment'
+import 'moment/locale/zh-cn'
+moment.locale('zh-cn')
+
 
 export default class Developing extends Component{
-
-    render(){
-        let btns=(
-            <div>
-            {
-                data.map((data)=>{
-                    return(
-                        <Button 
-                        key={data.color}
-                        style={{backgroundColor:data.color,height:60,width:260}}
-                        >
-                        {data.title}
-                        </Button>
-                    )
-                })
+    constructor(props){
+        super(props)
+        let date=new Date()
+        this.state={
+            selectyear:date.getFullYear(),
+            selectmonth:date.getMonth()+1,
+            selectday:date.getDate(),
+            dayshifts:['申爱华','高丽','杨贵华'], //白班人员
+            changeshifts:[{'key':0,'name':'李玉旋','next':1},{'key':1,'name':'陈忠良','next':2},{'key':2,'name':'廖睿','next':0}],//倒班人员
+        }
+        this.count=0
+    }
+    
+    getListData=(value)=>{
+        //输入调休日
+        let num=value._d.getDay()
+        let listData=[]
+        if(num!==6&&num!==0){
+            let ds=''
+            for(let j=0;j<this.state.dayshifts.length;j++){
+                ds+=this.state.dayshifts[j]+','
             }
-            </div>
-        )
+            listData.push({ type: 'success', content: ds.substring(0,ds.length-1) })
+            listData.push({ type: 'warning', content: this.state.changeshifts[this.count].name })
+        }else{
+            listData.push({ type: 'warning', content: this.state.changeshifts[this.count].name })
+        }
+        this.count=this.state.changeshifts[this.count].next
+      return listData || []
+    }
+
+    dateCellRender=(value)=>{
+      const listData = this.getListData(value);
+      return (
+        <ul className="events">
+          {listData.map(item => (
+            <li key={item.content}>
+              <Badge status={item.type} text={item.content} />
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    onPanelChange=(value)=>{
+        this.setState({
+            selectyear:value.year(),
+            selectmonth:value.month()+1,
+            selectday:value.date()
+        })
+    }
+    initData=()=>{
+        
+        //console.log(getDaysInMonth(this.state.selectyear,this.state.selectday))
+    }
+    
+    onSelect=(value)=>{
+        console.log(value)
+        console.log(value.year())
+        //console.log(value.month()+1)
+        //console.log(value.date())
+    }
+    componentWillMount(){
+        this.initData()
+    }
+    render(){
+        const {selectyear,selectmonth,selectday}=this.state
+        const title=selectyear+'-'+selectmonth+'-'+selectday
         return(
-            <div className="content">
-            {/*<Icon type="loading" className="content-icon"/>
-            <span>开发中</span>*/}
-                <div>
-                {btns}
-                </div>
-            </div>
+            <Card title={title}>
+                <Calendar
+                dateCellRender={this.dateCellRender} 
+                onPanelChange={this.onPanelChange} 
+                onSelect={this.onSelect} />
+            </Card>
         )
     }
 }

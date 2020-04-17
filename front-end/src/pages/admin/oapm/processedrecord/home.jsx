@@ -8,7 +8,7 @@ import PreviewBtn from '../../../../components/previewbtn'
 import {formateDate} from '../../../../utils/dateUtils'
 import {processingMode} from '../../../../config/selectConfig'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rProcessedRecords,dProcessedRecord} from '../../../../api'
+import {rProcessedRecords,dProcessedRecord,eProcessedRecord} from '../../../../api'
 import htmlToDraft from 'html-to-draftjs'
 
 const Option=Select.Option
@@ -226,7 +226,10 @@ export default class Home extends Component{
     
     render(){
         const {processedrecords,total,loading,searchName,searchType}=this.state
-        const title=<Button type='primary' onClick={()=>this.props.history.push('/processedrecord/addorupdate')}><Icon type='unordered-list'/>新增</Button>
+        const title=(<span>
+            <Button type='primary' onClick={()=>this.props.history.push('/processedrecord/addorupdate')}><Icon type='unordered-list'/>新增</Button>&nbsp;&nbsp;
+            <Button type='primary' onClick={async ()=>{await eProcessedRecord()}}><Icon type="export" />导出excel</Button>
+            </span>)
         
         const extra=(
         <span className="searchbar">

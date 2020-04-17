@@ -1,4 +1,5 @@
 import fetchreq from './datareq'
+import fetchdownload from './downloadreq'
 import {HOST} from '../utils/constants'
 /**account**/
 //登陆
@@ -78,7 +79,9 @@ export const couProcessedRecord=(processedrecord)=>fetchreq(HOST+'/api/oapm/proc
 //删除运维记录
 export const dProcessedRecord=(processedrecordId)=>fetchreq(HOST+'/api/oapm/processedrecord/',{'_id':processedrecordId},'DELETE')
 //上传图片
-export const cImg=(name)=>fetchreq(HOST+'/oapm/img/',{name},'POST')
+export const cImg=(name)=>fetchreq(HOST+'/api/oapm/img/',{name},'POST')
+//导出excel
+export const eProcessedRecord=()=>fetchdownload(HOST+'/api/oapm/export_ProcessedRecord_excel/')
 
 //读取打印机维修
 export const rPrinterRepairs=(printerrepair)=>fetchreq(HOST+'/api/oapm/printerrepair/',printerrepair)

@@ -1,0 +1,43 @@
+npm install react-app-polyfill core-js
+
+index.js
+import 'core-js/es'  
+import 'react-app-polyfill/ie9'  
+import 'react-app-polyfill/stable'
+
+package.json
+"browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all",
++     "ie > 9"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version",
++     "ie > 9"
+    ]
+  },
+
+如果没有效果删除node_modules文件夹重新下载
+如果还不行，可能是没有设置ie文档模式的原因，在index.html中添加
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+不是使用create-react-app创建的项目
+无需配置react-app-polyfill和package.json，其他的同上
+
+yarn -D add babel-polyfill
+webpack.config.js
+//webpack.config.js
+module.exports={
+    mode: 'development',
+    devtool: 'eval-source-map',
+    entry: ['babel-polyfill', path.resolve(base,'app/main.js')],    //主要是添加'babel-polyfill'到入口处
+    //下面的配置在此处省略
+}
+或者
+https://cdn.bootcss.com/babel-polyfill/6.23.0/polyfill.min.js
+<div id="root"></div>
+<script src='polyfill.min.js'></script>

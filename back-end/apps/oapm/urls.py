@@ -15,4 +15,6 @@ urlpatterns = [
     #图片
     #上传
     path('img/',views.ImgView.as_view()),
+    #导出excel
+    path('export_ProcessedRecord_excel/',views.export_ProcessedRecord_excel,name='export_ProcessedRecord_excel'),
 ]
