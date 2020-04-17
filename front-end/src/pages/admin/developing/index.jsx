@@ -21,7 +21,7 @@ export default class Developing extends Component{
         }
         this.count=0
     }
-    getDuty=(thisdate,dutys)=>{
+    getDuty=(thisdate,dutys,nums)=>{
         //thisdate:****-**-**
         /*dutys:[{
             'key':1,
@@ -36,7 +36,7 @@ export default class Developing extends Component{
                 'next':1
             }]},{
             'key':2,
-            'type':'nightshifts',
+            'type':'eveningshifts',
             'users':[{
                 'key':1,
                 'name':,'',
@@ -47,7 +47,7 @@ export default class Developing extends Component{
                 'next':1
             }]},{
             'key':3,
-            'type':'midnightshifts',
+            'type':'nightshifts',
             'users':[{
                 'key':1,
                 'name':,'',
