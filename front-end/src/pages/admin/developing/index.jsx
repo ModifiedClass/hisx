@@ -11,7 +11,7 @@ moment.locale('zh-cn')
 export default class Developing extends Component{
     constructor(props){
         super(props)
-        let date=new Date()
+        const date=new Date()
         this.state={
             selectyear:date.getFullYear(),
             selectmonth:date.getMonth()+1,
@@ -21,23 +21,64 @@ export default class Developing extends Component{
         }
         this.count=0
     }
-    
+    getDuty=(thisdate,dutys)=>{
+        //thisdate:****-**-**
+        /*dutys:[{
+            'key':1,
+            'type':'dayshifts',
+            'users':[{
+                'key':1,
+                'name':,'',
+                'next':2
+            },{
+                'key':2,
+                'name':,'',
+                'next':1
+            }]},{
+            'key':2,
+            'type':'nightshifts',
+            'users':[{
+                'key':1,
+                'name':,'',
+                'next':2
+            },{
+                'key':2,
+                'name':,'',
+                'next':1
+            }]},{
+            'key':3,
+            'type':'midnightshifts',
+            'users':[{
+                'key':1,
+                'name':,'',
+                'next':2
+            },{
+                'key':2,
+                'name':,'',
+                'next':1
+            }]}]*/
+    }
     getListData=(value)=>{
         //输入调休日
-        let num=value._d.getDay()
-        let listData=[]
-        if(num!==6&&num!==0){
-            let ds=''
-            for(let j=0;j<this.state.dayshifts.length;j++){
-                ds+=this.state.dayshifts[j]+','
+        const num=value._d.getDay()
+        const listData=[]
+        const thisdate=new Date()
+        const thismonth=thisdate.getMonth()
+        const thisyear=thisdate.getFullYear()
+        if(value.month()===thismonth&&value.year()===thisyear){
+            if(num!==6&&num!==0){
+                let ds=''
+                for(let j=0;j<this.state.dayshifts.length;j++){
+                    ds+=this.state.dayshifts[j]+','
+                }
+                listData.push({ type: 'success', content: ds.substring(0,ds.length-1) })
+                listData.push({ type: 'warning', content: this.state.changeshifts[this.count].name })
+            }else{
+                listData.push({ type: 'warning', content: this.state.changeshifts[this.count].name })
             }
-            listData.push({ type: 'success', content: ds.substring(0,ds.length-1) })
-            listData.push({ type: 'warning', content: this.state.changeshifts[this.count].name })
-        }else{
-            listData.push({ type: 'warning', content: this.state.changeshifts[this.count].name })
         }
         this.count=this.state.changeshifts[this.count].next
-      return listData || []
+        return listData || []
     }
 
     dateCellRender=(value)=>{
