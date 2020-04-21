@@ -211,7 +211,7 @@ class AddOrUpdate extends Component{
                     })(
                         <Select>
                         {
-                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.username}</Option>)
+                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.name}{ru.username}</Option>)
                         }
                         </Select>
                     )}
@@ -259,7 +259,7 @@ class AddOrUpdate extends Component{
                     })(
                         <Select>
                         {
-                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.username}</Option>)
+                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.name}{ru.username}</Option>)
                         }
                         </Select>
                     )}
