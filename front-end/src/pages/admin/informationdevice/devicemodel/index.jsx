@@ -133,7 +133,7 @@ export default class DeviceModel extends Component{
                 const result=await dDeviceModel(devicemodel._id)
                 if(result.status===1){
                     message.success('删除成功！')
-                    this.getUsers()
+                    this.getDeviceModels()
                 }
             }
         })

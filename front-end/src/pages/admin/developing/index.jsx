@@ -16,13 +16,13 @@ export default class Developing extends Component{
             selectyear:date.getFullYear(),
             selectmonth:date.getMonth()+1,
             selectday:date.getDate(),
-            dayshifts:['申爱华','高丽','杨贵华'], //白班人员
-            changeshifts:[{'key':0,'name':'李玉旋','next':1},{'key':1,'name':'陈忠良','next':2},{'key':2,'name':'廖睿','next':0}],//倒班人员
+            dayshifts:['长白班1','长白班2','长白班3'], //白班人员
+            changeshifts:[{'key':0,'name':'倒班1','next':1},{'key':1,'name':'倒班2','next':2},{'key':2,'name':'倒班3','next':0}],//倒班人员
         }
         this.count=0
     }
     getDuty=(thisdate,dutys,nums)=>{
-        //thisdate:****-**-**
+        //thisdate:****-**-** 当前月
         /*dutys:[{
             'key':1,
             'type':'dayshifts',
@@ -94,6 +94,7 @@ export default class Developing extends Component{
       )
     }
     onPanelChange=(value)=>{
+        console.log(value)
         this.setState({
             selectyear:value.year(),
             selectmonth:value.month()+1,

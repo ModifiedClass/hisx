@@ -63,6 +63,7 @@ STATICFILES_DIR=[
 ]
 STATIC_ROOT=os.path.join(BASE_DIR,'static')
 
+pip3 install mysqlclient
 数据库连接
 DATABASES = {
     'default': {

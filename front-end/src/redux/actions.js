@@ -34,6 +34,7 @@ export const login=(username,password)=>{
 
 //登出
 export const logout=()=>{
+    //react onbeforeunload 关闭浏览器时执行
     storeUtils.removeUser()
     return {type:RESET_USER}
 }

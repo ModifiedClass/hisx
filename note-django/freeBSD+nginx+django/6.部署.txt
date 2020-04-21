@@ -56,6 +56,9 @@ server_name www.***.com;
 location / {
 include uwsgi_params;　　# 设置将所有请求转发给uwsgi服务器处理
 uwsgi_pass 127.0.0.1:8009;　　# 指定uwsgi服务器url端口号与uwsgi配置的socket端口号一致
+uwsgi_send_timeout 600;
+uwsgi_connect_timeout 600;
+uwsgi_read_timeout 600;
 }
 location /static {
 alias /www/djangopro/static/;　　# 设置将/static的静态请求交给nginx，并指定静态文件的目录

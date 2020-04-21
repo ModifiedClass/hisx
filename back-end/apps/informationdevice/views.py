@@ -150,7 +150,7 @@ class DeviceModelView(APIView):
         pb=request.body
         res=json.loads(pb)
         name=res['name']
-        devicectegory_id=res['devicectegory_id']
+        devicectegory_id=res['devicecategory']
         try:
             with transaction.atomic():
                 obj=DeviceModel.objects.get(_id=res['_id'])

@@ -8,10 +8,12 @@ server{
 
     listen 80;
     server_name localhost;
-    
+    root /var/www/build;
+    index index.html index.htm;
 
     location / {
-        proxy_pass http://localhost:8000;
+        #proxy_pass http://localhost:8000;
+        try_files $uri $uri/ /index.html;
     }
     
 
