@@ -16,7 +16,7 @@ export default class ChartPRD extends Component{
     getOption=(legenddata,xdate,seriesdata)=>{
         return{
             tooltip: {
-                trigger: 'axis',
+                //trigger: 'axis',
                 axisPointer: {
                     type: 'cross',
                     label: {
@@ -25,7 +25,7 @@ export default class ChartPRD extends Component{
                 }
             },
             legend: {
-                data: legenddata
+                data:legenddata.slice(0,3)
             },
             toolbox: {
                 feature: {

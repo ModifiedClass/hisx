@@ -36,15 +36,23 @@ export default class DTimeLine extends Component{
     
     initTimelines=async()=>{
         const result=await rTimeLines()
+        const date=new Date()
+        const thisyear=date.getFullYear()
         if(result.status===1){
             const tls=result.data
+            const ytls=[]
             const arr=['all']
             tls.forEach(tl=>{
                 arr.push(formateYear(tl.create_time))
             })
             const years=Array.from(new Set(arr))
+            tls.forEach(tl=>{
+                if(tl.create_time.substring(0, 4)===thisyear.toString()){
+                    ytls.push(tl)
+                }
+            })
             this.setState({
-                tls,years,ytls:tls
+                tls,years,ytls:ytls
             })
             
         }
@@ -65,6 +73,8 @@ export default class DTimeLine extends Component{
     
     render(){
         const{years,reverse,ytls,isShow}=this.state
+        const date=new Date()
+        const thisyear=date.getFullYear()
         const title='时间轴'
         return(
             <Card title={title}>
@@ -73,14 +83,14 @@ export default class DTimeLine extends Component{
                         <Button type="primary"  onClick={this.handleClick}>
                              排序
                         </Button>
-                        <Select className="searchbar-select" onChange={this.selectYear} style={{float:'right'}}>
+                        <Select defaultValue={thisyear} className="searchbar-select" onChange={this.selectYear} style={{float:'right'}}>
                             {years.map(year=><Option key={year} value={year}>{year}</Option>)}
                         </Select>
                     </div>
-                    <Timeline pending="读取..." reverse={reverse}>
+                    <Timeline pending="读取..." reverse={reverse} >
                         {
                             ytls.map(tl=>
-                                <Timeline.Item key={tl._id}>
+                                <Timeline.Item key={tl._id}> 
                                 {tl.name+' '+shortDate(tl.create_time)}
                                 {tl.details?  <span>&nbsp;<Icon onClick={()=>{this.showDetails(tl._id)}} type="profile" theme="twoTone" /></span>:<span></span>}
                                 </Timeline.Item>
