@@ -167,7 +167,7 @@ class ProcessedRecordView(APIView):
             with transaction.atomic():
                 obj=ProcessedRecord()
                 if 'create_time' in res:
-                    obj.situation=res['create_time']
+                    obj.create_time=res['create_time']
                 if 'situation' in res:
                     obj.situation=res['situation']
                 if 'solution' in res:
@@ -219,7 +219,7 @@ class ProcessedRecordView(APIView):
             with transaction.atomic():
                 obj=ProcessedRecord.objects.get(_id=res['_id'])
                 if 'create_time' in res:
-                    obj.situation=res['create_time']
+                    obj.create_time=res['create_time']
                 if 'situation' in res:
                     obj.situation=res['situation']
                 if 'solution' in res:

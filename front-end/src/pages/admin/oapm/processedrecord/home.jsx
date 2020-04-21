@@ -5,7 +5,7 @@ import {BASE_GREEN,BASE_RED,BASE_BLUE} from '../../../../utils/colors'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import PreviewBtn from '../../../../components/previewbtn'
-import {formateDate} from '../../../../utils/dateUtils'
+import {shortDate} from '../../../../utils/dateUtils'
 import {processingMode} from '../../../../config/selectConfig'
 import {PAGE_SIZE} from '../../../../utils/constants'
 import {rProcessedRecords,dProcessedRecord,eProcessedRecord} from '../../../../api'
@@ -30,7 +30,7 @@ export default class Home extends Component{
             title:'记录时间',
             dataIndex:'create_time',
             width: 180,
-            render:(create_time)=>formateDate(create_time)
+            render:(create_time)=>shortDate(create_time)
         },
         {
             title:'问题情况',
