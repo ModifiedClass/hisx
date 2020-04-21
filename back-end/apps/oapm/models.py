@@ -21,7 +21,7 @@ class ProcessedRecord(models.Model):
         verbose_name='处理记录'
         verbose_name_plural='处理记录'
     _id=models.AutoField(primary_key=True)
-    create_time=models.DateTimeField(auto_now_add=True)
+    create_time=models.DateTimeField(verbose_name='处理日期)
     situation=models.TextField()
     solution=models.TextField()
     department=models.ManyToManyField(Department)

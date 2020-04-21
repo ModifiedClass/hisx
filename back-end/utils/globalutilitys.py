@@ -77,6 +77,7 @@ def save_image(files):
     from django.conf import settings
     filename = "%s.%s" % (get_time_stamp(), files.name.split('.')[-1])
     full_filename = "%s\\%s" % (settings.MEDIA_ROOT+'\\img', filename)
+    #linux服务器full_filename = "%s/%s" % (settings.MEDIA_ROOT+'/img', filename)
     #url="%s/%s" % ('media/img', filename)
     url='http://127.0.0.1:8000/media/img/'+filename
     with open(full_filename, 'wb+') as destination:
