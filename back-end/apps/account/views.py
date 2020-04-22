@@ -104,9 +104,13 @@ class GroupView(APIView):
         pb=request.body
         res=json.loads(pb)
         try:
-            Group.objects.filter(_id=res['_id']).delete()
-            ret['status']=1
-            ret['msg']="操作成功!"
+            obj=Group.objects.get(_id=res['_id'])
+            if obj.name=='管理员':
+                ret['msg']="内置组不能删除!"
+            else:
+                Group.objects.filter(_id=res['_id']).delete()
+                ret['status']=1
+                ret['msg']="操作成功!"
             return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
@@ -119,15 +123,18 @@ class GroupView(APIView):
         try:
             with transaction.atomic():
                 obj=Group.objects.get(_id=res['_id'])
-                if "name" in res:
-                    obj.name=res['name']
-                if "menu" in res:
-                    obj.menu=res['menu']
-                if "operation" in res:
-                    obj.operation=res['operation']
-                obj.save()
-                ret['status']=1
-                ret['msg']="操作成功!"
+                if obj.name=='管理员':
+                    ret['msg']="内置组不能修改!"
+                else:
+                    if "name" in res:
+                        obj.name=res['name']
+                    if "menu" in res:
+                        obj.menu=res['menu']
+                    if "operation" in res:
+                        obj.operation=res['operation']
+                    obj.save()
+                    ret['status']=1
+                    ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
@@ -294,9 +301,13 @@ class UserView(APIView):
         res=json.loads(pb)
         _id = res['_id']
         try:
-            User.objects.filter(_id=_id).delete()
-            ret['status']=1
-            ret['msg']="操作成功!"
+            obj=User.objects.get(_id=res['_id'])
+            if obj.username=='admin':
+                ret['msg']="内置用户不能删除!"
+            else:
+                User.objects.filter(_id=_id).delete()
+                ret['status']=1
+                ret['msg']="操作成功!"
             return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
@@ -309,25 +320,28 @@ class UserView(APIView):
         try:
             with transaction.atomic():
                 obj=User.objects.get(_id=res['_id'])
-                if "username" in res:
-                    obj.username=res['username']
-                if "password" in res:
-                    obj.password=pwdenc(res['password'])
-                if "name" in res:
-                    obj.name=res['name']
-                if "issuper" in res:
-                    obj.isSuper=res['issuper']
-                if "group" in res:
-                    groups=Group.objects.filter(_id__in=res['group'])
-                    obj.group.clear()
-                    obj.group.add(*groups)
-                if "department" in res:
-                    departments=Department.objects.filter(_id__in=res['department'])
-                    obj.department.clear()
-                    obj.department.add(*departments)
-                obj.save()
-                ret['status']=1
-                ret['msg']="操作成功!"
+                if obj.username=='admin':
+                    ret['msg']="内置用户不能修改!"
+                else:
+                    if "username" in res:
+                        obj.username=res['username']
+                    if "password" in res:
+                        obj.password=pwdenc(res['password'])
+                    if "name" in res:
+                        obj.name=res['name']
+                    if "issuper" in res:
+                        obj.isSuper=res['issuper']
+                    if "group" in res:
+                        groups=Group.objects.filter(_id__in=res['group'])
+                        obj.group.clear()
+                        obj.group.add(*groups)
+                    if "department" in res:
+                        departments=Department.objects.filter(_id__in=res['department'])
+                        obj.department.clear()
+                        obj.department.add(*departments)
+                    obj.save()
+                    ret['status']=1
+                    ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
         except Exception as e:
             ret['msg']=str(e)
