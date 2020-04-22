@@ -28,7 +28,7 @@ class ProcessedRecord(models.Model):
     processing_mode=models.IntegerField(default=1)
     problem_state=models.IntegerField(default=1)
     discoverer=models.ForeignKey(User,on_delete=models.CASCADE,related_name='discoverer',blank=True,null=True)
-    discovergroup=models.ForeignKey(Group,on_delete=models.CASCADE)
+    discovergroup=models.ForeignKey(Group,on_delete=models.CASCADE,blank=True,null=True)
     problem_category=models.ForeignKey(ProblemCategory,on_delete=models.CASCADE)
     handler=models.ForeignKey(User,on_delete=models.CASCADE,related_name='handler')
     imgs=models.TextField(blank=True,null=True)

@@ -131,10 +131,10 @@ export default class Home extends Component{
         },
         {
             title:'发现人',
-            dataIndex:'discoverer',
+            dataIndex:'discovergroup',
             width: 80,
-            render:(discoverer)=>{
-                return discoverer.name
+            render:(discovergroup)=>{
+                return discovergroup.name
             }
         },
         {

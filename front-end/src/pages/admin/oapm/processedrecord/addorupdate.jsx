@@ -140,7 +140,7 @@ class AddOrUpdate extends Component{
             create_time,
             problem_state,
             department,
-            discoverer,
+            discovergroup,
             problem_category,
             processing_mode,
             handler,
@@ -217,8 +217,8 @@ class AddOrUpdate extends Component{
                     )}
                     </Item>
                     <Item label="发现人">
-                    {getFieldDecorator('discoverer',{
-                        initialValue:isUpdate ? discoverer._id : 1,
+                    {getFieldDecorator('discovergroup',{
+                        initialValue:isUpdate ? discovergroup._id : 1,
                         rules:[
                         {
                             required:true,message:'发现人不能为空!'
