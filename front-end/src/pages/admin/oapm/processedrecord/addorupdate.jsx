@@ -5,7 +5,7 @@ import BackBtn from '../../../../components/backbtn'
 import PicsWall from './picswall'
 import RichTextEditor from './richtexteditor'
 
-import {couProcessedRecord,rDepartments,rProblemCategorys,rUsers} from '../../../../api'
+import {couProcessedRecord,rDepartments,rProblemCategorys,rUsers,rGroups} from '../../../../api'
 import {shortDate} from '../../../../utils/dateUtils'
 import {ptoc} from '../../../../utils/departmentUtils'
 import {problemState,processingMode} from '../../../../config/selectConfig'
@@ -217,8 +217,8 @@ class AddOrUpdate extends Component{
                     )}
                     </Item>
                     <Item label="发现人">
-                    {getFieldDecorator('discoverer',{
-                        initialValue:isUpdate ? discoverer._id : 1,
+                    {getFieldDecorator('discovergroup',{
+                        initialValue:isUpdate ? discovergroup._id : 1,
                         rules:[
                         {
                             required:true,message:'发现人不能为空!'
