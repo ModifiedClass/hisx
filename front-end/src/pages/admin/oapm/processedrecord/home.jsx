@@ -134,7 +134,8 @@ export default class Home extends Component{
             dataIndex:'discovergroup',
             width: 80,
             render:(discovergroup)=>{
-                return discovergroup.name
+                if(discovergroup)
+                    return discovergroup.name
             }
         },
         {

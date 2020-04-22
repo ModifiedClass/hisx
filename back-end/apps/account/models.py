@@ -54,6 +54,7 @@ class User(models.Model):
 class UserToken(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE)
     token=models.CharField(max_length=64)
+    create_time=models.DateTimeField(blank=True,null=True,auto_now_add=True)
     
     def __str__(self):
         return self.token

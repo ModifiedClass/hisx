@@ -163,6 +163,7 @@ class ProcessedRecordView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
+        print(res)
         try:
             with transaction.atomic():
                 obj=ProcessedRecord()

@@ -5,6 +5,7 @@ import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
 import {formateDate} from '../../../../utils/dateUtils'
+import {ptoc} from '../../../../utils/departmentUtils'
 import {rUsers,rGroups,couUser,dUser,rDepartments} from '../../../../api'
 import AddForm from './addform'
 import DepartmentForm from './departmentform'
@@ -230,7 +231,7 @@ export default class User extends Component{
         const result=await rDepartments()
         this.setState({
             udShow:true,
-            initDepartment:result?result.data:{}
+            initDepartment:result?ptoc(result.data):{}
         })
     }
     
