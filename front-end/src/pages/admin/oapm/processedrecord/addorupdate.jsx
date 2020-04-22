@@ -5,7 +5,7 @@ import BackBtn from '../../../../components/backbtn'
 import PicsWall from './picswall'
 import RichTextEditor from './richtexteditor'
 
-import {couProcessedRecord,rDepartments,rProblemCategorys,rUsers} from '../../../../api'
+import {couProcessedRecord,rDepartments,rProblemCategorys,rUsers,rGroups} from '../../../../api'
 import {shortDate} from '../../../../utils/dateUtils'
 import {ptoc} from '../../../../utils/departmentUtils'
 import {problemState,processingMode} from '../../../../config/selectConfig'

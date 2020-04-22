@@ -1,5 +1,5 @@
 from django.db import models
-from account.models import Department,User
+from account.models import Department,User,Group
 from informationdevice.models import DeviceInfo
 # Create your models here.
 
@@ -27,7 +27,8 @@ class ProcessedRecord(models.Model):
     department=models.ManyToManyField(Department)
     processing_mode=models.IntegerField(default=1)
     problem_state=models.IntegerField(default=1)
-    discoverer=models.ForeignKey(Group,on_delete=models.CASCADE,related_name='discoverer')
+    discoverer=models.ForeignKey(User,on_delete=models.CASCADE,related_name='discoverer',blank=True,null=True)
+    discovergroup=models.ForeignKey(Group,on_delete=models.CASCADE)
     problem_category=models.ForeignKey(ProblemCategory,on_delete=models.CASCADE)
     handler=models.ForeignKey(User,on_delete=models.CASCADE,related_name='handler')
     imgs=models.TextField(blank=True,null=True)
