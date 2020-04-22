@@ -22,6 +22,7 @@ class AddOrUpdate extends Component{
     state={
         departments:[],
         users:[],
+        groups:[],
         problemcategorys:[]
     }
     
@@ -40,12 +41,26 @@ class AddOrUpdate extends Component{
         
     }
     
-    getUsers=async ()=>{
-        const result=await rUsers()
+    getGroups=async ()=>{
+        const result=await rGroups()
         if(result.status===1){
-            const users=result.data
-            this.setState({users})            
+            const groups=result.data
+            this.setState({groups})            
         }
+        
+    }
+    
+    getUsers=async ()=>{
+        const gs=await rGroups({'name':'管理员'})
+        if(gs.status===1){
+            const g=gs.data[0]._id
+            const result=await rUsers({'group':g})
+            if(result.status===1){
+                const users=result.data
+                this.setState({users})            
+            }
+        }
+        
         
     }
     
@@ -110,6 +125,7 @@ class AddOrUpdate extends Component{
     componentWillMount(){
         this.getDepartments()
         this.getUsers()
+        this.getGroups()
         this.getProblemCategorys()
         
         const processedrecord=this.props.location.state
@@ -118,7 +134,7 @@ class AddOrUpdate extends Component{
         this.processedrecord=processedrecord ||{}
     }
     render(){
-        const {users,departments,problemcategorys}=this.state
+        const {users,groups,departments,problemcategorys}=this.state
         const {isUpdate,processedrecord}=this
         const {
             create_time,
@@ -211,7 +227,7 @@ class AddOrUpdate extends Component{
                     })(
                         <Select>
                         {
-                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.name}{ru.username}</Option>)
+                            groups.map(ru=><Option key={ru._id} value={ru._id}>{ru.name}{ru.username}</Option>)
                         }
                         </Select>
                     )}

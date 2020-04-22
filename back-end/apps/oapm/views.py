@@ -177,7 +177,7 @@ class ProcessedRecordView(APIView):
                 if 'problem_state' in res:
                     obj.problem_state=res['problem_state']
                 if 'discoverer' in res:
-                    obj.discoverer=User.objects.get(_id=res['discoverer'])
+                    obj.discoverer=Group.objects.get(_id=res['discoverer'])
                 if 'problem_category' in res:
                     obj.problem_category=ProblemCategory.objects.get(_id=res['problem_category'])
                 if 'handler' in res:
@@ -233,7 +233,7 @@ class ProcessedRecordView(APIView):
                 if 'problem_state' in res:
                     obj.problem_state=res['problem_state']
                 if 'discoverer' in res:
-                    obj.discoverer=User.objects.get(_id=res['discoverer'])
+                    obj.discoverer=Group.objects.get(_id=res['discoverer'])
                 if 'problem_category' in res:
                     obj.problem_category=ProblemCategory.objects.get(_id=res['problem_category'])
                 if 'handler' in res:

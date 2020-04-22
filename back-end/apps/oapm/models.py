@@ -27,7 +27,7 @@ class ProcessedRecord(models.Model):
     department=models.ManyToManyField(Department)
     processing_mode=models.IntegerField(default=1)
     problem_state=models.IntegerField(default=1)
-    discoverer=models.ForeignKey(User,on_delete=models.CASCADE,related_name='discoverer')
+    discoverer=models.ForeignKey(Group,on_delete=models.CASCADE,related_name='discoverer')
     problem_category=models.ForeignKey(ProblemCategory,on_delete=models.CASCADE)
     handler=models.ForeignKey(User,on_delete=models.CASCADE,related_name='handler')
     imgs=models.TextField(blank=True,null=True)
