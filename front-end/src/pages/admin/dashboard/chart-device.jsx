@@ -92,7 +92,7 @@ export default class ChartDevice extends Component{
     render(){
         
         const{data}=this.state
-        const extra=<span>设备总计:&nbsp;&nbsp;<Badge count={this.state.sum} style={{ backgroundColor: '#52c41a' }} /></span>
+        const extra=<span>设备总计:&nbsp;&nbsp;<Badge count={this.state.sum} overflowCount={10000} style={{ backgroundColor: '#52c41a' }} /></span>
         return(
             <Card title='设备结构' extra={extra}>
                 <ReactEcharts option={this.getOption(data)}/>
