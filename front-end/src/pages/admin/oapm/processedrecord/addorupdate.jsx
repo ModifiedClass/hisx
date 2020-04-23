@@ -94,10 +94,12 @@ class AddOrUpdate extends Component{
                 }=values
                 const imgs=this.pw.current.getImgs()
                 const solution=this.editor.current.getSolution()
+                const seldep=[]
+                seldep.push(department)
                 const processedrecord={
                     create_time,
                     problem_state,
-                    department,
+                    department:seldep,
                     discoverer,
                     problem_category,
                     processing_mode,
