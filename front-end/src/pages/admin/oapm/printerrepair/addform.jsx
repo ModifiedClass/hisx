@@ -88,12 +88,12 @@ class AddForm extends PureComponent{
                     )
                 }
                 </Item>
-                <Item label='打印机' >
+                <Item label='设备' >
                 {
                     getFieldDecorator('printer',{
                         initialValue:printerrepair.printer,
                         rules:[
-                        {required:true,message:'打印机不能为空!'}
+                        {required:true,message:'设备不能为空!'}
                         ]
                     })(
                         <Select>
@@ -127,7 +127,7 @@ class AddForm extends PureComponent{
                     })(
                         <Select>
                         {
-                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.username}</Option>)
+                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.username}{ru.name}</Option>)
                         }
                         </Select>
                     )}

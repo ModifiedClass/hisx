@@ -1,33 +1,68 @@
 import React,{Component} from 'react';
 
-import {Card,Form,Input,Select,Button,Icon,DatePicker,message} from 'antd'
+import {Card,Form,Input,Select,Cascader,Button,Icon,DatePicker,message,TreeSelect} from 'antd'
 import BackBtn from '../../../../components/backbtn'
 import PicsWall from './picswall'
 import RichTextEditor from './richtexteditor'
 
-import {couProcessedRecord,rDepartments,rProblemCategorys,rUsers} from '../../../../api'
+import {couProcessedRecord,rDepartments,rProblemCategorys,rUsers,rGroups} from '../../../../api'
 import {shortDate} from '../../../../utils/dateUtils'
+import {ptoc} from '../../../../utils/departmentUtils'
 import {problemState,processingMode} from '../../../../config/selectConfig'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 
 const Item=Form.Item
-const {Option}=Select
+const Option=Select.Option
 const {TextArea}=Input
 const thisDate=shortDate(Date.now())
+const { TreeNode } = TreeSelect
 
 class AddOrUpdate extends Component{
     state={
         departments:[],
         users:[],
-        problemcategorys:[],
+        groups:[],
+        problemcategorys:[]
     }
     
     constructor(props){
         super(props)
         this.pw=React.createRef()
         this.editor=React.createRef()
+    }
+    
+    getDepartments=async ()=>{
+        const result=await rDepartments()
+        if(result.status===1){
+            const departments=ptoc(result.data)
+            this.setState({departments})            
+        }
+        
+    }
+    
+    getGroups=async ()=>{
+        const result=await rGroups()
+        if(result.status===1){
+            const groups=result.data
+            this.setState({groups})            
+        }
+        
+    }
+    
+    getUsers=async ()=>{
+        const gs=await rGroups({'name':'管理员'})
+        if(gs.status===1){
+            const g=gs.data[0]._id
+            const result=await rUsers({'group':g})
+            if(result.status===1){
+                const users=result.data
+                this.setState({users})            
+            }
+        }
+        
+        
     }
     
     getProblemCategorys=async ()=>{
@@ -37,42 +72,6 @@ class AddOrUpdate extends Component{
             this.setState({problemcategorys})            
         }
         
-    }
-    
-    handleSearchDepartments=async value =>{
-        if(value){
-            const result1=await rDepartments({'code':value})
-            const result2=await rDepartments({'name':value})
-            if(result1.status===1){
-                const departments=result1.data
-                this.setState({departments})            
-            }else if(result2.status===1){
-                const departments=result2.data
-                this.setState({departments})            
-            }else{
-                this.setState({departments:[]})
-            }
-        }else{
-            this.setState({departments:[]})
-        }
-    }
-    
-    handleSearchUsers=async value =>{
-        if(value){
-            const result1=await rUsers({'username':value})
-            const result2=await rUsers({'name':value})
-            if(result1.status===1){
-                const users=result1.data
-                this.setState({users})            
-            }else if(result2.status===1){
-                const users=result2.data
-                this.setState({users}) 
-            }else{
-                this.setState({users:[]}) 
-            }
-        }else{
-            this.setState({users:[]})
-        }
     }
     
     displayRender=(label)=> {
@@ -86,7 +85,7 @@ class AddOrUpdate extends Component{
                     create_time,
                     problem_state,
                     department,
-                    discoverer,
+                    discovergroup,
                     problem_category,
                     processing_mode,
                     handler,
@@ -98,7 +97,7 @@ class AddOrUpdate extends Component{
                     create_time,
                     problem_state,
                     department,
-                    discoverer,
+                    discovergroup,
                     problem_category,
                     processing_mode,
                     handler,
@@ -120,7 +119,14 @@ class AddOrUpdate extends Component{
         })
     }
     
+    componentDidMount(){
+        
+    }
+    
     componentWillMount(){
+        this.getDepartments()
+        this.getUsers()
+        this.getGroups()
         this.getProblemCategorys()
         
         const processedrecord=this.props.location.state
@@ -129,15 +135,13 @@ class AddOrUpdate extends Component{
         this.processedrecord=processedrecord ||{}
     }
     render(){
-        const {users,departments,problemcategorys}=this.state
-        const departmentoptions = departments.map(d => <Option key={d._id} >{d.name}</Option>)
-        const useroptions = users.map(d => <Option key={d._id} >{d.username}-{d.name}</Option>)
+        const {users,groups,departments,problemcategorys}=this.state
         const {isUpdate,processedrecord}=this
         const {
             create_time,
             problem_state,
             department,
-            discoverer,
+            discovergroup,
             problem_category,
             processing_mode,
             handler,
@@ -145,6 +149,13 @@ class AddOrUpdate extends Component{
             solution,
             imgs
         }=processedrecord
+        //级联id数组     
+        const departmentIds=[]
+        if(isUpdate){
+            department.forEach(dep=>{
+                departmentIds.push(dep._id)
+            })
+        }
         
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
@@ -191,45 +202,54 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item label="发生部门">
                     {getFieldDecorator('department',{
-                        initialValue:department? department._id :1,
+                        initialValue:departmentIds,
                         rules:[
                         {
                             required:true,message:'发生部门不能为空!'
                         }
                         ]
                     })(
-                        <Select
+                        {/*<Cascader 
+                        fieldNames={{ label: 'name'}}
+                        expandTrigger="hover"
+                        displayRender={this.displayRender}
+                        options={departments} 
+                        placeholder="请选择部门!"/>*/}
+                        <TreeSelect
                             showSearch
                             style={{ width: '100%' }}
-                            placeholder="选择部门"
-                            showArrow={false}
-                            filterOption={false}
-                            onSearch={this.handleSearchDepartments}
-                            notFoundContent={null}
-                        >
-                        {departmentoptions}
-                        </Select>
+                            value={this.state.value}
+                            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                            placeholder="Please select"
+                            allowClear
+                            treeDefaultExpandAll
+                            onChange={this.onChange}
+                         >
+                            <TreeNode value="parent 1" title="parent 1" key="0-1">
+                              <TreeNode value="parent 1-0" title="parent 1-0" key="0-1-1">
+                                <TreeNode value="leaf1" title="my leaf" key="random" />
+                                <TreeNode value="leaf2" title="your leaf" key="random1" />
+                              </TreeNode>
+                              <TreeNode value="parent 1-1" title="parent 1-1" key="random2">
+                                <TreeNode value="sss" title={<b style={{ color: '#08c' }}>sss</b>} key="random3" />
+                              </TreeNode>
+                            </TreeNode>
+                        </TreeSelect>
                     )}
                     </Item>
                     <Item label="发现人">
-                    {getFieldDecorator('discoverer',{
-                        initialValue:discoverer ? discoverer._id : 1,
+                    {getFieldDecorator('discovergroup',{
+                        initialValue:discovergroup ? discovergroup._id : 1,
                         rules:[
                         {
                             required:true,message:'发现人不能为空!'
                         }
                         ]
                     })(
-                        <Select
-                            showSearch
-                            style={{ width: '100%' }}
-                            placeholder="选择发现人"
-                            showArrow={false}
-                            filterOption={false}
-                            onSearch={this.handleSearchUsers}
-                            notFoundContent={null}
-                        >
-                        {useroptions}
+                        <Select>
+                        {
+                            groups.map(ru=><Option key={ru._id} value={ru._id}>{ru.name}{ru.username}</Option>)
+                        }
                         </Select>
                     )}
                     </Item>
@@ -274,16 +294,10 @@ class AddOrUpdate extends Component{
                         }
                         ]
                     })(
-                        <Select
-                            showSearch
-                            style={{ width: '100%' }}
-                            placeholder="选择处理人"
-                            showArrow={false}
-                            filterOption={false}
-                            onSearch={this.handleSearchUsers}
-                            notFoundContent={null}
-                        >
-                        {useroptions}
+                        <Select>
+                        {
+                            users.map(ru=><Option key={ru._id} value={ru._id}>{ru.name}{ru.username}</Option>)
+                        }
                         </Select>
                     )}
                     </Item>

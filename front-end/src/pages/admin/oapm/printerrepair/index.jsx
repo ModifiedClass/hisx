@@ -6,7 +6,7 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate,shortDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
 import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
-import {rPrinterRepairs,couPrinterRepair,dPrinterRepair,rePrinterRepair,rUsers,rDeviceInfos} from '../../../../api'
+import {rPrinterRepairs,couPrinterRepair,dPrinterRepair,rePrinterRepair,rUsers,rDeviceInfos,rGroups} from '../../../../api'
 import AddForm from './addform'
 import ReviewForm from './reviewform'
 
@@ -98,10 +98,14 @@ export default class PrinterRepair extends Component{
     }
     //初始化用户用于传子控件
     initUsers=async()=>{
-        const result=await rUsers()
-        if(result.status===1){
-            const users=result.data
-            this.setState({users})
+        const gs=await rGroups({'name':'管理员'})
+        if(gs.status===1){
+            const g=gs.data[0]._id
+            const result=await rUsers({'group':g})
+            if(result.status===1){
+                const users=result.data
+                this.setState({users})            
+            }
         }
     }
     

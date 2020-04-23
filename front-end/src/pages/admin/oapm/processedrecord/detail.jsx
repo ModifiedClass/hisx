@@ -113,7 +113,7 @@ export default class ProcessedRecordDetail extends Component{
                 <Item label={icreate_time} span={2}>{formateDate(create_time)}</Item>
                 <Item label={istateDisplay}>{stateDisplay}</Item>
                 <Item label={idepartmentId} span={2}>{departmentNames.substring(0,departmentNames.length-1)}</Item>
-                <Item label={idiscoverer}>{discoverer.name}</Item>
+                <Item label={idiscoverer}>{discoverer?discoverer.name:''}</Item>
                 <Item label={iproblem_category}>{problem_category.name}</Item>
                 <Item label={iprocessing_mode}>{processing_modeDisplay}</Item>
                 <Item label={ihandler}>{handler.name}</Item>

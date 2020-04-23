@@ -176,17 +176,17 @@ class DepartmentView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        name=res['name']
-        code=res['code']
-        status=res['status']
         try:
             with transaction.atomic():
                 obj=Department()
-                obj.name=name
-                obj.code=code
+                if 'name' in res:
+                    obj.name=res['name']
+                if 'code' in res:
+                    obj.code=res['code']
+                if 'status'in res:
+                    obj.status=res['status']
                 if '_parent' in res:
-                    obj.parent=Department.objects.get(_id=res['_parent'])
-                obj.status=status
+                    obj._parent=Department.objects.get(_id=res['_parent'])
                 obj.save()
                 ret['status']=1
                 ret['msg']="操作成功!"
@@ -221,7 +221,9 @@ class DepartmentView(APIView):
                 if "code" in res:
                     obj.code=res['code']
                 if '_parent' in res:
-                    obj.parent=Department.objects.get(_id=res['_parent'])
+                    par=Department.objects.get(_id=res['_parent'])
+                    if par!=obj:
+                        obj._parent=Department.objects.get(_id=res['_parent'])
                 if "status" in res:
                     obj.status=res['status']
                 obj.save()
