@@ -147,7 +147,6 @@ class AddOrUpdate extends Component{
             solution,
             imgs
         }=processedrecord
-        
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:4},
@@ -193,7 +192,7 @@ class AddOrUpdate extends Component{
                     </Item>
                     <Item label="发生部门">
                     {getFieldDecorator('department',{
-                        initialValue:department? department._id :1,
+                        initialValue:department? department[department.length-1]._id :2,
                         rules:[
                         {
                             required:true,message:'发生部门不能为空!'

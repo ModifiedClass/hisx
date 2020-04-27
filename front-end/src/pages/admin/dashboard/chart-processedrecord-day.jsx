@@ -16,7 +16,7 @@ export default class ChartPRD extends Component{
     getOption=(legenddata,xdate,seriesdata)=>{
         return{
             tooltip: {
-                //trigger: 'axis',
+                trigger: 'axis',
                 axisPointer: {
                     type: 'cross',
                     label: {
@@ -25,12 +25,7 @@ export default class ChartPRD extends Component{
                 }
             },
             legend: {
-                data:legenddata.slice(0,3)
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
+                data:legenddata
             },
             grid: {
                 left: '3%',
@@ -41,15 +36,21 @@ export default class ChartPRD extends Component{
             xAxis: [
                 {
                     type: 'category',
+                    name:'时间',
                     boundaryGap: false,
                     data: xdate
                 }
             ],
-            yAxis: [
-                {
-                    type: 'value'
+            yAxis: {
+                type: 'value',
+                name:'数量',
+                minorTick: {
+                    show: true
+                },
+                minorSplitLine: {
+                    show: true
                 }
-            ],
+            },
             series: seriesdata
         }
     }
@@ -80,14 +81,15 @@ export default class ChartPRD extends Component{
                 seriesdata.push({
                     name: legenddata[i],
                     type: 'line',
-                    stack: '总量',
+                    smooth: true,
+                    /*stack: '总量',
                     label: {
                         normal: {
                             show: true,
                             position: 'top'
                         }
                     },
-                    areaStyle: {},
+                    areaStyle: {},*/
                     data:two
                 })
             }

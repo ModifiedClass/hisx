@@ -289,7 +289,7 @@ class DeviceInfoView(APIView):
                     ret['status']=1
                     ret['data']=objs
             else:
-                obj=DeviceInfo.objects.filter(status=1).order_by('name')
+                obj=DeviceInfo.objects.filter(**searchdict).order_by('name')
                 if not obj:
                     ret['msg']="没有获取到数据!"
                 else:

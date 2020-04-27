@@ -43,7 +43,7 @@ class AddForm extends PureComponent{
     //根据型号id初始化select设备
     getDeviceInfos=async value =>{
         this.setState({deviceinfos:[]})
-        const result=await rDeviceInfos({'isPage':false,'devicemodel_id':value})
+        const result=await rDeviceInfos({'isPage':false,'devicemodel':value})
         if(result.status===1){
             this.setState({deviceinfos:result.data.list})
         }  

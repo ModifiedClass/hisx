@@ -22,7 +22,7 @@ export default class ChartPR extends Component{
                 orient: 'vertical',
                 //orient: 'horizontal',
                 left: 1,
-                data:legenddata.slice(0,3)
+                data:legenddata
             },
             series: [
                 {
