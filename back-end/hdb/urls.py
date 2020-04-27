@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/informationdevice/', include('informationdevice.urls')),
     path('api/oapm/', include('oapm.urls')),
     path('api/timeline/', include('timeline.urls')),
+    path('api/analysis/', include('analysis.urls')),
     re_path(r'^media/(?P<path>.*)',serve, {"document_root":settings.MEDIA_ROOT}),
 ]#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

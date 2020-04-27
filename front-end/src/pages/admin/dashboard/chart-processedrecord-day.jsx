@@ -82,14 +82,6 @@ export default class ChartPRD extends Component{
                     name: legenddata[i],
                     type: 'line',
                     smooth: true,
-                    /*stack: '总量',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top'
-                        }
-                    },
-                    areaStyle: {},*/
                     data:two
                 })
             }

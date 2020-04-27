@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'informationdevice',
     'oapm',
     'timeline',
+    'analysis',
 ]
 
 MIDDLEWARE = [
