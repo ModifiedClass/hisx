@@ -6,7 +6,7 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate,shortDate} from '../../../../utils/dateUtils'
 import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rCartridays,couCartriday,dCartriday,reCartriday,rUsers} from '../../../../api'
+import {rCartridays,couCartriday,dCartriday,reCartriday,rUsers,rGroups} from '../../../../api'
 
 import AddForm from './addform'
 import ReviewForm from './reviewform'
@@ -77,10 +77,14 @@ export default class Cartriday extends Component{
     }
     
     initUsers=async()=>{
-        const result=await rUsers()
-        if(result.status===1){
-            const users=result.data
-            this.setState({users})
+        const gs=await rGroups({'name':'管理员'})
+        if(gs.status===1){
+            const g=gs.data[0]._id
+            const result=await rUsers({'group':g})
+            if(result.status===1){
+                const users=result.data
+                this.setState({users})            
+            }
         }
     }
     

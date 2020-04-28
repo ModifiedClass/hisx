@@ -96,6 +96,10 @@ export const deviceRunSystem=[
 {
     label:'MacOS',
     value:'15',
+},
+{
+    label:'其他',
+    value:'16',
 }
 ]
 

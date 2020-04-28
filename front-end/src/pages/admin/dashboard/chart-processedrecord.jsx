@@ -22,7 +22,7 @@ export default class ChartPR extends Component{
                 orient: 'vertical',
                 //orient: 'horizontal',
                 left: 1,
-                data:legenddata.slice(0,3)
+                data:legenddata
             },
             series: [
                 {
@@ -81,7 +81,7 @@ export default class ChartPR extends Component{
         
         const{legenddata,seriesdata,sum}=this.state
         const title='各类问题比例'
-        const extra=<span>问题数总计:&nbsp;&nbsp;<Badge count={sum} /></span>
+        const extra=<span>问题数总计:&nbsp;&nbsp;<Badge count={sum} overflowCount={1000000}/></span>
         return(
             <Card title={title} extra={extra}>
                 <ReactEcharts option={this.getOption(legenddata,seriesdata)}/>
