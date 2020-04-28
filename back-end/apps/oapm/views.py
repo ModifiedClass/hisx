@@ -638,7 +638,7 @@ def export_ProcessedRecord_excel(request):
         sheet.write(data_row,3,processing_mode)
         sheet.write(data_row,4,problem_state)
         sheet.write(data_row,5,i['department__name'])
-        sheet.write(data_row,6,i['discoverer__name'])
+        sheet.write(data_row,6,i['discovergroup__name'])
         sheet.write(data_row,7,i['problem_category__name'])
         sheet.write(data_row,8,i['handler__name'])
         data_row = data_row + 1
