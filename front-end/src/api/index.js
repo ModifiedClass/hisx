@@ -119,4 +119,10 @@ export const couTimeLine=(timeline)=>fetchreq(HOST+'/api/timeline/',timeline,(ti
 //删除时间轴
 export const dTimeLine=(timelineId)=>fetchreq(HOST+'/api/timeline/',{'_id':timelineId},'DELETE')
 
-
+/**analysis**/
+//获取最近30天问题记录
+export const chart_processedrecord_day=()=>fetchreq(HOST+'/api/analysis/chart_processedrecord_day/')
+//获取问题类别比例
+export const chart_processedrecord=()=>fetchreq(HOST+'/api/analysis/chart_processedrecord/')
+//获取设备类别比例
+export const chart_device=()=>fetchreq(HOST+'/api/analysis/chart_device/')

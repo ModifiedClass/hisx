@@ -175,6 +175,7 @@ export default class Home extends Component{
             const {total,list}=result.data
             this.setState({deviceinfos:list,total})
         }else{
+            this.setState({deviceinfos:[],total:0})
             message.error(result.msg)
         }
     }

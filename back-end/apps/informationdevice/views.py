@@ -252,8 +252,6 @@ class DeviceInfoView(APIView):
         searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
-        if request.GET.get("devicecategory"):
-            searchdict['devicecategory_id']=request.GET.get("devicecategory")
         if request.GET.get("devicemodel"):
             searchdict['devicemodel_id']=request.GET.get("devicemodel")
         if request.GET.get("installlocation"):

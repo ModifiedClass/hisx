@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import {Card,Badge} from 'antd'
 import ReactEcharts from 'echarts-for-react'
 
-import {rDeviceInfos,rDeviceCategorys} from '../../../api'
+import {chart_device} from '../../../api'
 
 
 export default class ChartDevice extends Component{
@@ -19,15 +19,6 @@ export default class ChartDevice extends Component{
                 trigger: 'item',
                 formatter: '{a} <br/>{b} : {c} ({d}%)'
             },
-
-            /*visualMap: {
-                show: false,
-                min: 1,
-                max: 1000,
-                inRange: {
-                    colorLightness: [0, 1]
-                }
-            },*/
             series: [
                 {
                     name: '设备结构',
@@ -63,28 +54,8 @@ export default class ChartDevice extends Component{
         }
     }
     initData=async()=>{
-        const dcs=[]
-        const di=await rDeviceInfos({'isPage':false})
-        const dc=await rDeviceCategorys()
-        if(dc.status===1){
-            for(let i=0;i<dc.data.length;i++){
-                dcs.push(dc.data[i].name)
-            }
-        }
-        if(di.status===1){
-            const data=[]
-            const sum=di.data.list.length
-            for(let i=0;i<dcs.length;i++){
-                let nums=0
-                for(let j=0;j<sum;j++){
-                    if(di.data.list[j].devicemodel.devicecategory.name===dcs[i]){
-                        nums++
-                    }
-                }
-                data.push({value: nums, name: dcs[i]})
-            }
-            this.setState({data,sum})
-        }
+        const temp=await chart_device()
+        this.setState({data:temp.data,sum:temp.sum})
     }
      componentWillMount(){
         this.initData()
