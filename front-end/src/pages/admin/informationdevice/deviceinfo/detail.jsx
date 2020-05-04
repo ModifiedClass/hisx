@@ -3,6 +3,7 @@ import React,{Component} from 'react';
 import {Card,Descriptions} from 'antd'
 import BackBtn from '../../../../components/backbtn'
 import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
+import {shortDate} from '../../../../utils/dateUtils'
 
 const Item=Descriptions.Item
 
@@ -38,7 +39,8 @@ export default class DeviceInfoDetail extends Component{
             ip,
             mac,
             status,
-            create_time
+            remarks,
+            installdate
         }=this.props.location.state.deviceinfo
         
         const title=(
@@ -60,7 +62,8 @@ export default class DeviceInfoDetail extends Component{
                 <Item label='设备ip：' span={3}>{ip}</Item>
                 <Item label='设备mac：' span={3}>{mac}</Item>
                 <Item label='设备状态：' span={1}>{this.statusdisplay(status)}</Item>
-                <Item label='安装时间：' span={2}>{create_time}</Item>
+                <Item label='安装时间：' span={2}>{shortDate(installdate)}</Item>
+                <Item label='备注：' span={3}>{remarks}</Item>
               </Descriptions>
             </Card>  
         )

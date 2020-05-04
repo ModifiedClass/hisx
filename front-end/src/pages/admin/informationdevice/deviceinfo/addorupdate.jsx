@@ -12,6 +12,7 @@ moment.locale('zh-cn')
 
 const Item=Form.Item
 const Option=Select.Option
+const {TextArea}=Input
 const thisDate=shortDate(Date.now())
 
 class AddOrUpdate extends Component{
@@ -189,8 +190,8 @@ class AddOrUpdate extends Component{
                     )}
                     </Item>
                     <Item label="安装时间">
-                    {getFieldDecorator('create_time',{
-                        initialValue:isUpdate ? moment(deviceinfo.deviceinfo.create_time,'YYYY-MM-DD') : moment(thisDate,'YYYY-MM-DD'),
+                    {getFieldDecorator('installdate',{
+                        initialValue:isUpdate ? moment(deviceinfo.deviceinfo.installdate,'YYYY-MM-DD') : moment(thisDate,'YYYY-MM-DD'),
                         rules:[
                         {
                             required:true,message:'安装时间不能为空!'
@@ -214,6 +215,13 @@ class AddOrUpdate extends Component{
                             deviceStatus.map(item=><Option key={item.value} value={item.value}>{item.label}</Option>)
                         }
                         </Select>
+                    )}
+                    </Item>
+                    <Item label="备注">
+                    {getFieldDecorator('remarks',{
+                        initialValue:isUpdate ? deviceinfo.deviceinfo.remarks : ''
+                    })(
+                        <TextArea placeholder='' autoSize={{minRows:2}}/>
                     )}
                     </Item>
                     <Item>

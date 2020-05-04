@@ -50,11 +50,12 @@ class DeviceInfo(models.Model):
     devicemodel=models.ForeignKey(DeviceModel,on_delete=models.CASCADE,blank=True,null=True)  #型号
     ip=models.CharField(blank=True,null=True,max_length=100)
     mac=models.CharField(blank=True,null=True,max_length=100)
-    installdate=models.DateField(auto_now_add=True)  #安装时间
+    installdate=models.DateTimeField(verbose_name='安装日期')  #安装时间
     parent=models.ForeignKey('self',on_delete=models.CASCADE,blank=True,null=True) #连接设备
     runos=models.IntegerField(default= 1) #运行系统
     installlocation=models.ForeignKey(InstallLocation,on_delete=models.CASCADE,blank=True,null=True)
     create_time=models.DateTimeField(auto_now_add=True)
+    remarks=models.TextField(blank=True,null=True)
 
     class Meta:
         db_table="hisx_DeviceInfos"
