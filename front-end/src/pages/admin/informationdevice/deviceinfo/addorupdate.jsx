@@ -102,7 +102,7 @@ class AddOrUpdate extends Component{
                     })(
                         <Select>
                             {
-                                parents.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
+                                parents.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}-{ps.sn}</Option>)
                             }
                         </Select>
                     )}

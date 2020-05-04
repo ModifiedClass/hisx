@@ -207,7 +207,7 @@ export default class Home extends Component{
     
     deleteProcessedRecord=(processedrecord)=>{
         Modal.confirm({
-            title:'确认删除'+processedrecord.name+'吗？',
+            title:'确认删除？',
             onOk:async()=>{
                 const result=await dProcessedRecord(processedrecord._id)
                 if(result.status===1){

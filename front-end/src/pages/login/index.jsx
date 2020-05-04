@@ -4,6 +4,7 @@ import {Redirect} from 'react-router-dom'
 
 import {connect} from 'react-redux'
 import {login} from '../../redux/actions'
+import {SITENAME} from '../../utils/constants'
 
 import './index.less'
 
@@ -45,13 +46,13 @@ class Login extends Component {
         return(
             <div className="login">
                 <section className="login-content">
-                    <h2>HISX</h2>
+                    <h2>{SITENAME}</h2>
                     <Form onSubmit={this.handleSubmit} className="login-form">
                         <Form.Item>
                         {getFieldDecorator('username', {
                         rules: [{ required: true, message: '用户名不能为空!' },
                             { min: 3, message: '用户名不少于3位!' },
-                            { max: 20, message: '用户名不大于20位!' }],initialValue:'admin'
+                            { max: 20, message: '用户名不大于20位!' }],initialValue:'U095'
                         })(
                             <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                             placeholder="用户名" />

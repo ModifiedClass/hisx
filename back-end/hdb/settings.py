@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'oapm',
     'timeline',
     'analysis',
+    'systemsetting',
 ]
 
 MIDDLEWARE = [

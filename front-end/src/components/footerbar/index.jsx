@@ -1,4 +1,6 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+
+import {SITENAME} from '../../utils/constants'
 
 import './index.less'
 export default class FooterBar extends Component{
@@ -10,7 +12,6 @@ export default class FooterBar extends Component{
         }
     }
     render(){
-        let complany='hisx'
         let devdate='2020',copyrightdate=''
         if(this.state.date.toString() === devdate){
             copyrightdate=this.state.date
@@ -19,7 +20,7 @@ export default class FooterBar extends Component{
         }
         return(
             <div className="footerbar">
-                <span>&copy; {complany} &trade; {copyrightdate}</span>
+                <span>&copy; {SITENAME} &trade; {copyrightdate}</span>
             </div>
         )
     }
