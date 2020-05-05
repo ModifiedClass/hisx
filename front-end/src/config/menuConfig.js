@@ -93,5 +93,15 @@ const menuList=[
     }
     ]
 },
+/*{
+    title:'数据分析',
+    key:'/analysis',
+    icon:'line-chart',
+},*/
+{
+    title:'系统设置',
+    key:'/setting',
+    icon:'setting',
+},
 ]
 export default  menuList

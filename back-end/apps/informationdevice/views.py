@@ -252,8 +252,6 @@ class DeviceInfoView(APIView):
         searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
-        if request.GET.get("devicecategory"):
-            searchdict['devicecategory_id']=request.GET.get("devicecategory")
         if request.GET.get("devicemodel"):
             searchdict['devicemodel_id']=request.GET.get("devicemodel")
         if request.GET.get("installlocation"):
@@ -325,6 +323,8 @@ class DeviceInfoView(APIView):
                     obj.mac=res["mac"]
                 if "installdate" in res and res["installdate"]:
                     obj.installdate=res["installdate"]
+                if "remarks" in res and res["remarks"]:
+                    obj.remarks=res["remarks"]
                 if "parent" in res and res["parent"]:
                     obj.parent=DeviceInfo.objects.get(_id=int(res["parent"]))
                 if "runos" in res and res["runos"]:
@@ -373,6 +373,8 @@ class DeviceInfoView(APIView):
                     obj.mac=res["mac"]
                 if "installdate" in res and res["installdate"]:
                     obj.installdate=res["installdate"]
+                if "remarks" in res and res["remarks"]:
+                    obj.remarks=res["remarks"]
                 if "parent" in res and res["parent"] and res["parent"]!=res['_id']:
                     obj.parent=DeviceInfo.objects.get(_id=int(res["parent"]))
                 if "runos" in res and res["runos"]:

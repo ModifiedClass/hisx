@@ -154,7 +154,8 @@ export default class Home extends Component{
             name,
             ip,
             mac,
-            status
+            status,
+            remarks
         }=this.state
         let result=await rDeviceInfos({
             isPage,
@@ -167,7 +168,8 @@ export default class Home extends Component{
             name,
             ip,
             mac,
-            status
+            status,
+            remarks
         })
         
         this.setState({loading:false})
@@ -175,6 +177,7 @@ export default class Home extends Component{
             const {total,list}=result.data
             this.setState({deviceinfos:list,total})
         }else{
+            this.setState({deviceinfos:[],total:0})
             message.error(result.msg)
         }
     }

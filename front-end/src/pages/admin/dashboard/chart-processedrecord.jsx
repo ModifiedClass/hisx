@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import {Card,Badge} from 'antd'
 import ReactEcharts from 'echarts-for-react'
 
-import {rProcessedRecords,rProblemCategorys} from '../../../api'
+import {chart_processedrecord} from '../../../api'
 
 export default class ChartPR extends Component{
     state={
@@ -50,29 +50,12 @@ export default class ChartPR extends Component{
         }
     }
     initData=async()=>{
-        const legenddata=[]
-
-        const pr=await rProcessedRecords({'isPage':false})
-        const pc=await rProblemCategorys()
-        if(pc.status===1){
-            for(let i=0;i<pc.data.length;i++){
-                legenddata.push(pc.data[i].name)
-            }
-        }
-        if(pr.status===1){
-            const seriesdata=[]
-            const sum=pr.data.list.length
-            for(let i=0;i<legenddata.length;i++){
-                let nums=0
-                for(let j=0;j<sum;j++){
-                    if(pr.data.list[j].problem_category.name===legenddata[i]){
-                        nums++
-                    }
-                }
-                seriesdata.push({value: nums, name: legenddata[i]})
-            }
-            this.setState({legenddata,seriesdata,sum})
-        }
+        const temp=await chart_processedrecord()
+        this.setState({
+            legenddata:temp.legenddata,
+            seriesdata:temp.seriesdata,
+            sum:temp.sum
+        })
     }
      componentWillMount(){
         this.initData()

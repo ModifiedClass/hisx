@@ -2,8 +2,7 @@ import React,{Component} from 'react';
 import {Card} from 'antd'
 import ReactEcharts from 'echarts-for-react'
 
-import {rProcessedRecords,rProblemCategorys} from '../../../api'
-import {get30Days} from '../../../utils/dateUtils.js'
+import {chart_processedrecord_day} from '../../../api'
 
 
 export default class ChartPRD extends Component{
@@ -55,38 +54,14 @@ export default class ChartPRD extends Component{
         }
     }
     initData=async()=>{
-        const legenddata=[]
-        const xdate=get30Days()
-
-        const pr=await rProcessedRecords({'isPage':false})
-        const pc=await rProblemCategorys()
-        if(pc.status===1){
-            for(let i=0;i<pc.data.length;i++){
-                legenddata.push(pc.data[i].name)
-            }
-        }
-        if(pr.status===1){
-            const seriesdata=[]
-            for(let i=0;i<legenddata.length;i++){
-                const two=[]
-                for(let j=0;j<xdate.length;j++){
-                    let nums=0
-                    for(let k=0;k<pr.data.list.length;k++){
-                        if(pr.data.list[k].create_time.substring(0,10)===xdate[j]&&pr.data.list[k].problem_category.name===legenddata[i]){
-                            nums++
-                        }
-                    }
-                    two.push(nums)
-                }
-                seriesdata.push({
-                    name: legenddata[i],
-                    type: 'line',
-                    smooth: true,
-                    data:two
-                })
-            }
-            this.setState({xdate,legenddata,seriesdata})
-        }
+        //console.time('计时器')
+        const temp=await chart_processedrecord_day()
+        this.setState({
+            xdate:temp.xdate,
+            legenddata:temp.legenddata,
+            seriesdata:temp.seriesdata
+        })
+        //console.timeEnd('计时器')
     }
     componentWillMount(){
         this.initData()

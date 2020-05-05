@@ -25,11 +25,14 @@ import DeviceCategory from './informationdevice/devicecategory'
 import DeviceModel from './informationdevice/devicemodel'
 import InstallLocation from './informationdevice/installlocation'
 import DeviceInfo from './informationdevice/deviceinfo'
+import Analysis from './analysis'
+import Setting from './setting'
 import NotFound from '../status/404'
 
 const { Header, Footer, Sider, Content } = Layout;
 
 class Admin extends Component{
+
     render(){
         const user=this.props.user
         if(!user||!user._id){
@@ -63,6 +66,8 @@ class Admin extends Component{
                                 <Route path='/devicemodel' component={DeviceModel}/>
                                 <Route path='/installlocation' component={InstallLocation}/>
                                 <Route path='/deviceinfo' component={DeviceInfo}/>
+                                <Route path='/analysis' component={Analysis}/>
+                                <Route path='/setting' component={Setting}/>
                                 <Route path='/developing' component={Developing}/>
                                 <Route component={NotFound}/>
                             </Switch>
