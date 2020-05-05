@@ -6,36 +6,17 @@ import { Menu, Icon} from 'antd'
 import './index.less'
 
 import menuList from '../../config/menuConfig'
-import {rGroups} from '../../api'
 //import memUtils from '../../utils/memUtils'
 import {setBreadCrum} from '../../redux/actions'
 
 const { SubMenu } = Menu
 
 class SiderBar extends Component{
-    state={
-        menus:[]
-    }
-    initMenus=async()=>{
-        const groupids=this.props.user.group
-        const arr=[]
-        for(let i=0;i<groupids.length;i++){
-            const g={'_id':groupids[i]}
-            const result=await rGroups(g)
-            for(let j=0;j<result.data.length;j++){
-                let temp=result.data[j].menu.split(',')
-                for(let k=0;k<temp.length;k++){
-                    arr.push(temp[k])
-                }
-            }   
-        }
-        const menus=Array.from(new Set(arr))
-        this.setState({menus})
-    }
+
     hasAuth=(item)=>{
         const {key,isPublic}=item
-        const menus=this.state.menus
         //const menus=this.props.user.group.menu
+        const menus=this.props.user.menus
         const username=this.props.user.username
         if(username==='admin' ||isPublic||menus.indexOf(key)!==-1){
             return true
@@ -48,7 +29,7 @@ class SiderBar extends Component{
     getMenuNodes=menuList=>{
         const path=this.props.location.pathname
         return menuList.map(item=>{
-            //if(this.hasAuth(item)){
+            if(this.hasAuth(item)){
                 if(!item.children){
                     //判断item是否当前对于得item，更新redux中BreadCrum状态
                     if(item.key===path||path.indexOf(item.key)===0){
@@ -80,13 +61,11 @@ class SiderBar extends Component{
                         </SubMenu>
                     )
                 }
-            //}
+            }
         })
     }
+
     componentWillMount(){
-        this.initMenus()
-    }
-    componentDidMount(){
         this.menuNodes=this.getMenuNodes(menuList)
     }
     render(){

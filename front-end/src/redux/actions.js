@@ -10,7 +10,7 @@ import {
 } from './actiontypes'
 
 import storeUtils from '../utils/storeUtils'
-import {cLogin} from '../api'
+import {cLogin,rGroups} from '../api'
 //设置面包屑同步action
 export const setBreadCrum=(breadCrum)=>({type:SET_BREAD_CRUM,data:breadCrum})
 
@@ -22,9 +22,28 @@ export const login=(username,password)=>{
     return async dispatch=>{
         const result=await cLogin(username,password)
         if(result.status===1){
-            const user=result.data[0]
+            /*const user=result.data[0]
+            storeUtils.saveUser(user)
+            dispatch(receiveUser(user))*/
+            const{_id,username,name,group}=result.data[0]
+            const arr=[]
+            for(let i=0;i<group.length;i++){
+                const g={'_id':group[i]}
+                const res=await rGroups(g)
+                if(res.status===1){
+                    for(let j=0;j<res.data.length;j++){
+                        let temp=res.data[j].menu.split(',')
+                        for(let k=0;k<temp.length;k++){
+                            arr.push(temp[k])
+                        }
+                    } 
+                }                
+            }
+            const menus=Array.from(new Set(arr))
+            const user={_id,username,name,group,menus}
             storeUtils.saveUser(user)
             dispatch(receiveUser(user))
+            
         }else{
             const message=result.msg
             console.log(message)
