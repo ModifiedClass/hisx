@@ -44,7 +44,13 @@ class Admin extends Component{
         }
         const menus=user.menus
         const username=user.username
-        const path=this.props.location.pathname
+        let path=this.props.location.pathname
+        if(path.indexOf('/processedrecord')===0){
+            path='/processedrecord'
+        }
+        if(path.indexOf('/deviceinfo')===0){
+            path='/deviceinfo'
+        }
         if(username!=='admin'&&!menus.includes(path)&&path!=='/'){
             message.error('没有权限！')
             return <Redirect to='/dashboard'/>

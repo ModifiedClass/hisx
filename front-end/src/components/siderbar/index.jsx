@@ -73,6 +73,9 @@ class SiderBar extends Component{
         if(path.indexOf('/processedrecord')===0){
             path='/processedrecord'
         }
+        if(path.indexOf('/deviceinfo')===0){
+            path='/deviceinfo'
+        }
         const openKey=this.openKey
         return(
             <div className="siderbar" >
