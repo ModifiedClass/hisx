@@ -10,6 +10,7 @@ import AuthMenuForm from './authmenuform'
 import AuthOperationForm from './authoperationform'
 import {formateDate} from '../../../../utils/dateUtils'
 
+
 export default class Group extends Component{
     constructor(props){
         super(props)
@@ -126,6 +127,7 @@ export default class Group extends Component{
             isShowGO:true
         })
     }
+
     GroupMenuAuth=async()=>{
         this.setState({
             isShowGM:false
@@ -133,21 +135,8 @@ export default class Group extends Component{
         const group=this.state.selectedGroup
         const menus=this.auth.current.getMenus()
         group.menu=menus?menus.join(','):menus
-        
         const result=await couGroup(group)
         if(result.status===1){
-            //给自己角色授权，强制退出
-            /*if(group._id===memUtils.user.group_id){
-                memUtils.user={}
-                storeUtils.removeUser()
-                this.props.history.replace('/login')
-                message.success('当前用户组权限更改，需重新登录！')
-            }else{
-                message.success('授权成功！')
-                this.setState({
-                    groups:[...this.state.groups]
-                })
-            }*/
              message.success('授权成功！')
         }else{
             message.error(result.msg)
@@ -236,7 +225,10 @@ export default class Group extends Component{
                       this.setState({isShowGM:false})
                   }}
                 >
-                    <AuthMenuForm ref={this.auth} group={selectedGroup}/>
+                    <AuthMenuForm 
+                    ref={this.auth} 
+                    group={selectedGroup}
+                    />
                 </Modal>
                 <Modal
                   title="操作权限"

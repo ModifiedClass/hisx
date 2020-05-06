@@ -63,3 +63,45 @@ export function getPY(s) {
         return py
     }
 }
+//去除父菜单，只留叶子菜单
+//参数：所有菜单对象，带父菜单的待处理菜单数组
+export function getLeaveNode(menuList,pmenus){
+    const delkeys=[]
+    if(pmenus){
+        for(let i=0;i<pmenus.length;i++){
+            for(let j=0;j<menuList.length;j++){
+                if(menuList[j].children&&menuList[j].key==pmenus[i]){
+                    delkeys.push(pmenus[i])
+                }
+            }
+        }
+        for(let i=0;i<delkeys.length;i++){
+            let index = pmenus.indexOf(delkeys[i])
+            if(index>-1){
+                pmenus.splice(index, 1)
+            }
+        }
+    }
+    return pmenus
+}
+
+//根据叶子菜单得到父菜单与叶子菜单数组
+export function getParentAndLeave(menuList,menus){
+    if(menus){
+        const pkey=[]
+        for(let i=0;i<menuList.length;i++){
+            if(menuList[i].children){
+                for(let j=0;j<menuList[i].children.length;j++){
+                    for(let k=0;k<menus.length;k++){
+                        if(menus[k]===menuList[i].children[j].key){
+                            pkey.push(menuList[i].key)
+                        }
+                    }
+                }
+            }
+        }
+        const uniquePkey=Array.from(new Set(pkey))
+        menus.push(uniquePkey)
+    }
+    return menus
+}

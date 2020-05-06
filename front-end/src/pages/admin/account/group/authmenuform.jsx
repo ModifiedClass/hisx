@@ -14,7 +14,7 @@ export default class AuthMenuForm extends Component{
         //根据组权限初始化菜单
         const {menu}=this.props.group
         this.state={
-            checkedKeys:menu?menu.split(','):menu
+            checkedKeys:menu?menu.split(','):menu,
         }
     }
     static propTypes={
@@ -37,8 +37,10 @@ export default class AuthMenuForm extends Component{
     }
     
     //选中nodes时回调设置选中状态
-    onCheck=checkedKeys=>{
-        this.setState({checkedKeys})
+    onCheck=(checkedKeys)=>{
+        this.setState({
+            checkedKeys
+        })
     }
     
     componentWillMount(){

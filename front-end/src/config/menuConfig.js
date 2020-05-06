@@ -34,7 +34,7 @@ const menuList=[
 },
 {
     title:'信息设备',
-    key:'informationdevice',
+    key:'/informationdevice',
     icon:'laptop',
     children:[
     {
@@ -93,11 +93,11 @@ const menuList=[
     }
     ]
 },
-/*{
+{
     title:'数据分析',
     key:'/analysis',
     icon:'line-chart',
-},*/
+},
 {
     title:'系统设置',
     key:'/setting',

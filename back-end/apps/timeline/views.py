@@ -23,7 +23,7 @@ class TimelineView(APIView):
             searchdict['details__icontains']=request.GET.get("details")
         ret={'status':0,'msg':None,'data':None}
         try:
-            obj=Timeline.objects.filter(**searchdict).order_by('create_time')
+            obj=Timeline.objects.filter(**searchdict).order_by('-create_time')
             if not obj:
                 ret['msg']="没有获取到数据!"
             else:

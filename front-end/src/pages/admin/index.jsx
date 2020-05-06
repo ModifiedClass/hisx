@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import {Redirect,Route,Switch} from 'react-router-dom'
-import { Layout } from 'antd';
+import { Layout,message } from 'antd';
 import {connect} from 'react-redux'
 
 import './index.less'
@@ -28,6 +28,7 @@ import DeviceInfo from './informationdevice/deviceinfo'
 import Analysis from './analysis'
 import Setting from './setting'
 import NotFound from '../status/404'
+import {logout} from '../../redux/actions'
 
 const { Header, Footer, Sider, Content } = Layout;
 
@@ -37,6 +38,16 @@ class Admin extends Component{
         const user=this.props.user
         if(!user||!user._id){
             return <Redirect to='/login'/>
+        }
+        if(!user.menus){
+            this.props.logout()
+        }
+        const menus=user.menus
+        const username=user.username
+        const path=this.props.location.pathname
+        if(username!=='admin'&&!menus.includes(path)&&path!=='/'){
+            message.error('没有权限！')
+            return <Redirect to='/dashboard'/>
         }
         return(
             <Layout className="layout-main">
@@ -83,5 +94,5 @@ class Admin extends Component{
 }
 export default connect(
     state=>({user:state.user}),
-    {}
+    {logout}
 )(Admin)
