@@ -77,7 +77,7 @@ export default class Cartriday extends Component{
     }
     
     initUsers=async()=>{
-        const gs=await rGroups({'name':'管理员'})
+        const gs=await rGroups({'name':'信息科'})
         if(gs.status===1){
             const g=gs.data[0]._id
             const result=await rUsers({'group':g})
