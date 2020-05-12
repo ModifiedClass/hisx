@@ -25,7 +25,7 @@ import DeviceCategory from './informationdevice/devicecategory'
 import DeviceModel from './informationdevice/devicemodel'
 import InstallLocation from './informationdevice/installlocation'
 import DeviceInfo from './informationdevice/deviceinfo'
-import Analysis from './analysis'
+import DoctorAbility from './analysis/doctorability'
 import Setting from './setting'
 import NotFound from '../status/404'
 import {logout} from '../../redux/actions'
@@ -83,7 +83,7 @@ class Admin extends Component{
                                 <Route path='/devicemodel' component={DeviceModel}/>
                                 <Route path='/installlocation' component={InstallLocation}/>
                                 <Route path='/deviceinfo' component={DeviceInfo}/>
-                                <Route path='/analysis' component={Analysis}/>
+                                <Route path='/DoctorAbility' component={DoctorAbility}/>
                                 <Route path='/setting' component={Setting}/>
                                 <Route path='/developing' component={Developing}/>
                                 <Route component={NotFound}/>

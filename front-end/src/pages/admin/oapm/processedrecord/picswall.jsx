@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import {Upload,Icon,Modal,message} from 'antd'
 
-import {BASE_IMG_URL} from '../../../../utils/constants'
+import {BASE_IMG_URL,FILELIST_LENGTH} from '../../../../utils/constants'
 
 export default class PicsWall extends Component{
     
@@ -92,7 +92,7 @@ export default class PicsWall extends Component{
                  onPreview={this.handlePreview}
                  onChange={this.handleChange}
                 >
-                {fileList.length>=3?null:uploadButton}
+                {fileList.length>=FILELIST_LENGTH?null:uploadButton}
                 </Upload>
                 <Modal width='80%' visible={previewVisble} footer={null} onCancel={this.handleCancel}>
                     <img alt='' style={{width:'auto'}} src={previewImage}/>

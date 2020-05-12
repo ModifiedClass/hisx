@@ -97,6 +97,12 @@ const menuList=[
     title:'数据分析',
     key:'/analysis',
     icon:'line-chart',
+    children:[
+    {
+        title:'医生治疗情况',
+        key:'/doctorability',
+        icon:'radar-chart'
+    }]
 },
 {
     title:'系统设置',

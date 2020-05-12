@@ -84,3 +84,33 @@ def save_image(files):
         for chunk in files.chunks():
             destination.write(chunk)
     return filename, full_filename,url
+
+"""
+#登录验证
+def login_req(func):
+    def warpper(request, *args, **kwargs):
+        if request.session.get('havelogin', False):
+            return func(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect('/back/login')
+    return warpper
+
+
+#权限验证
+def permission_req(func):
+    def warpper(request, *args, **kwargs):
+        id=request.session['uid']
+        user=User.objects.get(id=id)
+        groups=user.group.all()
+        method=func.__name__
+        gl=[]
+        for i in groups:
+            for j in i.permission.all():
+                gl.append(j.method)
+        gl=set(gl)
+        if method in gl or user.name=="admin":
+            return func(request, *args, **kwargs)
+        else:
+            return setzhResponseHeader({"sign":-1,"message":"没有权限!"})
+    return warpper
+"""
