@@ -99,9 +99,13 @@ const menuList=[
     icon:'line-chart',
     children:[
     {
-        title:'医生治疗情况',
-        key:'/doctorability',
+        title:'治疗情况',
+        key:'/zlqk',
         icon:'radar-chart'
+    },{
+        title:'诊断情况',
+        key:'/zdqk',
+        icon:'bar-chart'
     }]
 },
 {

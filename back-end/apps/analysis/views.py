@@ -8,8 +8,26 @@ from utils.datetimeutilitys import *
 from oapm.models import ProblemCategory,ProcessedRecord
 from informationdevice.models import DeviceInfo,DeviceCategory
 import cx_Oracle
+from utils.sql.sqlstr import hisconn,zyks
+from utils.sql.zlqk import qyzlqk,bmyszlqk
+from utils.sql.zdqk import qyzdqk,bmyszdqk
 
 # Create your views here.
+def getzyks(request):
+    '''住院科室'''
+    sql=zyks
+    conn = cx_Oracle.connect(hisconn)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql)
+        res=cursor.fetchall()
+        return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+    except:
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
 def chart_processedrecord_day(request):
     """获取最近n天问题记录""" 
     ret={'xdate':None,'legenddata':None,'seriesdata':None}
@@ -73,6 +91,83 @@ def chart_device(request):
     ret['sum']=sum
     return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))
 
+
+def chart_qyzlqk(request):
+    '''全院治疗情况'''
+    sql=qyzlqk
+    startDate=request.GET.get("startDate")
+    endDate=request.GET.get("endDate")
+    params=[startDate,endDate]
+    conn = cx_Oracle.connect(hisconn)
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute(sql,params)
+        res=cursor.fetchall()
+        return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+    except:
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
+def chart_bmyszlqk(request):
+    '''部门医师治疗情况'''
+    sql=bmyszlqk
+    department=request.GET.get("department")
+    startDate=request.GET.get("startDate")
+    endDate=request.GET.get("endDate")
+    params=[department,startDate,endDate]
+    conn = cx_Oracle.connect(hisconn)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql,params)
+        res=cursor.fetchall()
+        return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+    except:
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
+def chart_qyzdqk(request):
+    '''全院诊断情况'''
+    sql=qyzdqk
+    startDate=request.GET.get("startDate")
+    endDate=request.GET.get("endDate")
+    params=[startDate,endDate]
+    conn = cx_Oracle.connect(hisconn)
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute(sql,params)
+        res=cursor.fetchall()
+        return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+    except:
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
+def chart_bmyszdqk(request):
+    '''部门医师诊断情况'''
+    sql=bmyszdqk
+    department=request.GET.get("department")
+    startDate=request.GET.get("startDate")
+    endDate=request.GET.get("endDate")
+    params=[department,startDate,endDate]
+    conn = cx_Oracle.connect(hisconn)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql,params)
+        res=cursor.fetchall()
+        return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+    except:
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+'''    
 #病人区域分布
 def getpatdis(request):
     sql=sqlpatdis
@@ -258,15 +353,6 @@ def getavgwaitingtime(request):
     conn.close()
     return setzhResponseHeader(res)
     
-def test19c(request):
-    sql='''select 姓名 from Y_TABLE_用户表'''
-    conn = cx_Oracle.connect('system/ygh123ygh@192.168.201.136:1521/orcl')
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    res=cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return setzhResponseHeader({'num':res})
 
 def hqms(request):
     sql=hqmsbydata
@@ -363,3 +449,4 @@ def exporthqmscsv(request):
     response['Content-Disposition'] = "attachment;filename='%s'" % name
     response.streaming_content = csv_template
     return response
+'''

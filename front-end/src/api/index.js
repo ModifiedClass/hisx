@@ -120,12 +120,22 @@ export const couTimeLine=(timeline)=>fetchreq(HOST+'/api/timeline/',timeline,(ti
 export const dTimeLine=(timelineId)=>fetchreq(HOST+'/api/timeline/',{'_id':timelineId},'DELETE')
 
 /**analysis**/
+//住院科室
+export const getzyks=()=>fetchreq(HOST+'/api/analysis/getzyks/')
 //获取最近30天问题记录
 export const chart_processedrecord_day=()=>fetchreq(HOST+'/api/analysis/chart_processedrecord_day/')
 //获取问题类别比例
 export const chart_processedrecord=()=>fetchreq(HOST+'/api/analysis/chart_processedrecord/')
 //获取设备类别比例
 export const chart_device=()=>fetchreq(HOST+'/api/analysis/chart_device/')
+//获取全院治疗情况
+export const chart_qyzlqk=(startDate,endDate)=>fetchreq(HOST+'/api/analysis/chart_qyzlqk/',{startDate:startDate,endDate:endDate})
+//获取部门医师治疗情况
+export const chart_bmyszlqk=(department,startDate,endDate)=>fetchreq(HOST+'/api/analysis/chart_bmyszlqk/',{department:department,startDate:startDate,endDate:endDate})
+//获取全院诊断情况
+export const chart_qyzdqk=(startDate,endDate)=>fetchreq(HOST+'/api/analysis/chart_qyzdqk/',{startDate:startDate,endDate:endDate})
+//获取部门医师诊断情况
+export const chart_bmyszdqk=(department,startDate,endDate)=>fetchreq(HOST+'/api/analysis/chart_bmyszdqk/',{department:department,startDate:startDate,endDate:endDate})
 
 /**setting**/
 //清理session

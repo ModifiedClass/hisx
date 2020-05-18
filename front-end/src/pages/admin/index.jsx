@@ -25,7 +25,8 @@ import DeviceCategory from './informationdevice/devicecategory'
 import DeviceModel from './informationdevice/devicemodel'
 import InstallLocation from './informationdevice/installlocation'
 import DeviceInfo from './informationdevice/deviceinfo'
-import DoctorAbility from './analysis/doctorability'
+import Zlqk from './analysis/zlqk'
+import Zdqk from './analysis/zdqk'
 import Setting from './setting'
 import NotFound from '../status/404'
 import {logout} from '../../redux/actions'
@@ -83,7 +84,8 @@ class Admin extends Component{
                                 <Route path='/devicemodel' component={DeviceModel}/>
                                 <Route path='/installlocation' component={InstallLocation}/>
                                 <Route path='/deviceinfo' component={DeviceInfo}/>
-                                <Route path='/DoctorAbility' component={DoctorAbility}/>
+                                <Route path='/zlqk' component={Zlqk}/>
+                                <Route path='/zdqk' component={Zdqk}/>
                                 <Route path='/setting' component={Setting}/>
                                 <Route path='/developing' component={Developing}/>
                                 <Route component={NotFound}/>
