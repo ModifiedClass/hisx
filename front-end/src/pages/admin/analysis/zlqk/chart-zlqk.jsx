@@ -9,7 +9,9 @@ export default class ChartZlqk extends Component{
 
     getOption=(indicator,data,legend)=>{
         return{
-            tooltip: {},
+            tooltip: {
+                position: ['50%', '30%']
+            },
             legend: {
                 orient: 'vertical',
                 //orient: 'horizontal',
@@ -29,7 +31,7 @@ export default class ChartZlqk extends Component{
                 indicator: indicator
             },
             series: [{
-                name: '个人 vs 部门',
+                name: '',
                 type: 'radar',
                 // areaStyle: {normal: {}},
                 data: data

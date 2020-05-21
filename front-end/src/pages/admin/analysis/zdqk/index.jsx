@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import {Col,Row,Select,DatePicker } from 'antd'
 
 import ChartZdqk from './chart-zdqk'
-import {getzyks,chart_qyzdqk,chart_bmyszdqk} from '../../../../api'
+import {getmzks,chart_qyzdqk,chart_bmyszdqk} from '../../../../api'
 
 const Option=Select.Option
 const { RangePicker } = DatePicker
@@ -18,9 +18,9 @@ export default class Zdqk extends Component{
     }
     initqyzlqk=async(startdate,enddate)=>{
         const res=await chart_qyzdqk(startdate,enddate)
-        const data=[['标题', '出院总数', '三日确诊数', '入出院诊断符合数']]
+        const data=[['标题', '收病人数', '药占比%', '材料占比%', '检查占比%', '治疗占比%', '其他费用占比%', '平均费用(元)']]
         for (let d in res){
-             data.push(['人次',res[d][0],res[d][1],res[d][2]])
+             data.push(['诊疗情况',res[d][0],res[d][1],res[d][2],res[d][3],res[d][4],res[d][5],res[d][6]])
         }
         this.setState({
             data1:data
@@ -28,16 +28,16 @@ export default class Zdqk extends Component{
     }
     initbmzlqk=async(department,startdate,enddate)=>{
         const res=await chart_bmyszdqk(department,startdate,enddate)
-        const data=[['医师', '出院总数', '三日确诊数', '入出院诊断符合数']]
+        const data=[['医师', '收病人数', '药占比%', '材料占比%', '检查占比%', '治疗占比%', '其他费用占比%', '平均费用(元)']]
         for (let d in res){
-             data.push([res[d][0],res[d][1],res[d][2],res[d][3]])
+             data.push([res[d][0],res[d][1],res[d][2],res[d][3],res[d][4],res[d][5],res[d][6],res[d][7]])
         }
         this.setState({
             data2:data
         })
     }
     initData=async()=>{
-        const res=await getzyks()
+        const res=await getmzks()
         const departments=[]
         for (let d in res){
             departments.push({'_id':res[d][0],'name':res[d][1]})

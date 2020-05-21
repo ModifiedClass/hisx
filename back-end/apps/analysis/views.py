@@ -8,11 +8,26 @@ from utils.datetimeutilitys import *
 from oapm.models import ProblemCategory,ProcessedRecord
 from informationdevice.models import DeviceInfo,DeviceCategory
 import cx_Oracle
-from utils.sql.sqlstr import hisconn,zyks
-from utils.sql.zlqk import qyzlqk,bmyszlqk
-from utils.sql.zdqk import qyzdqk,bmyszdqk
+from utils.sql.sqlstr import hisconn,zyks,mzks
+from utils.sql.ysability import zyysability,zyability,mzysability,mzability
 
 # Create your views here.
+def getmzks(request):
+    '''门诊科室'''
+    sql=mzks
+    conn = cx_Oracle.connect(hisconn)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql)
+        res=cursor.fetchall()
+        return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+    except:
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def getzyks(request):
     '''住院科室'''
     sql=zyks
@@ -94,7 +109,7 @@ def chart_device(request):
 
 def chart_qyzlqk(request):
     '''全院治疗情况'''
-    sql=qyzlqk
+    sql=zyability
     startDate=request.GET.get("startDate")
     endDate=request.GET.get("endDate")
     params=[startDate,endDate]
@@ -112,8 +127,8 @@ def chart_qyzlqk(request):
         conn.close()
 
 def chart_bmyszlqk(request):
-    '''部门医师治疗情况'''
-    sql=bmyszlqk
+    '''住院医师治疗情况'''
+    sql=zyysability
     department=request.GET.get("department")
     startDate=request.GET.get("startDate")
     endDate=request.GET.get("endDate")
@@ -131,8 +146,8 @@ def chart_bmyszlqk(request):
         conn.close()
 
 def chart_qyzdqk(request):
-    '''全院诊断情况'''
-    sql=qyzdqk
+    '''全院门诊治疗情况'''
+    sql=mzability
     startDate=request.GET.get("startDate")
     endDate=request.GET.get("endDate")
     params=[startDate,endDate]
@@ -150,8 +165,8 @@ def chart_qyzdqk(request):
         conn.close()
 
 def chart_bmyszdqk(request):
-    '''部门医师诊断情况'''
-    sql=bmyszdqk
+    '''门诊医师医师治疗情况'''
+    sql=mzysability
     department=request.GET.get("department")
     startDate=request.GET.get("startDate")
     endDate=request.GET.get("endDate")

@@ -122,6 +122,8 @@ export const dTimeLine=(timelineId)=>fetchreq(HOST+'/api/timeline/',{'_id':timel
 /**analysis**/
 //住院科室
 export const getzyks=()=>fetchreq(HOST+'/api/analysis/getzyks/')
+//门诊科室
+export const getmzks=()=>fetchreq(HOST+'/api/analysis/getmzks/')
 //获取最近30天问题记录
 export const chart_processedrecord_day=()=>fetchreq(HOST+'/api/analysis/chart_processedrecord_day/')
 //获取问题类别比例
