@@ -12,4 +12,10 @@ urlpatterns = [
     path('chart_bmyszlqk/',views.chart_bmyszlqk,name='chart_bmyszlqk'),
     path('chart_qyzdqk/',views.chart_qyzdqk,name='chart_qyzdqk'),
     path('chart_bmyszdqk/',views.chart_bmyszdqk,name='chart_bmyszdqk'),
+    path('getzlhists/',views.getzlhists,name='getzlhists'),
+    path('gettjxtts/',views.gettjxtts,name='gettjxtts'),
+    path('gethislocktables/',views.gethislocktables,name='gethislocktables'),
+    path('hisunlocktables/',views.hisunlocktables,name='hisunlocktables'),
+    path('gettjxtlocktables/',views.gettjxtlocktables,name='gettjxtlocktables'),
+    path('tjxtunlocktables/',views.tjxtunlocktables,name='tjxtunlocktables')
 ]

@@ -94,16 +94,31 @@ const menuList=[
     ]
 },
 {
+    title:'辅助工具',
+    key:'/tools',
+    icon:'tool',
+    children:[
+    {
+        title:'查看表空间',
+        key:'/tablespace',
+        icon:'percentage'
+    },{
+        title:'查看锁表情况',
+        key:'/locktables',
+        icon:'lock'
+    }]
+},
+{
     title:'数据分析',
     key:'/analysis',
     icon:'line-chart',
     children:[
     {
-        title:'治疗情况',
+        title:'住院医师治疗情况',
         key:'/zlqk',
         icon:'radar-chart'
     },{
-        title:'诊断情况',
+        title:'门诊医师治疗情况',
         key:'/zdqk',
         icon:'bar-chart'
     }]

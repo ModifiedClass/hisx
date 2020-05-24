@@ -27,6 +27,8 @@ import InstallLocation from './informationdevice/installlocation'
 import DeviceInfo from './informationdevice/deviceinfo'
 import Zlqk from './analysis/zlqk'
 import Zdqk from './analysis/zdqk'
+import TableSpace from './tools/tablespace'
+import LockTables from './tools/locktables'
 import Setting from './setting'
 import NotFound from '../status/404'
 import {logout} from '../../redux/actions'
@@ -86,6 +88,8 @@ class Admin extends Component{
                                 <Route path='/deviceinfo' component={DeviceInfo}/>
                                 <Route path='/zlqk' component={Zlqk}/>
                                 <Route path='/zdqk' component={Zdqk}/>
+                                <Route path='/tablespace' component={TableSpace}/>
+                                <Route path='/locktables' component={LockTables}/>
                                 <Route path='/setting' component={Setting}/>
                                 <Route path='/developing' component={Developing}/>
                                 <Route component={NotFound}/>

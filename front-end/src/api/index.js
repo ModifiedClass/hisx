@@ -138,6 +138,18 @@ export const chart_bmyszlqk=(department,startDate,endDate)=>fetchreq(HOST+'/api/
 export const chart_qyzdqk=(startDate,endDate)=>fetchreq(HOST+'/api/analysis/chart_qyzdqk/',{startDate:startDate,endDate:endDate})
 //获取部门医师诊断情况
 export const chart_bmyszdqk=(department,startDate,endDate)=>fetchreq(HOST+'/api/analysis/chart_bmyszdqk/',{department:department,startDate:startDate,endDate:endDate})
+//获取zlhis表空间使用情况
+export const getzlhists=()=>fetchreq(HOST+'/api/analysis/getzlhists/')
+//获取体检系统表空间使用情况
+export const gettjxtts=()=>fetchreq(HOST+'/api/analysis/gettjxtts/')
+//查询his锁表情况
+export const gethislocktables=()=>fetchreq(HOST+'/api/analysis/gethislocktables/')
+//his解锁表
+export const hisunlocktables=(sessionid,serial)=>fetchreq(HOST+'/api/analysis/hisunlocktables/',{sessionid:sessionid,serial:serial},'POST')
+//查询体检系统锁表情况
+export const gettjxtlocktables=()=>fetchreq(HOST+'/api/analysis/gettjxtlocktables/')
+//体检系统解锁表
+export const tjxtunlocktables=(sessionid,serial)=>fetchreq(HOST+'/api/analysis/tjxtunlocktables/',{sessionid:sessionid,serial:serial},'POST')
 
 /**setting**/
 //清理session

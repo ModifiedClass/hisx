@@ -8,8 +8,9 @@ from utils.datetimeutilitys import *
 from oapm.models import ProblemCategory,ProcessedRecord
 from informationdevice.models import DeviceInfo,DeviceCategory
 import cx_Oracle
-from utils.sql.sqlstr import hisconn,zyks,mzks
+from utils.sql.sqlstr import hisconn,zyks,mzks,oracleconn
 from utils.sql.ysability import zyysability,zyability,mzysability,mzability
+from utils.sql.histools import tablespacestatus,locktablestatus,unlocktables
 
 # Create your views here.
 def getmzks(request):
@@ -182,6 +183,120 @@ def chart_bmyszdqk(request):
     finally:
         cursor.close()
         conn.close()
+
+def getzlhists(request):
+    '''zlhis表空间使用情况'''
+    sql=tablespacestatus
+    conn = cx_Oracle.connect(hisconn)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql)
+        res=cursor.fetchall()
+        return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+    except:
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
+def gettjxtts(request):
+    '''体检系统表空间使用情况'''
+    sql=tablespacestatus
+    orcl=oracleconn['tjxt']
+    res=[]
+    try:
+        tns = cx_Oracle.makedsn(orcl['host'], orcl['port'],orcl['instance'])
+        conn = cx_Oracle.connect(orcl['u'], orcl['p'],tns)
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        res=cursor.fetchall()
+        print(res)
+        cursor.close()
+        conn.close()
+    except:
+        pass
+    return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+        
+
+def gethislocktables(request):
+    '''查看his锁表情况'''
+    sql=locktablestatus
+    orcl=oracleconn['his']
+    res=[]
+    try:
+        tns = cx_Oracle.makedsn(orcl['host'], orcl['port'],orcl['instance'])
+        conn = cx_Oracle.connect(orcl['u'], orcl['p'],tns)
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        res=cursor.fetchall()
+        cursor.close()
+        conn.close()
+    except:
+        pass
+    return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+        
+
+def hisunlocktables(request):
+    '''his解锁表'''
+    pb=request.body
+    res=json.loads(pb)
+    sessionid=res['sessionid']
+    serial=res['serial']
+    sql=tablespacestatus
+    params=[sessionid,serial]
+    orcl=oracleconn['his']
+    res=[]
+    try:
+        tns = cx_Oracle.makedsn(orcl['host'], orcl['port'],orcl['instance'])
+        conn = cx_Oracle.connect(orcl['u'], orcl['p'],tns)
+        cursor = conn.cursor()
+        res=cursor.execute(sql,params)
+        cursor.close()
+        conn.close()
+    except:
+        pass
+    return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+        
+
+def gettjxtlocktables(request):
+    '''查看体检系统锁表情况'''
+    sql=locktablestatus
+    orcl=oracleconn['tjxt']
+    res=[]
+    try:
+        tns = cx_Oracle.makedsn(orcl['host'], orcl['port'],orcl['instance'])
+        conn = cx_Oracle.connect(orcl['u'], orcl['p'],tns)
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        res=cursor.fetchall()
+        cursor.close()
+        conn.close()
+    except:
+        pass
+    return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+        
+
+def tjxtunlocktables(request):
+    '''体检系统解锁表'''
+    pb=request.body
+    res=json.loads(pb)
+    sessionid=res['sessionid']
+    serial=res['serial']
+    sql=tablespacestatus
+    params=[sessionid,serial]
+    orcl=oracleconn['tjxt']
+    res=[]
+    try:
+        tns = cx_Oracle.makedsn(orcl['host'], orcl['port'],orcl['instance'])
+        conn = cx_Oracle.connect(orcl['u'], orcl['p'],tns)
+        cursor = conn.cursor()
+        res=cursor.execute(sql,params)
+        cursor.close()
+        conn.close()
+    except:
+        pass
+    return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+
 '''    
 #病人区域分布
 def getpatdis(request):
