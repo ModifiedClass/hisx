@@ -145,11 +145,11 @@ export const gettjxtts=()=>fetchreq(HOST+'/api/analysis/gettjxtts/')
 //查询his锁表情况
 export const gethislocktables=()=>fetchreq(HOST+'/api/analysis/gethislocktables/')
 //his解锁表
-export const hisunlocktables=(sessionid,serial)=>fetchreq(HOST+'/api/analysis/hisunlocktables/',{sessionid:sessionid,serial:serial},'POST')
+export const hisunlocktables=(ss)=>fetchreq(HOST+'/api/analysis/hisunlocktables/',{ss:ss},'POST')
 //查询体检系统锁表情况
 export const gettjxtlocktables=()=>fetchreq(HOST+'/api/analysis/gettjxtlocktables/')
 //体检系统解锁表
-export const tjxtunlocktables=(sessionid,serial)=>fetchreq(HOST+'/api/analysis/tjxtunlocktables/',{sessionid:sessionid,serial:serial},'POST')
+export const tjxtunlocktables=(ss)=>fetchreq(HOST+'/api/analysis/tjxtunlocktables/',{ss:ss},'POST')
 
 /**setting**/
 //清理session

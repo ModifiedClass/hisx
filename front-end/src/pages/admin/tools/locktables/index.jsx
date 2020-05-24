@@ -46,7 +46,7 @@ export default class LockTables extends Component{
             title:'确认解锁 '+locktable.name+' 吗？',
             onOk:async()=>{
                 /*if(this.state.localdb==='1'){
-                    const result=await hisunlocktables(locktable.sessionid,locktable.serial)
+                    const result=await hisunlocktables(locktable.sessionid+','+locktable.serial)
                     if(result){
                         message.success('解锁成功！')
                         this.selectType('1')
@@ -54,7 +54,7 @@ export default class LockTables extends Component{
                         message.error('解锁失败！')
                     }
                 }else{
-                    const result=await tjxtunlocktables(locktable.sessionid,locktable.serial)
+                    const result=await tjxtunlocktables(locktable.sessionid+','+locktable.serial)
                     if(result){
                         message.success('解锁成功！')
                         this.selectType('1')

@@ -240,10 +240,9 @@ def hisunlocktables(request):
     '''his解锁表'''
     pb=request.body
     res=json.loads(pb)
-    sessionid=res['sessionid']
-    serial=res['serial']
+    ss=res['ss']
     sql=tablespacestatus
-    params=[sessionid,serial]
+    params=[ss]
     orcl=oracleconn['his']
     res=[]
     try:
@@ -280,10 +279,9 @@ def tjxtunlocktables(request):
     '''体检系统解锁表'''
     pb=request.body
     res=json.loads(pb)
-    sessionid=res['sessionid']
-    serial=res['serial']
+    ss=res['ss']
     sql=tablespacestatus
-    params=[sessionid,serial]
+    params=[ss]
     orcl=oracleconn['tjxt']
     res=[]
     try:
