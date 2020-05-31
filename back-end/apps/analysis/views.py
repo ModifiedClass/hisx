@@ -199,6 +199,23 @@ def getzlhists(request):
         cursor.close()
         conn.close()
 
+def getzlhistssub(request):
+    '''zlhis某个表空间使用情况'''
+    sql=tablespacestatus
+    tsname=request.GET.get("tsname")
+    conn = cx_Oracle.connect(hisconn)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(sql,tsname)
+        res=cursor.fetchall()
+        return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+    except:
+        pass
+    finally:
+        cursor.close()
+        conn.close()
+
+
 def gettjxtts(request):
     '''体检系统表空间使用情况'''
     sql=tablespacestatus
@@ -209,6 +226,25 @@ def gettjxtts(request):
         conn = cx_Oracle.connect(orcl['u'], orcl['p'],tns)
         cursor = conn.cursor()
         cursor.execute(sql)
+        res=cursor.fetchall()
+        print(res)
+        cursor.close()
+        conn.close()
+    except:
+        pass
+    return setzhJsonResponseHeader(json.dumps(res,ensure_ascii=False))
+        
+def gettjxttssub(request):
+    '''体检系统某个表空间使用情况'''
+    sql=tablespacestatus
+    tsname=request.GET.get("tsname")
+    orcl=oracleconn['tjxt']
+    res=[]
+    try:
+        tns = cx_Oracle.makedsn(orcl['host'], orcl['port'],orcl['instance'])
+        conn = cx_Oracle.connect(orcl['u'], orcl['p'],tns)
+        cursor = conn.cursor()
+        cursor.execute(sql,tsname)
         res=cursor.fetchall()
         print(res)
         cursor.close()

@@ -142,6 +142,10 @@ export const chart_bmyszdqk=(department,startDate,endDate)=>fetchreq(HOST+'/api/
 export const getzlhists=()=>fetchreq(HOST+'/api/analysis/getzlhists/')
 //获取体检系统表空间使用情况
 export const gettjxtts=()=>fetchreq(HOST+'/api/analysis/gettjxtts/')
+//获取zlhis某个表空间使用情况
+export const getzlhistssub=(tsname)=>fetchreq(HOST+'/api/analysis/getzlhistssub/',{tsname:tsname})
+//获取体检系统某个表空间使用情况
+export const gettjxttssub=(tsname)=>fetchreq(HOST+'/api/analysis/gettjxttssub/',{tsname:tsname})
 //查询his锁表情况
 export const gethislocktables=()=>fetchreq(HOST+'/api/analysis/gethislocktables/')
 //his解锁表

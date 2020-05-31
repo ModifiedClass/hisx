@@ -48,10 +48,10 @@ export default class TableSpace extends Component{
             <div style={{ background: '#ECECEC', padding: '30px' }}>
                 <Row gutter={24}>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                        <ChartTableSpace data={hisdata} title={histitle}/>
+                        <ChartTableSpace data={hisdata} title={histitle} thisname={his}/>
                     </Col>
                     <Col xs={24} sm={12} md={12} lg={12} xl={12}>
-                        <ChartTableSpace data={tjxtdata} title={tjxttitle}/>
+                        <ChartTableSpace data={tjxtdata} title={tjxttitle} thisname={tjxt}/>
                     </Col>
                 </Row>
             </div>
