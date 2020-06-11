@@ -26,5 +26,6 @@ urlpatterns = [
     path('api/timeline/', include('timeline.urls')),
     path('api/analysis/', include('analysis.urls')),
     path('api/systemsetting/', include('systemsetting.urls')),
+    path('api/bms/', include('bms.urls')),
     re_path(r'^media/(?P<path>.*)',serve, {"document_root":settings.MEDIA_ROOT}),
 ]#+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

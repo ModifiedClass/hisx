@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'timeline',
     'analysis',
     'systemsetting',
+    'bms',
 ]
 
 MIDDLEWARE = [

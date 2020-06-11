@@ -3,6 +3,8 @@
 # dependencies
 /front-end/node_modules
 /front-end/.pnp
+/front-end-redux/node_modules
+/front-end-redux/.pnp
 front-end/.pnp.js
 /back-end/db.sqlite3
 /back-end/apps/__pycache__

@@ -1,0 +1,151 @@
+const menuList=[
+{
+    title:'仪表盘',
+    key:'/dashboard',
+    icon:'dashboard',
+    isPublic:true
+},
+{
+    title:'帐户管理',
+    key:'/account',
+    icon:'contacts',
+    children:[
+    {
+        title:'组管理',
+        key:'/group',
+        icon:'team'
+    },
+    {
+        title:'部门管理',
+        key:'/department',
+        icon:'apartment'
+    },
+    {
+        title:'用户管理',
+        key:'/user',
+        icon:'user'
+    },
+    ]
+},
+{
+    title:'时间轴',
+    key:'/timeline',
+    icon:'history',
+},
+{
+    title:'信息设备',
+    key:'/informationdevice',
+    icon:'laptop',
+    children:[
+    {
+        title:'设备类别',
+        key:'/devicecategory',
+        icon:'unordered-list'
+    },
+    {
+        title:'设备型号',
+        key:'/devicemodel',
+        icon:'barcode'
+    },
+    {
+        title:'安装位置',
+        key:'/installlocation',
+        icon:'environment'
+    },
+    {
+        title:'设备列表',
+        key:'/deviceinfo',
+        icon:'menu'
+    },
+    {
+        title:'设备拓扑',
+        key:'/devicetopo',
+        icon:'apartment'
+    },
+    ]
+},
+{
+    title:'运维记录',
+    key:'/oapm',
+    icon:'ordered-list',
+    children:[
+    {
+        title:'信息化模块',
+        key:'/applicationsoftWare',
+        icon:'appstore'
+    },{
+        title:'问题类别',
+        key:'/problemcategory',
+        icon:'block'
+    },
+    {
+        title:'处理记录',
+        key:'/processedrecord',
+        icon:'unordered-list'
+    },{
+        title:'设备维修',
+        key:'/printerrepair',
+        icon:'tool'
+    },{
+        title:'硒鼓加粉',
+        key:'/cartriday',
+        icon:'download'
+    }
+    ]
+},
+{
+    title:'辅助工具',
+    key:'/tools',
+    icon:'tool',
+    children:[
+    {
+        title:'查看表空间',
+        key:'/tablespace',
+        icon:'percentage'
+    },{
+        title:'查看锁表情况',
+        key:'/locktables',
+        icon:'lock'
+    }]
+},
+{
+    title:'数据分析',
+    key:'/analysis',
+    icon:'line-chart',
+    children:[
+    {
+        title:'住院医师治疗情况',
+        key:'/zlqk',
+        icon:'radar-chart'
+    },{
+        title:'门诊医师治疗情况',
+        key:'/zdqk',
+        icon:'bar-chart'
+    }]
+},
+{
+    title:'图书管理',
+    key:'/bms',
+    icon:'snippets',
+    children:[
+    {
+        title:'图书类别',
+        key:'/bookcategory',
+        icon:'block'
+    },{
+        title:'图书目录',
+        key:'/book',
+        icon:'book'
+    },{
+        title:'借阅记录',
+        key:'/borrowrecord',
+        icon:'form'
+    }]
+},
+{
+    title:'系统设置',
+    key:'/setting',
+    icon:'setting',
+},
+]
+export default  menuList

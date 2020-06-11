@@ -39,18 +39,16 @@ class AuthView(APIView):
         
     authentication_classes=[]
     def patch(self,request,*args,**kwargs):
-        ret={'status':0,'msg':None,'data':[]}
+        ret={'status':0,'msg':None,}
         pb=request.body
         res=json.loads(pb)
         try:
-            obj=User.objects.filter(username=res['username'])
+            obj=User.objects.get(username=res['username'])
             if not obj:
                 ret['msg']="用户不存在！"
             else:    
                 obj.password='e10adc3949ba59abbe56e057f20f883e'
                 obj.save()
-                ser=UserSerializer(instance=obj,many=True)
-                ret['data']=ser.data
                 ret['msg']='密码已重置为123456'
                 ret['status']=1
         except Exception as e:
