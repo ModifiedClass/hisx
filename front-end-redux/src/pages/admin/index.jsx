@@ -31,6 +31,7 @@ import LockTables from './tools/locktables'
 import Setting from './setting'
 import BookCategory from './bms/bookcategory'
 import Book from './bms/book'
+import BookStock from './bms/bookstock'
 import BorrowRecord from './bms/borrowrecord'
 import NotFound from '../status/404'
 import {logout} from '../../redux/actions/account'
@@ -95,6 +96,7 @@ class Admin extends Component{
                                 <Route path='/setting' component={Setting}/>
                                 <Route path='/bookcategory' component={BookCategory}/>
                                 <Route path='/book' component={Book}/>
+                                <Route path='/bookstock' component={BookStock}/>
                                 <Route path='/borrowrecord' component={BorrowRecord}/>
                                 <Route path='/developing' component={Developing}/>
                                 <Route component={NotFound}/>

@@ -12,7 +12,6 @@ import Highlighter from 'react-highlight-words'
 
 class Department extends Component{
     state={
-        departments:[],
         loading:false,
         isShow:false,
         searchText: '',
@@ -137,9 +136,8 @@ class Department extends Component{
     getDepartments = async()=>{
         this.setState({loading:true})
         await this.props.rDeps()
-        const result=this.props.depmanage
         this.setState({loading:false})
-        this.setState({departments:result.data})
+        this.setState({departments:this.props.depmanage.data})
     }
 
     showAdd=()=>{
@@ -200,7 +198,7 @@ class Department extends Component{
         this.getDepartments()
     }
     render(){
-        const {departments,loading,isShow}=this.state
+        const {loading,isShow}=this.state
         const department=this.department||{}
         const title=<Button type='primary' onClick={this.showAdd}><Icon type="apartment" />新增</Button>
         return(
@@ -209,7 +207,7 @@ class Department extends Component{
                 bordered
                 rowKey='_id'
                 loading={loading}
-                dataSource={departments}
+                dataSource={this.props.depmanage.data}
                 columns={this.columns}
                 pagination={false}
                 scroll={{ y: 480 }}
@@ -227,7 +225,7 @@ class Department extends Component{
                     <AddForm 
                     setForm={(form)=>{this.form=form}} 
                     department={department}
-                    departments={departments}
+                    departments={this.props.depmanage.data}
                     />
                 </Modal>
             </Card>

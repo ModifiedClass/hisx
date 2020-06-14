@@ -1,9 +1,9 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,DatePicker,Select} from 'antd'
+import {Form,Input,DatePicker,Select} from 'antd'
 import {shortDate} from '../../../../utils/dateUtils'
-import {rBooks,rUsers} from '../../../../api'
+import {rBooks} from '../../../../api'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
@@ -15,12 +15,11 @@ class AddForm extends Component{
 
     state={
         books:[],
-        users:[],
     }
     
     static propTypes={
         setForm:PropTypes.func.isRequired,
-        borrowrecord:PropTypes.object
+        bookstock:PropTypes.object
     }
     
     getBooksList=async value =>{
@@ -31,32 +30,13 @@ class AddForm extends Component{
         }  
     }
 
-    handleSearchUsers=async value =>{
-        if(value){
-            const result1=await rUsers({'username':value})
-            const result2=await rUsers({'name':value})
-            if(result1.status===1){
-                const users=result1.data
-                this.setState({users})            
-            }else if(result2.status===1){
-                const users=result2.data
-                this.setState({users}) 
-            }else{
-                this.setState({users:[]}) 
-            }
-        }else{
-            this.setState({users:[]})
-        }
-    }
-
     componentWillMount(){
         this.props.setForm(this.props.form)
     }
     
     render(){
-        const {borrowrecord,bookcategorys}=this.props
-        const {users,books}=this.state
-        const useroptions = users.map(d => <Option key={d._id} >{d.username}-{d.name}</Option>)
+        const {bookstock,bookcategorys}=this.props
+        const {books}=this.state
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:5},
@@ -64,12 +44,12 @@ class AddForm extends Component{
         }
         return(
             <Form {...formItemLayout}>
-                <Item label="借阅时间">
+                <Item label="入库时间">
                     {getFieldDecorator('create_time',{
-                        initialValue: borrowrecord.create_time?moment(borrowrecord.create_time,'YYYY-MM-DD'):moment(thisDate,'YYYY-MM-DD'),
+                        initialValue: bookstock.create_time?moment(bookstock.create_time,'YYYY-MM-DD'):moment(thisDate,'YYYY-MM-DD'),
                         rules:[
                         {
-                            required:true,message:'借阅时间!'
+                            required:true,message:'入库时间!'
                         }
                         ]
                     })(
@@ -106,25 +86,15 @@ class AddForm extends Component{
                     )
                 }
                 </Item>
-                <Item label='借阅人' {...formItemLayout}>
+                <Item label='数量' {...formItemLayout}>
                 {
-                    getFieldDecorator('reader',{
-                        initialValue:borrowrecord.details,
+                    getFieldDecorator('nums',{
+                        initialValue:bookstock.details,
                         rules:[
-                        {required:false}
+                        {required:true,message:'数量不能为空!'}
                         ]
                     })(
-                        <Select
-                            showSearch
-                            style={{ width: '100%' }}
-                            placeholder="选择借阅人"
-                            showArrow={false}
-                            filterOption={false}
-                            onSearch={this.handleSearchUsers}
-                            notFoundContent={null}
-                        >
-                        {useroptions}
-                        </Select>
+                        <Input />
                     )
                 }
                 </Item>

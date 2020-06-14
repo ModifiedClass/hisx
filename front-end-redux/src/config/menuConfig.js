@@ -135,9 +135,13 @@ const menuList=[
     },{
         title:'图书目录',
         key:'/book',
+        icon:'unordered-list'
+    },{
+        title:'图书入库',
+        key:'/bookstock',
         icon:'book'
     },{
-        title:'借阅记录',
+        title:'图书借阅',
         key:'/borrowrecord',
         icon:'form'
     }]

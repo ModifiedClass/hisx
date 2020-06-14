@@ -45,7 +45,7 @@ class SearchForm extends PureComponent{
             <Form className="ant-advanced-search-form" >
                 <Row gutter={24}>
                     <Col span={8}>
-                        <Item label="类别">
+                        <Item label="归还状态">
                         {
                         getFieldDecorator('bookcategory',{
                         initialValue:''})
@@ -60,7 +60,7 @@ class SearchForm extends PureComponent{
                         </Item>
                     </Col>
                     <Col span={8}>
-                        <Item label='名称' >
+                        <Item label='书名' >
                         {
                         getFieldDecorator('name',{
                         initialValue:''})
@@ -71,7 +71,7 @@ class SearchForm extends PureComponent{
                         </Item>
                     </Col>
                     <Col span={8}>
-                        <Item label='作者' >
+                        <Item label='借阅时间' >
                         {
                         getFieldDecorator('author',{
                         initialValue:''})
@@ -82,7 +82,7 @@ class SearchForm extends PureComponent{
                         </Item>
                     </Col>
                     <Col span={8}>
-                        <Item label='出版社' >
+                        <Item label='归还时间' >
                         {
                         getFieldDecorator('publisher',{
                         initialValue:''})
@@ -93,7 +93,7 @@ class SearchForm extends PureComponent{
                         </Item>
                     </Col>
                     <Col span={8}>
-                        <Item label='出版时间' >
+                        <Item label='借阅人' >
                         {
                         getFieldDecorator('publisheryear',{
                         initialValue:''})

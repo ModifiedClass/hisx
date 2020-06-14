@@ -7,6 +7,7 @@ import {PAGE_SIZE} from '../../../../utils/constants'
 import {rBookCategorys} from '../../../../api'
 import AddForm from './addform'
 import {formateDate,shortDate} from '../../../../utils/dateUtils'
+import SearchForm from './searchform'
 
 export default class BorrowRecord extends Component{
 
@@ -14,7 +15,8 @@ export default class BorrowRecord extends Component{
         isShowAdd:false,
         loading:false,
         borrowrecords:[],  //所有时间轴,用于显示table数据
-        bookcategorys:[]
+        bookcategorys:[],
+        selectedBr:{},    //选中记录
     }
     initColums=()=>{
         this.columns=[
@@ -71,6 +73,23 @@ export default class BorrowRecord extends Component{
             isShowAdd:true
         })
     }
+
+    showReturn=()=>{
+        this.setState({
+            isShowAdd:true
+        })
+    }
+
+    onRow=(borrowrecord)=>{
+        return{
+            onClick:event=>{
+                this.setState({
+                    selectedBr:borrowrecord,
+                })
+            }
+        }
+    }
+
     addOrUpdateBorrowRecord=()=>{
         this.form.validateFields(async(err,values)=>{
             if(!err){
@@ -113,6 +132,37 @@ export default class BorrowRecord extends Component{
             }
         })
     } 
+
+    setSearchItem=(searchItem)=>{
+        this.setState({
+            borrowrecord:searchItem.borrowrecord,
+
+        },()=>{  //解决setState延迟
+            this.getBorrowRecords(this.pageNum)
+        })
+    }
+
+    returnBook=async()=>{
+        const br=this.state.selectedBr||{}
+        if(br&&br.name){
+            Modal.confirm({
+                title:'确认归还吗？',
+                onOk:async()=>{
+                    /*await this.props.dTl(borrowrecord._id)
+                    const result=this.props.borrowrecordmanage
+                    if(result.status===1){
+                        message.success(result.msg)
+                        this.getBorrowRecords()
+                    }else{
+                        message.error(result.msg)
+                    }*/
+                }
+            })
+        }else{
+            message.error("请选择要归还的记录！")
+        }
+        
+    }
     
     componentWillMount(){
         this.getBookCategorys()
@@ -122,21 +172,34 @@ export default class BorrowRecord extends Component{
         this.getBorrowRecords()
     }
     render(){
-        const {borrowrecords,loading,isShowAdd,bookcategorys}=this.state
+        const {borrowrecords,loading,isShowAdd,bookcategorys,selectedBr}=this.state
         const borrowrecord=this.borrowrecord||{}
         const title=(
              <span>
-                 <Button type='primary' onClick={this.showAdd}><Icon type="history" />借阅</Button>
+                 <Button type='primary' onClick={this.showAdd}><Icon type="history" />借阅</Button>&nbsp;&nbsp;&nbsp;
+                 <Button type='primary' onClick={this.showReturn} disabled={!selectedBr._id}><Icon type="history" />归还</Button>
              </span>)
         return(
             <Card title={title} >
+                <SearchForm setForm={(form)=>{this.form=form}} setSearchItem={this.setSearchItem}/>
                 <Table
                 bordered
+                size='small'
                 rowKey='_id'
                 loading={loading}
                 dataSource={borrowrecords}
                 columns={this.columns}
                 pagination={{defaultPageSize:PAGE_SIZE}}
+                rowSelection={{
+                type:'radio',
+                selectedRowKeys:[selectedBr._id],
+                onSelect:(borrowrecord)=>{
+                    this.setState({
+                        selectedBr:borrowrecord,
+                    })
+                }
+                }}
+                onRow={this.onRow}
                 />
                 <Modal
                   title={borrowrecord._id ? "编辑借阅" : '新增借阅'}

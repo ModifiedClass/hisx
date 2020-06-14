@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
-import {Card,Button,Modal,Icon,Table,message,Tag} from 'antd'
+import {Card,Button,Modal,Icon,Table,message,Collapse} from 'antd'
 
-import {BASE_RED,BASE_BLUE} from '../../../../utils/colors'
+
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import PreviewBtn from '../../../../components/previewbtn'
@@ -10,6 +10,7 @@ import {PAGE_SIZE} from '../../../../utils/constants'
 import {rBooks,dBook} from '../../../../api'
 import SearchForm from './searchform'
 
+const { Panel } = Collapse
 
 export default class Home extends Component{
     state={
@@ -23,52 +24,41 @@ export default class Home extends Component{
     }
     
     initColums=()=>{
-        this.columns=[
-        {
-            title:'入库时间',
-            dataIndex:'create_time',
-            width: 100,
-            render:(create_time)=>shortDate(create_time)
-        },
-        {
+        this.columns=[{
             title:'图书类别',
             dataIndex:'bookcategory',
             width: 150,
             render:(bookcategory)=>{return(bookcategory.name)}
-        },
-        {
+        },{
             title:'书名',
             dataIndex:'name',
             width: 250,
-        },
-        {
+        },{
             title:'isbn',
             dataIndex:'isbn',
             width: 150,
-        },
-        {
-            title:'状态',
+        },{
+            title:'作者',
             width: 100,
-            dataIndex:'status',
-            render:(status)=>{
-                if(status){
-                    return (
-                        <span>
-                            <Tag color={BASE_RED}>借出</Tag>
-                        </span>
-                    )
-                }else{
-                    return (
-                        <span>
-                            <Tag color={BASE_BLUE}>未借出</Tag>
-                        </span>
-                    )
-                }
-                
-                
-            }
-        },        
-        {
+            dataIndex:'author',
+        },{
+            title:'出版社',
+            width: 200,
+            dataIndex:'publisher',
+        },{
+            title:'出版时间',
+            width: 50,
+            dataIndex:'publisheryear',
+        },{
+            title:'价格',
+            width: 50,
+            dataIndex:'price',
+        },{
+            title:'入库时间',
+            dataIndex:'create_time',
+            width: 100,
+            render:(create_time)=>shortDate(create_time)
+        },{
             title:'操作',
             fixed: 'right',
             width: 100,
@@ -79,8 +69,7 @@ export default class Home extends Component{
                 <DeleteBtn onClick={()=>this.deleteBook(book)}/>
             </span>
             )
-        }
-        ]
+        }]
     }
     getBooks= async(pageNum)=>{
         this.pageNum=pageNum
@@ -156,9 +145,14 @@ export default class Home extends Component{
  
         return(
             <Card title={title} >
+                <Collapse>
+                <Panel header="过滤" >
                 <SearchForm setForm={(form)=>{this.form=form}} setSearchItem={this.setSearchItem}/>
+                </Panel>
+                </Collapse>
                 <Table
                 bordered
+                size='small'
                 rowKey='_id'
                 loading={loading}
                 dataSource={books}

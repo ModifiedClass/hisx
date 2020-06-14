@@ -45,6 +45,10 @@ class AddOrUpdate extends Component{
                     create_time,
                     name,
                     isbn,
+                    author,
+                    publisher,
+                    publisheryear,
+                    price,
                     profile,
                     status,
                     bookcategory,
@@ -54,6 +58,10 @@ class AddOrUpdate extends Component{
                     create_time,
                     name,
                     isbn,
+                    author,
+                    publisher,
+                    publisheryear,
+                    price,
                     profile,
                     status,
                     bookcategory,
@@ -87,6 +95,10 @@ class AddOrUpdate extends Component{
             create_time,
             name,
             isbn,
+            author,
+            publisher,
+            publisheryear,
+            price,
             profile,
             bookcategory,
             cover
@@ -150,7 +162,35 @@ class AddOrUpdate extends Component{
                     {getFieldDecorator('isbn',{
                         initialValue:isUpdate ? isbn : ''
                     })(
-                        <Input placeholder='isbn!'/>
+                        <Input placeholder='请输入isbn!'/>
+                    )}
+                    </Item>
+                    <Item label="作者">
+                    {getFieldDecorator('author',{
+                        initialValue:isUpdate ? author : ''
+                    })(
+                        <Input placeholder='请输入作者!'/>
+                    )}
+                    </Item>
+                    <Item label="出版社">
+                    {getFieldDecorator('publisher',{
+                        initialValue:isUpdate ? publisher : ''
+                    })(
+                        <Input placeholder='请输入出版社!'/>
+                    )}
+                    </Item>
+                    <Item label="出版时间">
+                    {getFieldDecorator('publisheryear',{
+                        initialValue:isUpdate ? publisheryear : ''
+                    })(
+                        <Input placeholder='请输入出版时间（年）!'/>
+                    )}
+                    </Item>
+                    <Item label="价格">
+                    {getFieldDecorator('price',{
+                        initialValue:isUpdate ? price : ''
+                    })(
+                        <Input placeholder='请输入价格!'/>
                     )}
                     </Item>
                     <Item label="简介" labelCol={{span:4}} wrapperCol={{span:20}}>

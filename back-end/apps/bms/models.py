@@ -17,18 +17,35 @@ class BookCategory(models.Model):
 
 class Book(models.Model):
     class Meta:
-        db_table="Books"
+        db_table="hisx_Books"
         verbose_name='图书'
         verbose_name_plural='图书'
         
     _id=models.AutoField(primary_key=True)
-    create_time=models.DateTimeField(verbose_name='入库日期')
+    create_time=models.DateTimeField(verbose_name='创建日期')
     bookcategory=models.ForeignKey(BookCategory,on_delete=models.CASCADE)
     name=models.CharField(max_length=50)
     isbn=models.TextField(blank=True,null=True)
     cover=models.TextField(blank=True,null=True)#封面
     profile=models.TextField(blank=True,null=True)#简介
-    status=models.BooleanField(default=False)  #False未借出 True已借出
+    publisher=models.CharField(max_length=50,blank=True,null=True)#出版社
+    publisheryear=models.CharField(max_length=4,blank=True,null=True)#出版年份
+    author=models.CharField(max_length=50,blank=True,null=True)#作者
+    price=models.DecimalField(max_digits=5, decimal_places=2,blank=True,null=True)#价格
+    def __str__(self):
+        return str(self.name)
+
+
+class BookStock(models.Model):
+    class Meta:
+        db_table="hisx_BookStocks"
+        verbose_name='图书库存'
+        verbose_name_plural='图书库存'
+        
+    _id=models.AutoField(primary_key=True)
+    create_time=models.DateTimeField(verbose_name='入库日期')
+    book=models.ForeignKey(Book,on_delete=models.CASCADE)
+    nums=models.IntegerField(blank=True,null=True)  #入库数量
     def __str__(self):
         return str(self.nums)
 
