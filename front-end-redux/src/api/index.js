@@ -174,11 +174,18 @@ export const couBookCategory=(bookcategory)=>fetchreq(HOST+'/api/bms/bookcategor
 export const dBookCategory=(bookcategoryId)=>fetchreq(HOST+'/api/bms/bookcategory/',{'_id':bookcategoryId},'DELETE')
 
 //读取图书
-export const rBooks=(book)=>fetchreq(HOST+'/api/bms/books/',book)
+export const rBooks=(book)=>fetchreq(HOST+'/api/bms/book/',book)
 //增加或更新图书
-export const couBook=(book)=>fetchreq(HOST+'/api/bms/books/',book,(book._id ? 'PATCH' : 'POST'))
+export const couBook=(book)=>fetchreq(HOST+'/api/bms/book/',book,(book._id ? 'PATCH' : 'POST'))
 //删除图书
-export const dBook=(bookId)=>fetchreq(HOST+'/api/bms/books/',{'_id':bookId},'DELETE')
+export const dBook=(bookId)=>fetchreq(HOST+'/api/bms/book/',{'_id':bookId},'DELETE')
+
+//读取图书库存
+export const rBookStocks=(bookstock)=>fetchreq(HOST+'/api/bms/bookstock/',bookstock)
+//增加或更新图书库存
+export const couBookStock=(bookstock)=>fetchreq(HOST+'/api/bms/bookstock/',bookstock,(bookstock._id ? 'PATCH' : 'POST'))
+//删除图书库存
+export const dBookStock=(bookstockId)=>fetchreq(HOST+'/api/bms/bookstock/',{'_id':bookstockId},'DELETE')
 
 //读取借阅记录
 export const rBorrowRecords=(borrowrecord)=>fetchreq(HOST+'/api/bms/borrowrecord/',borrowrecord)

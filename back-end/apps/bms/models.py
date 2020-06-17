@@ -57,9 +57,10 @@ class BorrowRecord(models.Model):
         verbose_name_plural='借阅记录'
     _id=models.AutoField(primary_key=True)
     create_time=models.DateTimeField(verbose_name='借出日期')
-    return_time=models.DateTimeField(verbose_name='归还日期')
+    return_time=models.DateTimeField(blank=True,null=True,verbose_name='归还日期')
     reader=models.ForeignKey(User,on_delete=models.CASCADE,related_name='reader')
     book=models.ForeignKey(Book,on_delete=models.CASCADE,related_name='book')
+    status=models.BooleanField(default=False)
 
     def __str__(self):
         return self.book.name

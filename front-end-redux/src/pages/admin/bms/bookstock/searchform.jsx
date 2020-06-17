@@ -4,17 +4,22 @@ import {
     Form, 
     Row, 
     Col,
-    Select,
     Input,
     Button,
     Icon,
+    DatePicker
     } from 'antd'
 
 
-const Option=Select.Option
 const Item=Form.Item
+const { RangePicker } = DatePicker
 
 class SearchForm extends PureComponent{
+
+    state={
+        startdate:'',
+        enddate:'',
+    }
 
     static propTypes={
         setForm:PropTypes.func.isRequired
@@ -25,36 +30,32 @@ class SearchForm extends PureComponent{
 
     getFormItem=()=>{
         this.props.form.validateFields((err,values)=>{
-            this.props.setSearchItem(values)
+            console.log(values.book)
+            this.props.setSearchItem({
+                book:values.book,
+                startdate:this.state.startdate,
+                enddate:this.state.enddate
+            })
         })
         
     }
-    
+
+    dataonChange=(date, dateString)=>{
+        const startdate=dateString[0]
+        const enddate=dateString[1]
+        this.setState({startdate,enddate})
+    }
+
     componentWillMount(){
         this.props.setForm(this.props.form)
     }
     
     render(){
         const {getFieldDecorator}=this.props.form
-        const bookStatus=[{'value':0,'label':'未归还'},{'value':1,'label':'已归还'}]
+
         return(
             <Form className="ant-advanced-search-form" >
                 <Row gutter={24}>
-                    <Col span={8}>
-                        <Item label="归还状态">
-                        {
-                        getFieldDecorator('status',{
-                        initialValue:''})
-                        (
-                            <Select >
-                                {
-                                    bookStatus.map(ps=><Option key={ps.value} value={ps.value}>{ps.label}</Option>)
-                                }
-                            </Select>
-                            )
-                        }
-                        </Item>
-                    </Col>
                     <Col span={8}>
                         <Item label='书名' >
                         {
@@ -66,40 +67,18 @@ class SearchForm extends PureComponent{
                         }
                         </Item>
                     </Col>
-                    <Col span={8}>
-                        <Item label='借阅时间' >
+                    <Col span={10}>
+                        <Item label='入库时间' >
                         {
-                        getFieldDecorator('create_time',{
+                        getFieldDecorator('publisheryear',{
                         initialValue:''})
                             (
-                            <Input />
+                                <RangePicker onChange={this.dataonChange} />
                             )
                         }
                         </Item>
                     </Col>
-                    <Col span={8}>
-                        <Item label='归还时间' >
-                        {
-                        getFieldDecorator('return_time',{
-                        initialValue:''})
-                            (
-                            <Input />
-                            )
-                        }
-                        </Item>
-                    </Col>
-                    <Col span={8}>
-                        <Item label='借阅人' >
-                        {
-                        getFieldDecorator('reader',{
-                        initialValue:''})
-                            (
-                            <Input />
-                            )
-                        }
-                        </Item>
-                    </Col>
-                    <Col span={8}>
+                    <Col span={6}>
                         <Item style={{float:'right'}}>
                             <span>
                                 <Button style={{marginBottom:10}} type='primary' onClick={this.getFormItem}>搜索<Icon type='search'/></Button>

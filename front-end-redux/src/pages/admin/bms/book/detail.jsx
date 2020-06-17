@@ -3,7 +3,7 @@ import React,{Component} from 'react';
 import {Card,Descriptions,Empty,Modal} from 'antd'
 import {BASE_IMG_URL} from '../../../../utils/constants'
 import BackBtn from '../../../../components/backbtn'
-import {formateDate} from '../../../../utils/dateUtils'
+import {shortDate} from '../../../../utils/dateUtils'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
@@ -51,7 +51,7 @@ export default class ProcessedRecordDetail extends Component{
         return(
             <Card title={title}>
               <Descriptions bordered>
-                <Item label='入库时间' span={2}>{formateDate(create_time)}</Item>
+                <Item label='入库时间' span={2}>{shortDate(create_time)}</Item>
                 <Item label='图书类别' >{bookcategory.name}</Item>
                 <Item label='书名'>{name}</Item>
                 <Item label='isbn'>{isbn}</Item>

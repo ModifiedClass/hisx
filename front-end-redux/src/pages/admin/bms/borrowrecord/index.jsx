@@ -1,10 +1,11 @@
 import React,{Component} from 'react'
-import {Card,Table,Button,Icon,message,Modal} from 'antd'
+import {Card,Table,Button,Icon,message,Modal,Tag} from 'antd'
 
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
+import {BASE_RED,BASE_BLUE} from '../../../../utils/colors'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rBookCategorys} from '../../../../api'
+import {rBorrowRecords, couBorrowRecord,dBorrowRecord} from '../../../../api'
 import AddForm from './addform'
 import {formateDate,shortDate} from '../../../../utils/dateUtils'
 import SearchForm from './searchform'
@@ -12,11 +13,18 @@ import SearchForm from './searchform'
 export default class BorrowRecord extends Component{
 
     state={
+        total:0,
         isShowAdd:false,
         loading:false,
-        borrowrecords:[],  //所有时间轴,用于显示table数据
-        bookcategorys:[],
+        borrowrecords:[],  //用于显示table数据
         selectedBr:{},    //选中记录
+        status:false,
+        reader:{},
+        book:'',
+        bstartdate:'',
+        benddate:'',
+        rstartdate:'',
+        renddate:'',
     }
     initColums=()=>{
         this.columns=[
@@ -35,6 +43,24 @@ export default class BorrowRecord extends Component{
             dataIndex:'create_time',
             render:(create_time)=>formateDate(create_time)
         },{
+            title:'归还状态',
+            dataIndex:'status',
+            render:(status)=>{
+                if(status){
+                    return (
+                        <span>
+                            <Tag color={BASE_BLUE}>已归还</Tag>
+                        </span>
+                    )
+                }else{
+                    return (
+                        <span>
+                            <Tag color={BASE_RED}>未归还</Tag>
+                        </span>
+                    )
+                }
+            }
+        },{
             title:'归还日期',
             dataIndex:'return_time',
             render:(return_time)=>formateDate(return_time)
@@ -52,19 +78,33 @@ export default class BorrowRecord extends Component{
         ]
     }
 
-    getBookCategorys=async ()=>{
-        const result=await rBookCategorys()
-        if(result.status===1){
-            const bookcategorys=result.data
-            this.setState({bookcategorys})            
-        }
-        
-    }
     
-    getBorrowRecords=async ()=>{
-        /*await this.props.rTls()
-        const result=this.props.borrowrecordmanage
-        this.setState({ borrowrecords:result.data })*/
+    getBorrowRecords=async pageNum=>{
+        this.pageNum=pageNum
+        const isPage=true
+        this.setState({loading:true})
+        const{status,book,reader,bstartdate,benddate,rstartdate,renddate}=this.state
+        console.log(status)
+        let result = await rBorrowRecords({
+            isPage,
+            pageNum,
+            pageSize:PAGE_SIZE,
+            status,
+            reader,
+            book,
+            bstartdate,
+            benddate,
+            rstartdate,
+            renddate,
+        })
+        this.setState({loading:false})
+        if(result.status===1){
+            const {total,list}=result.data
+            this.setState({borrowrecords:list,total})
+        }else{
+            this.setState({borrowrecords:[]})
+            message.error(result.msg)
+        }
     }
 
     showAdd=()=>{
@@ -95,19 +135,23 @@ export default class BorrowRecord extends Component{
             if(!err){
                 this.setState({isShowAdd:false})
                 const borrowrecord=values
-                borrowrecord.create_time=shortDate(values['create_time'])
-                this.form.resetFields()
-                if(this.borrowrecord){
-                    borrowrecord._id=this.borrowrecord._id
-                }
-                /*await this.props.couTl(borrowrecord)
-                const result=this.props.borrowrecordmanage
-                if(result.status===1){
-                    message.success(result.msg)
-                    this.getBorrowRecords()
+                if(borrowrecord.stock<1){
+                    message.error("库存不足")
                 }else{
-                    message.error(result.msg)
-                }*/
+                    borrowrecord.create_time=shortDate(values['create_time'])
+                    this.form.resetFields()
+                    if(this.borrowrecord){
+                        borrowrecord._id=this.borrowrecord._id
+                    }
+                    borrowrecord.status=false
+                    const result=await couBorrowRecord(borrowrecord)
+                    if(result.status===1){
+                        message.success(result.msg)
+                        this.getBorrowRecords(1)
+                    }else{
+                        message.error(result.msg)
+                    }
+                }
             }
         })
     }
@@ -121,21 +165,24 @@ export default class BorrowRecord extends Component{
         Modal.confirm({
             title:'确认删除吗？',
             onOk:async()=>{
-                /*await this.props.dTl(borrowrecord._id)
-                const result=this.props.borrowrecordmanage
+                const result=await dBorrowRecord(borrowrecord._id)
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getBorrowRecords()
-                }else{
-                    message.error(result.msg)
-                }*/
+                    this.getBorrowRecords(1)
+                }
             }
         })
     } 
 
     setSearchItem=(searchItem)=>{
         this.setState({
-            borrowrecord:searchItem.borrowrecord,
+            status:searchItem.status,
+            reader:searchItem.reader,
+            book:searchItem.book,
+            bstartdate:searchItem.bstartdate,
+            benddate:searchItem.benddate,
+            rstartdate:searchItem.rstartdate,
+            renddate:searchItem.renddate,
 
         },()=>{  //解决setState延迟
             this.getBorrowRecords(this.pageNum)
@@ -144,18 +191,18 @@ export default class BorrowRecord extends Component{
 
     returnBook=async()=>{
         const br=this.state.selectedBr||{}
-        if(br&&br.name){
+        if(br.status!==false){
+            message.error("已经归还！")
+        }else if(br&&br.name){
             Modal.confirm({
                 title:'确认归还吗？',
                 onOk:async()=>{
-                    /*await this.props.dTl(borrowrecord._id)
-                    const result=this.props.borrowrecordmanage
+                    br.status=true
+                    const result=await couBorrowRecord(br)
                     if(result.status===1){
                         message.success(result.msg)
-                        this.getBorrowRecords()
-                    }else{
-                        message.error(result.msg)
-                    }*/
+                        this.getBorrowRecords(1)
+                    }
                 }
             })
         }else{
@@ -165,14 +212,13 @@ export default class BorrowRecord extends Component{
     }
     
     componentWillMount(){
-        this.getBookCategorys()
         this.initColums()
     }
     componentDidMount(){
-        this.getBorrowRecords()
+        this.getBorrowRecords(1)
     }
     render(){
-        const {borrowrecords,loading,isShowAdd,bookcategorys,selectedBr}=this.state
+        const {borrowrecords,loading,isShowAdd,bookcategorys,selectedBr,total}=this.state
         const borrowrecord=this.borrowrecord||{}
         const title=(
              <span>
@@ -189,7 +235,13 @@ export default class BorrowRecord extends Component{
                 loading={loading}
                 dataSource={borrowrecords}
                 columns={this.columns}
-                pagination={{defaultPageSize:PAGE_SIZE}}
+                pagination={{
+                    current:this.pageNum,
+                    defaultPageSize:PAGE_SIZE,
+                    ShowQuickJumper:true,
+                    total,
+                    onChange:this.getBooks
+                    }}
                 rowSelection={{
                 type:'radio',
                 selectedRowKeys:[selectedBr._id],

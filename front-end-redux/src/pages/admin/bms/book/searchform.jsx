@@ -32,8 +32,15 @@ class SearchForm extends PureComponent{
         })
         
     }
-    
+    initSelect=async()=>{
+        const bookcategorys=await rBookCategorys()
+        if(bookcategorys.status===1){
+            this.setState({bookcategorys:bookcategorys.data})
+        }
+    }
+
     componentWillMount(){
+        this.initSelect()
         this.props.setForm(this.props.form)
     }
     
@@ -50,7 +57,7 @@ class SearchForm extends PureComponent{
                         getFieldDecorator('bookcategory',{
                         initialValue:''})
                         (
-                            <Select onChange={this.getDM}>
+                            <Select >
                                 {
                                     bookcategorys.map(ps=><Option key={ps._id} value={ps._id}>{ps.name}</Option>)
                                 }

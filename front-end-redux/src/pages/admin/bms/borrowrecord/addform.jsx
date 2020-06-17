@@ -1,9 +1,9 @@
 import React,{Component} from 'react';
 import PropTypes from 'prop-types'
 
-import {Form,DatePicker,Select} from 'antd'
+import {Form,DatePicker,Select,Input} from 'antd'
 import {shortDate} from '../../../../utils/dateUtils'
-import {rBooks,rUsers} from '../../../../api'
+import {rBooks,rUsers,rBookStocks, rBorrowRecords} from '../../../../api'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
@@ -16,6 +16,7 @@ class AddForm extends Component{
     state={
         books:[],
         users:[],
+        stock:0
     }
     
     static propTypes={
@@ -23,9 +24,8 @@ class AddForm extends Component{
         borrowrecord:PropTypes.object
     }
     
-    getBooksList=async value =>{
-        this.setState({books:[]})
-        const result=await rBooks({'bookcategory':value})
+    handleSearchBooks=async value =>{
+        const result=await rBooks({'name':value})
         if(result.status===1){
             this.setState({books:result.data.list})
         }  
@@ -48,15 +48,34 @@ class AddForm extends Component{
             this.setState({users:[]})
         }
     }
+    
+    getStock=async value =>{
+        const bresult=await rBookStocks({'book':value})
+        const brresult=await rBorrowRecords({'book':value,'status':false})
+        let allstock=0
+        let allbr=0
+        if(bresult.status===1){
+            const bs=bresult.data.list
+            for(let i=0;i<bs.length;i++){
+                allstock+=bs[i].nums
+            }
+        }
+        if(brresult.status===1){
+            const br=brresult.data.list
+            allbr=br.length
+        }
+        this.setState({stock:allstock-allbr})
+    }
 
     componentWillMount(){
         this.props.setForm(this.props.form)
     }
     
     render(){
-        const {borrowrecord,bookcategorys}=this.props
+        const {borrowrecord}=this.props
         const {users,books}=this.state
         const useroptions = users.map(d => <Option key={d._id} >{d.username}-{d.name}</Option>)
+        const bookoptions = books.map(d => <Option key={d._id} >{d.bookcategory.name}-{d.name}</Option>)
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:5},
@@ -76,21 +95,6 @@ class AddForm extends Component{
                         <DatePicker/>
                     )}
                 </Item>
-                <Item label="图书类别">
-                    {getFieldDecorator('bookcategory',{
-                        rules:[
-                        {
-                            required:true,message:'图类别不能为空!'
-                        }
-                        ]
-                    })(
-                        <Select onChange={this.getBooksList}>
-                        {
-                            bookcategorys.map(pc=><Option key={pc._id} value={pc._id}>{pc.name}</Option>)
-                        }
-                        </Select>
-                    )}
-                    </Item>
                 <Item label='图书' {...formItemLayout}>
                 {
                     getFieldDecorator('book',{
@@ -98,11 +102,30 @@ class AddForm extends Component{
                         {required:true,message:'图书不能为空!'}
                         ]
                     })(
-                        <Select >
-                        {
-                            books.map(pc=><Option key={pc._id} value={pc._id}>{pc.name}-{pc.publisheryear}</Option>)
-                        }
+                        <Select
+                            onChange={this.getStock}
+                            showSearch
+                            style={{ width: '100%' }}
+                            placeholder="选择图书"
+                            showArrow={false}
+                            filterOption={false}
+                            onSearch={this.handleSearchBooks}
+                            notFoundContent={null}
+                        >
+                        {bookoptions}
                         </Select>
+                    )
+                }
+                </Item>
+                <Item label='库存' {...formItemLayout}>
+                {
+                    getFieldDecorator('stock',{
+                        initialValue:this.state.stock,
+                        rules:[
+                        {required:false}
+                        ]
+                    })(
+                        <Input disabled/>
                     )
                 }
                 </Item>
@@ -111,7 +134,7 @@ class AddForm extends Component{
                     getFieldDecorator('reader',{
                         initialValue:borrowrecord.details,
                         rules:[
-                        {required:false}
+                        {required:true,message:'借阅人不能为空!'}
                         ]
                     })(
                         <Select

@@ -22,12 +22,18 @@ class AddForm extends Component{
         bookstock:PropTypes.object
     }
     
-    getBooksList=async value =>{
-        this.setState({books:[]})
-        const result=await rBooks({'bookcategory':value})
-        if(result.status===1){
-            this.setState({books:result.data.list})
-        }  
+    handleSearchBooks=async value =>{
+        if(value){
+            const result=await rBooks({'name':value})
+            if(result.status===1){
+                const books=result.data.list
+                this.setState({books})            
+            }else{
+                this.setState({books:[]})
+            }
+        }else{
+            this.setState({books:[]})
+        }
     }
 
     componentWillMount(){
@@ -35,8 +41,9 @@ class AddForm extends Component{
     }
     
     render(){
-        const {bookstock,bookcategorys}=this.props
+        const {bookstock}=this.props
         const {books}=this.state
+        const bookoptions = books.map(d => <Option key={d._id} >{d.name}</Option>)
         const {getFieldDecorator}=this.props.form
         const formItemLayout={
             labelCol:{span:5},
@@ -56,32 +63,24 @@ class AddForm extends Component{
                         <DatePicker/>
                     )}
                 </Item>
-                <Item label="图书类别">
-                    {getFieldDecorator('bookcategory',{
-                        rules:[
-                        {
-                            required:true,message:'图类别不能为空!'
-                        }
-                        ]
-                    })(
-                        <Select onChange={this.getBooksList}>
-                        {
-                            bookcategorys.map(pc=><Option key={pc._id} value={pc._id}>{pc.name}</Option>)
-                        }
-                        </Select>
-                    )}
-                    </Item>
                 <Item label='图书' {...formItemLayout}>
                 {
                     getFieldDecorator('book',{
+                        initialValue:bookstock.book?bookstock.book._id:1,
                         rules:[
                         {required:true,message:'图书不能为空!'}
                         ]
                     })(
-                        <Select >
-                        {
-                            books.map(pc=><Option key={pc._id} value={pc._id}>{pc.name}-{pc.publisheryear}</Option>)
-                        }
+                        <Select
+                            showSearch
+                            style={{ width: '100%' }}
+                            placeholder="图书"
+                            showArrow={false}
+                            filterOption={false}
+                            onSearch={this.handleSearchBooks}
+                            notFoundContent={null}
+                        >
+                        {bookoptions}
                         </Select>
                     )
                 }
@@ -89,7 +88,7 @@ class AddForm extends Component{
                 <Item label='数量' {...formItemLayout}>
                 {
                     getFieldDecorator('nums',{
-                        initialValue:bookstock.details,
+                        initialValue:bookstock.nums,
                         rules:[
                         {required:true,message:'数量不能为空!'}
                         ]

@@ -20,7 +20,10 @@ export default class Home extends Component{
         isShow:false,
         bookcategory:'',  //搜素关键字
         name:'',
-        status:'',
+        author:'',
+        publisher:'',
+        publisheryear:'',
+
     }
     
     initColums=()=>{
@@ -47,11 +50,11 @@ export default class Home extends Component{
             dataIndex:'publisher',
         },{
             title:'出版时间',
-            width: 50,
+            width: 80,
             dataIndex:'publisheryear',
         },{
             title:'价格',
-            width: 50,
+            width: 80,
             dataIndex:'price',
         },{
             title:'入库时间',
@@ -71,24 +74,27 @@ export default class Home extends Component{
             )
         }]
     }
-    getBooks= async(pageNum)=>{
+    getBooks= async pageNum=>{
         this.pageNum=pageNum
         const isPage=true
         this.setState({loading:true})
-        const{bookcategory,name,status}=this.state
+        const{bookcategory,name,author,publisher,publisheryear}=this.state
         let result = await rBooks({
             isPage,
             pageNum,
             pageSize:PAGE_SIZE,
             bookcategory,
             name,
-            status
+            author,
+            publisher,
+            publisheryear,
         })
         this.setState({loading:false})
         if(result.status===1){
             const {total,list}=result.data
             this.setState({books:list,total})
         }else{
+            this.setState({books:[]})
             message.error(result.msg)
         }
     }
@@ -124,7 +130,9 @@ export default class Home extends Component{
         this.setState({
             bookcategory:searchItem.bookcategory,
             name:searchItem.name,
-            status:searchItem.status
+            author:searchItem.author,
+            publisher:searchItem.publisher,
+            publisheryear:searchItem.publisheryear,
         },()=>{  //解决setState延迟
             this.getBooks(this.pageNum)
         })
