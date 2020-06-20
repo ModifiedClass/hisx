@@ -66,8 +66,7 @@ export const login=(username,password)=>{
             dispatch(receiveUser(user))
             
         }else{
-            const message=result.msg
-            console.log(message)
+            console.log(result.msg)
         }
     }
 }

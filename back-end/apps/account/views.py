@@ -270,22 +270,23 @@ class UserView(APIView):
         ret={'status':0,'msg':None,'data':None}
         pb=request.body
         res=json.loads(pb)
-        username=res['username']
-        password=res['password']
-        name=res['name']
-        issuper=res['issuper']
         group=res['group']
         try:
             with transaction.atomic():
                 obj=User()
-                obj.username=username
-                obj.password=pwdenc(password)
-                obj.name=name
-                obj.issuper=issuper
+                if "username" in res:
+                    obj.username=res['username']
+                if "password" in res:
+                    obj.password=pwdenc(res['password'])
+                if "name" in res:
+                    obj.name=res['name']
+                if "issuper" in res:
+                    obj.isSuper=res['issuper']
                 obj.save()
-                groups=Group.objects.filter(_id__in=group)
-                obj.group.clear()
-                obj.group.add(*groups)
+                if "group" in res:
+                    groups=Group.objects.filter(_id__in=res['group'])
+                    obj.group.clear()
+                    obj.group.add(*groups)
                 ret['status']=1
                 ret['msg']="操作成功!"
                 return setzhJsonResponseHeader(json.dumps(ret,ensure_ascii=False))

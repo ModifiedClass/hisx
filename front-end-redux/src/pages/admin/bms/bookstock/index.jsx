@@ -4,7 +4,7 @@ import {Card,Table,Button,Icon,message,Modal} from 'antd'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rBookStocks, couBookStock, dBookStock,couBook} from '../../../../api'
+import {rBookStocks, couBookStock, dBookStock} from '../../../../api'
 import AddForm from './addform'
 import {shortDate} from '../../../../utils/dateUtils'
 import SearchForm from './searchform'
@@ -17,7 +17,7 @@ export default class BookStock extends Component{
         isShowAdd:false,
         loading:false,
         bookstocks:[],  //用于显示table数据
-        book:'',
+        bookname:'',
         startdate:'',
         enddate:''
     }
@@ -54,12 +54,12 @@ export default class BookStock extends Component{
         this.pageNum=pageNum
         const isPage=true
         this.setState({loading:true})
-        const{book,startdate,enddate}=this.state
+        const{bookname,startdate,enddate}=this.state
         let result = await rBookStocks({
             isPage,
             pageNum,
             pageSize:PAGE_SIZE,
-            book,
+            bookname,
             startdate,
             enddate,
         })
@@ -120,7 +120,7 @@ export default class BookStock extends Component{
     
     setSearchItem=(searchItem)=>{
         this.setState({
-            book:searchItem.book,
+            bookname:searchItem.bookname,
             startdate:searchItem.startdate,
             enddate:searchItem.enddate,
         },()=>{  //解决setState延迟

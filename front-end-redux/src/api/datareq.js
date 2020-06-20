@@ -1,25 +1,3 @@
-//import axios from 'axios'
-import {message} from 'antd'
-//import {HOST} from '../utils/constants'
-/*export function axiosreq(url,data={},method='GET'){
-    return new Promise((resolve,reject)=>{
-        let promise
-        if(method==='GET'){
-           promise = axios.get(url,{
-                params:data
-                })
-        }else{
-            promise = axios.post(url,data)
-        }
-        promise.then(response=>{
-            resolve(response.data)
-        }).catch(error=>{
-            message.error(error.message)
-        })
-    })
-    
-}*/
-
 //const csrftoken=()=>{fetch(HOST+'/account/get_token/')}
 
 const obj2String=(obj, arr = [], idx = 0)=>{
@@ -28,7 +6,8 @@ const obj2String=(obj, arr = [], idx = 0)=>{
     }
     return new URLSearchParams(arr).toString()
 }
-const fetchreq=async(url,data={},method='GET')=>{
+
+const fetchreq=(url,data={},method='GET')=>{
     let opt={}
     if(method === 'GET'){
         url += '?' + obj2String(data)
@@ -55,12 +34,15 @@ const fetchreq=async(url,data={},method='GET')=>{
             })
         };
     }
-    const obj=await fetch(url,opt)
+    return new Promise((resolve,reject)=>{
+        fetch(url,opt)
         .then(res=>res.json())
         .then(res=>{
-            return eval('(' + res + ')')
+            //resolve( eval('(' + res + ')') )
+            resolve(JSON.parse(res))
+        }).catch(error=>{
+            console.log(error.message)
         })
-        .catch(err=>{message.error(err)})
-    return obj;
+    })  
 }
 export default fetchreq

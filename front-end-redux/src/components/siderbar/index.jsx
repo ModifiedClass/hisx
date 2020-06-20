@@ -13,19 +13,19 @@ const { SubMenu } = Menu
 
 class SiderBar extends Component{
 
-    hasAuth=(item)=>{
+    hasAuth = item =>{
         const {key,isPublic}=item
         const menus=this.props.user.menus
         const username=this.props.user.username
         if(username==='admin' ||isPublic||menus.indexOf(key)!==-1){
             return true
         }else if(item.children){
-            return !!item.children.find(child=>menus.indexOf(child.key!==-1))
+            return !!!item.children.find(child=>menus.indexOf(child.key!==-1))
         }
         return false
     }
     
-    getMenuNodes=menuList=>{
+    /*mapMenuNodes=menuList=>{
         const path=this.props.location.pathname
         return menuList.map(item=>{
             if(this.hasAuth(item)){
@@ -45,10 +45,10 @@ class SiderBar extends Component{
                 }else{
                     //const cItem=item.children.find(cItem=>cItem.key===path)
                     //产品路径有子类,将路径改为父类,菜单自动展开
-                    /*const cItem=item.children.find(cItem=>path.indexOf(cItem.key===0))
-                    if(cItem){
-                        this.openKey=item.key
-                    }*/
+                    //const cItem=item.children.find(cItem=>path.indexOf(cItem.key===0))
+                    //if(cItem){
+                    //    this.openKey=item.key
+                    //}
                     return(
                         <SubMenu key={item.key} title={
                             <span>
@@ -56,16 +56,52 @@ class SiderBar extends Component{
                                 <span>{item.title}</span>
                             </span>
                         }>
-                        {this.getMenuNodes(item.children)}
+                        {this.mapMenuNodes(item.children)}
                         </SubMenu>
                     )
                 }
             }
         })
+    }*/
+
+    reduceMenuNodes=menuList=>{
+        const path=this.props.location.pathname
+        return menuList.reduce((pre,item)=>{
+            if(this.hasAuth(item)){
+                //pre添加<Menu.Item>
+                if(!item.children){
+                    if(item.key===path||path.indexOf(item.key)===0){
+                        this.props.setBreadCrum(item.title)
+                    }
+                    pre.push((
+                        <Menu.Item key={item.key} >
+                            <Link to={item.key} onClick={()=>this.props.setBreadCrum(item.title)}>
+                                <Icon type={item.icon} />
+                                <span>{item.title}</span>
+                            </Link>
+                        </Menu.Item>
+                    ))
+                }else{
+                    //pre添加<SubMenu>
+                    pre.push((
+                        <SubMenu key={item.key} title={
+                            <span>
+                                <Icon type={item.icon} />
+                                <span>{item.title}</span>
+                            </span>
+                        }>
+                        {this.reduceMenuNodes(item.children)}
+                        </SubMenu>
+                    ))
+                }
+            }
+            return pre
+        },[])
     }
 
     componentWillMount(){
-        this.menuNodes=this.getMenuNodes(menuList)
+        //this.menuNodes=this.mapMenuNodes(menuList)
+        this.menuNodes=this.reduceMenuNodes(menuList)
     }
     render(){
         let path=this.props.location.pathname

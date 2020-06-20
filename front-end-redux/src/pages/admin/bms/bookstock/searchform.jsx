@@ -30,9 +30,8 @@ class SearchForm extends PureComponent{
 
     getFormItem=()=>{
         this.props.form.validateFields((err,values)=>{
-            console.log(values.book)
             this.props.setSearchItem({
-                book:values.book,
+                bookname:values.bookname,
                 startdate:this.state.startdate,
                 enddate:this.state.enddate
             })
@@ -59,7 +58,7 @@ class SearchForm extends PureComponent{
                     <Col span={8}>
                         <Item label='书名' >
                         {
-                        getFieldDecorator('book',{
+                        getFieldDecorator('bookname',{
                         initialValue:''})
                             (
                             <Input />
@@ -70,7 +69,7 @@ class SearchForm extends PureComponent{
                     <Col span={10}>
                         <Item label='入库时间' >
                         {
-                        getFieldDecorator('publisheryear',{
+                        getFieldDecorator('create_time',{
                         initialValue:''})
                             (
                                 <RangePicker onChange={this.dataonChange} />

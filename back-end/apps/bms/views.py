@@ -251,6 +251,8 @@ class BookStockView(APIView):
             searchdict['_id']=request.GET.get("_id")
         if request.GET.get("book"):
             searchdict['book_id']=request.GET.get("book")
+        if request.GET.get("bookname"):
+            searchdict['book__name__icontains']=request.GET.get("bookname")
         if request.GET.get("nums"):
             searchdict['nums']=request.GET.get("nums")
         if request.GET.get("startdate"):#__range=(startdate, enddate)
@@ -355,19 +357,20 @@ class BorrowRecordView(APIView):
     借阅记录
     '''
     def get(self,request,*args,**kwargs):
-        print(request.GET.get("status"))
         isPage=False
         pageSize=int(request.GET.get("pageSize")) if request.GET.get("pageSize") else 2
         pageNum=int(request.GET.get("pageNum")) if request.GET.get("pageNum") else 1
         searchdict={}
         if request.GET.get("_id"):
             searchdict['_id']=request.GET.get("_id")
-        if request.GET.get("status"):
+        if request.GET.get("status")=='1':
             searchdict['status']=True
-        else:
+        elif request.GET.get("status")=='0':
             searchdict['status']=False
         if request.GET.get("reader"):
-            searchdict['reader__name__icontains']=request.GET.get("reader")
+            searchdict['reader_id']=request.GET.get("reader")
+        if request.GET.get("bookid"):
+            searchdict['book_id']=request.GET.get("bookid")
         if request.GET.get("book"):
             searchdict['book__name__icontains']=request.GET.get("book")
         if request.GET.get("bstartdate"):
@@ -464,6 +467,8 @@ class BorrowRecordView(APIView):
                     obj.create_time= res['create_time']
                 if 'return_time' in res:
                     obj.return_time= res['return_time']
+                if 'status' in res:
+                    obj.status= res['status']
                 if 'reader' in res:
                     obj.reader=User.objects.get(_id=res['reader'])
                 obj.save()

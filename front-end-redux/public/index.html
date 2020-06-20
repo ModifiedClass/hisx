@@ -11,7 +11,6 @@
       content="Web site created using create-react-app"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link rel="stylesheet" href="%PUBLIC_URL%/css/reset.css" />
     <style type="text/css">
         *{
@@ -31,24 +30,5 @@
   <body>
     <div id="root" style="height:100%;padding:0px;margin:0px;color: #222;"></div>
     <script src='polyfill.min.js'></script>
-    <script>
-        var _beforeUnload_time = 0, _gap_time = 0;
-        var is_fireFox = navigator.userAgent.indexOf("Firefox")>-1;//是否是火狐浏览器
-        window.οnunlοad=function(e){//关闭浏览器后的退出操作
-            _gap_time = new Date().getTime() - _beforeUnload_time;
-            if(_gap_time <= 5) {
-                dispatch({type: 'reset_user'});
-            }else{
-                console.info("你正在刷新页面");
-            }
-        }
-
-        window.onbeforeunload  =function(e) { //对火狐浏览器的特殊处理
-            _beforeUnload_time = new Date().getTime();
-            if(is_fireFox){//火狐关闭执行
-                dispatch({type: 'reset_user'});
-            }
-        }
-    </script>
   </body>
 </html>

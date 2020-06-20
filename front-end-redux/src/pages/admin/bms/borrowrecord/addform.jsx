@@ -51,7 +51,7 @@ class AddForm extends Component{
     
     getStock=async value =>{
         const bresult=await rBookStocks({'book':value})
-        const brresult=await rBorrowRecords({'book':value,'status':false})
+        const brresult=await rBorrowRecords({'bookid':value,'status':0})
         let allstock=0
         let allbr=0
         if(bresult.status===1){
@@ -98,6 +98,7 @@ class AddForm extends Component{
                 <Item label='图书' {...formItemLayout}>
                 {
                     getFieldDecorator('book',{
+                        initialValue: borrowrecord.book?borrowrecord.book._id:1,
                         rules:[
                         {required:true,message:'图书不能为空!'}
                         ]
@@ -117,7 +118,7 @@ class AddForm extends Component{
                     )
                 }
                 </Item>
-                <Item label='库存' {...formItemLayout}>
+                {borrowrecord.book ? null:(<Item label='库存' {...formItemLayout}>
                 {
                     getFieldDecorator('stock',{
                         initialValue:this.state.stock,
@@ -128,11 +129,11 @@ class AddForm extends Component{
                         <Input disabled/>
                     )
                 }
-                </Item>
+                </Item>)}
                 <Item label='借阅人' {...formItemLayout}>
                 {
                     getFieldDecorator('reader',{
-                        initialValue:borrowrecord.details,
+                        initialValue:borrowrecord.reader?borrowrecord.reader._id:1,
                         rules:[
                         {required:true,message:'借阅人不能为空!'}
                         ]
