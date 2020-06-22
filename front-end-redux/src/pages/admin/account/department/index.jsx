@@ -6,7 +6,7 @@ import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
-import {rDeps,couDep,dDep} from '../../../../redux/actions/account'
+import {rDeps,couDep,dDep} from '../../../../redux/actions/account-action'
 import AddForm from './addform'
 import Highlighter from 'react-highlight-words'
 

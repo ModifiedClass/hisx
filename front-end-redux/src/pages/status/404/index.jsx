@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import {Row,Col,Button} from 'antd'
 import {connect} from 'react-redux'
 
-import {setBreadCrum} from '../../../redux/actions/account'
+import {setBreadCrum} from '../../../redux/actions/account-action'
 import './index.less'
 
 class NotFound extends Component {

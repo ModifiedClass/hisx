@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {Col,Row,Select,DatePicker } from 'antd'
 
 import ChartZdqk from './chart-zdqk'
-import {chartQyzdqk,chartBmyszdqk,rMzks} from '../../../../redux/actions/analysis'
+import {chartQyzdqk,chartBmyszdqk,rMzks} from '../../../../redux/actions/analysis-action'
 
 const Option=Select.Option
 const { RangePicker } = DatePicker

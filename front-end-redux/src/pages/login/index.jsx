@@ -3,7 +3,7 @@ import { Form, Icon, Input, Button,message } from 'antd';
 import {Redirect} from 'react-router-dom'
 
 import {connect} from 'react-redux'
-import {login} from '../../redux/actions/account'
+import {login} from '../../redux/actions/account-action'
 import {SITENAME} from '../../utils/constants'
 
 import './index.less'

@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 
 import {Card,Button,Timeline,Select,Icon,Typography,Modal} from 'antd'
 
-import {rTls} from '../../../redux/actions/timeline'
+import {rTls} from '../../../redux/actions/timeline-action'
 import {shortDate,formateYear} from '../../../utils/dateUtils'
 
 const Option=Select.Option

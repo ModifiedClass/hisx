@@ -7,7 +7,7 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
 import {formateDate} from '../../../../utils/dateUtils'
 import {ptoc} from '../../../../utils/departmentUtils'
-import {rUs,couUs,dUs,rGro,rDeps,recPwd} from '../../../../redux/actions/account'
+import {rUs,couUs,dUs,rGro,rDeps,recPwd} from '../../../../redux/actions/account-action'
 import AddForm from './addform'
 import DepartmentForm from './departmentform'
 import Highlighter from 'react-highlight-words'
@@ -153,14 +153,14 @@ class User extends Component{
     getUsers=async()=>{
         this.setState({loading:true})
         await this.props.rUs()
-        const result=this.props.usermanage
+        const result=this.props.usermanage.data
         this.setState({loading:false})
-        this.setState({users:result.data})
+        this.setState({users:result})
 
         await this.props.rGro()
-        const groups=this.props.groupmanage
-        this.initGroupNames(groups.data)
-        this.setState({groups:groups.data})
+        const groups=this.props.groupmanage.data
+        this.initGroupNames(groups)
+        this.setState({groups:groups})
     }
     
     onRow=(user)=>{
@@ -339,6 +339,7 @@ class User extends Component{
         )
     }
 }
+
 export default connect(
     state=>({
         usermanage:state.usermanage,

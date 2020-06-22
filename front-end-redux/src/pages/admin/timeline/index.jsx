@@ -5,7 +5,7 @@ import {Card,Table,Button,Icon,message,Modal} from 'antd'
 import EditBtn from '../../../components/editbtn'
 import DeleteBtn from '../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../utils/constants'
-import {rTls,couTl,dTl} from '../../../redux/actions/timeline'
+import {rTls,couTl,dTl} from '../../../redux/actions/timeline-action'
 import AddForm from './addform'
 import {formateDate,shortDate} from '../../../utils/dateUtils'
 

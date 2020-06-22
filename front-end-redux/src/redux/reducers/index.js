@@ -8,10 +8,10 @@ import {
     user,
     groupmanage,
     usermanage
-} from './account'
+} from './account-reducer'
 
-import { chartsmanage } from './analysis'
-import { timelinemanage } from './timeline'
+import { chartsmanage } from './analysis-reducer'
+import { timelinemanage } from './timeline-reducer'
 
 export default combineReducers({
     depmanage,

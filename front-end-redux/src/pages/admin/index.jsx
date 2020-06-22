@@ -34,7 +34,7 @@ import Book from './bms/book'
 import BookStock from './bms/bookstock'
 import BorrowRecord from './bms/borrowrecord'
 import NotFound from '../status/404'
-import {logout} from '../../redux/actions/account'
+import {logout} from '../../redux/actions/account-action'
 
 const { Header, Footer, Sider, Content } = Layout;
 

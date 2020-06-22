@@ -6,8 +6,7 @@ import { Menu, Icon} from 'antd'
 import './index.less'
 
 import menuList from '../../config/menuConfig'
-//import memUtils from '../../utils/memUtils'
-import {setBreadCrum} from '../../redux/actions/account'
+import {setBreadCrum} from '../../redux/actions/account-action'
 
 const { SubMenu } = Menu
 

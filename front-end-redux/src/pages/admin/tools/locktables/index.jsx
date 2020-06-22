@@ -1,7 +1,11 @@
 import React,{Component} from 'react';
 import {Modal,message,Card,Table,Select} from 'antd'
 
-import {gethislocktables,hisunlocktables,gettjxtlocktables} from '../../../../api'
+import {
+    gethislocktables,
+    //hisunlocktables,
+    gettjxtlocktables
+} from '../../../../api'
 import EditBtn from '../../../../components/editbtn'
 
 const Option=Select.Option
