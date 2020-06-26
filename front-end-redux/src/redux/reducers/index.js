@@ -3,22 +3,22 @@
 */
 import {combineReducers} from 'redux'
 import {
-    depmanage,
+    departmentReducer,
     breadCrum,
     user,
-    groupmanage,
-    usermanage
+    groupReducer,
+    userReducer
 } from './account-reducer'
 
-import { chartsmanage } from './analysis-reducer'
-import { timelinemanage } from './timeline-reducer'
+import { chartsReducer } from './analysis-reducer'
+import { timelineReducer } from './timeline-reducer'
 
 export default combineReducers({
-    depmanage,
+    departmentReducer,
     breadCrum,
     user,
-    groupmanage,
-    usermanage,
-    timelinemanage,
-    chartsmanage,
+    groupReducer,
+    userReducer,
+    timelineReducer,
+    chartsReducer,
 })

@@ -1,6 +1,6 @@
 
 //管理chart
-export const chartsmanage=(state={},action)=>{
+export const chartsReducer=(state={},action)=>{
     if(action.type){
         return {
             ...state,

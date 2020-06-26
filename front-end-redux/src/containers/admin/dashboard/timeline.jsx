@@ -1,5 +1,6 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {Card,Button,Timeline,Select,Icon,Typography,Modal} from 'antd'
 
@@ -38,7 +39,7 @@ class DTimeLine extends Component{
     
     initTimelines=async()=>{
         await this.props.rTls()
-        const result=this.props.timelinemanage
+        const result=this.props.timelineReducer
         const date=new Date()
         const thisyear=date.getFullYear()
         const tls=result.data
@@ -115,7 +116,19 @@ class DTimeLine extends Component{
         )
     }
 }
+
+DTimeLine.propTypes={
+    timelineReducer:PropTypes.object.isRequired,
+    rTls:PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => {
+    return {timelineReducer:state.timelineReducer}
+}
+
+const mapDispatchToProps = {rTls}
+
 export default connect(
-    state=>({timelinemanage:state.timelinemanage}),
-    {rTls}
+    mapStateToProps,
+    mapDispatchToProps
 )(DTimeLine)

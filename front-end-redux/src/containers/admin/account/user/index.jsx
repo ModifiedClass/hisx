@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux'
 import {Card,Table,Button,Icon,message,Modal,Input} from 'antd'
+import PropTypes from 'prop-types'
 
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
@@ -16,15 +17,15 @@ class User extends Component{
     constructor(props){
         super(props)
         this.auth=React.createRef()
-    }
-    state={
-        isShow:false,
-        udShow:false,
-        loading:false,
-        users:[],  //所有用户
-        groups:[],   //用户组
-        selectedUser:{},    //选中用户
-        initDepartment:{}   //传给子组件初始化tree
+        this.state={
+            isShow:false,
+            udShow:false,
+            loading:false,
+            users:[],  //所有用户
+            groups:[],   //用户组
+            selectedUser:{},    //选中用户
+            initDepartment:{}   //传给子组件初始化tree
+        }
     }
     
     getColumnSearchProps = dataIndex => ({
@@ -150,15 +151,15 @@ class User extends Component{
         this.groupNames=groupNames
     }
     
-    getUsers=async()=>{
+    initUsers=async()=>{
         this.setState({loading:true})
         await this.props.rUs()
-        const result=this.props.usermanage.data
+        const result=this.props.userReducer.data
         this.setState({loading:false})
         this.setState({users:result})
 
         await this.props.rGro()
-        const groups=this.props.groupmanage.data
+        const groups=this.props.groupReducer.data
         this.initGroupNames(groups)
         this.setState({groups:groups})
     }
@@ -184,10 +185,10 @@ class User extends Component{
                     user._id=this.user._id
                 }
                 await this.props.couUs(user)
-                const result=this.props.usermanage
+                const result=this.props.userReducer
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getUsers()
+                    this.initUsers()
                 }else{
                     message.error(result.msg)
                 }
@@ -213,10 +214,10 @@ class User extends Component{
                 title:'确认删除 '+user.username+' 吗？',
                 onOk:async()=>{
                     await this.props.dUs(user._id)
-                    const result=this.props.usermanage
+                    const result=this.props.userReducer
                     if(result.status===1){
                         message.success(result.msg)
-                        this.getUsers()
+                        this.initUsers()
                     }else{
                         message.error(result.msg)
                     }
@@ -227,7 +228,7 @@ class User extends Component{
     
     showDepartment=async()=>{
         await this.props.rDeps()
-        const result=this.props.depmanage
+        const result=this.props.departmentReducer
         this.setState({
             udShow:true,
             initDepartment:result?ptoc(result.data):{}
@@ -243,10 +244,10 @@ class User extends Component{
         user.department=departments
 
         await this.props.couUs(user)
-        const result=this.props.usermanage
+        const result=this.props.userReducer
         if(result.status===1){
             message.success(result.msg)
-            this.getUsers()
+            this.initUsers()
         }else{
             message.error(result.msg)
         }
@@ -261,10 +262,10 @@ class User extends Component{
                 title:'确认重置 '+username+' 吗？',
                 onOk:async()=>{
                     await this.props.recPwd(username)
-                    const result=this.props.usermanage
+                    const result=this.props.userReducer
                     if(result.status===1){
                         message.success(result.msg)
-                        this.getUsers()
+                        this.initUsers()
                     }else{
                         message.error(result.msg)
                     }
@@ -278,7 +279,7 @@ class User extends Component{
     }
     
     componentDidMount(){
-        this.getUsers()
+        this.initUsers()
     }
     render(){
         const {users,groups,selectedUser,initDepartment,loading,isShow,udShow}=this.state
@@ -340,11 +341,36 @@ class User extends Component{
     }
 }
 
+User.propTypes={
+    userReducer:PropTypes.object.isRequired,
+    groupReducer:PropTypes.object.isRequired,
+    departmentReducer:PropTypes.object.isRequired,
+    rUs:PropTypes.func.isRequired,
+    couUs:PropTypes.func.isRequired,
+    dUs:PropTypes.func.isRequired,
+    rGro:PropTypes.func.isRequired,
+    rDeps:PropTypes.func.isRequired,
+    recPwd:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        userReducer:state.userReducer,
+        groupReducer:state.groupReducer,
+        departmentReducer:state.departmentReducer
+    }
+}
+
+const mapDispatchToProps = {
+    rUs,
+    couUs,
+    dUs,
+    rGro,
+    rDeps,
+    recPwd
+}
+
 export default connect(
-    state=>({
-        usermanage:state.usermanage,
-        groupmanage:state.groupmanage,
-        depmanage:state.depmanage
-    }),
-    {rUs,couUs,dUs,rGro,rDeps,recPwd}
+    mapStateToProps,
+    mapDispatchToProps
 )(User)

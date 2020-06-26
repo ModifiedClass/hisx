@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
 import {Card,Table,Button,Icon,message,Modal} from 'antd'
+import PropTypes from 'prop-types'
 
 import EditBtn from '../../../components/editbtn'
 import DeleteBtn from '../../../components/deletebtn'
@@ -11,11 +12,15 @@ import {formateDate,shortDate} from '../../../utils/dateUtils'
 
 class TimeLine extends Component{
 
-    state={
-        isShowAdd:false,
-        loading:false,
-        timelines:[],  //所有时间轴,用于显示table数据
+    constructor(props){
+        super(props)
+        this.state={
+            isShowAdd:false,
+            loading:false,
+            timelines:[],  //所有时间轴,用于显示table数据
+        }
     }
+
     initColums=()=>{
         this.columns=[
         {
@@ -45,7 +50,7 @@ class TimeLine extends Component{
     }
     getTimeLines=async ()=>{
         await this.props.rTls()
-        const result=this.props.timelinemanage
+        const result=this.props.timelineReducer
         this.setState({ timelines:result.data })
     }
 
@@ -66,7 +71,7 @@ class TimeLine extends Component{
                     timeline._id=this.timeline._id
                 }
                 await this.props.couTl(timeline)
-                const result=this.props.timelinemanage
+                const result=this.props.timelineReducer
                 if(result.status===1){
                     message.success(result.msg)
                     this.getTimeLines()
@@ -87,7 +92,7 @@ class TimeLine extends Component{
             title:'确认删除 '+timeline.name+' 吗？',
             onOk:async()=>{
                 await this.props.dTl(timeline._id)
-                const result=this.props.timelinemanage
+                const result=this.props.timelineReducer
                 if(result.status===1){
                     message.success(result.msg)
                     this.getTimeLines()
@@ -136,7 +141,21 @@ class TimeLine extends Component{
         )
     }
 }
+
+TimeLine.propTypes={
+    timelineReducer:PropTypes.object.isRequired,
+    rTls:PropTypes.func.isRequired,
+    couTl:PropTypes.func.isRequired,
+    dTl:PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => {
+    return {timelineReducer:state.timelineReducer}
+}
+
+const mapDispatchToProps =  {rTls,couTl,dTl}
+
 export default connect(
-    state=>({timelinemanage:state.timelinemanage}),
-    {rTls,couTl,dTl}
+    mapStateToProps,
+    mapDispatchToProps
 )(TimeLine)

@@ -1,11 +1,16 @@
 import React,{Component} from 'react';
 import {Card} from 'antd'
 import ReactEcharts from 'echarts-for-react'
-
-
+import PropTypes from 'prop-types'
 
 
 export default class ChartZdqk extends Component{
+
+    static propTypes={
+        title:PropTypes.string.isRequired,
+        data:PropTypes.object,
+        extra:PropTypes.element
+    }
 
     getOption=(data)=>{
         return{

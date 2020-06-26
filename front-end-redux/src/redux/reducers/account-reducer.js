@@ -41,7 +41,7 @@ export const user=(state=initUser,action)=>{
 }
 
 //管理部门
-export const depmanage=(state={},action)=>{
+export const departmentReducer=(state={},action)=>{
     switch(action.type){
         case GET_DEPARTMENT:
             return {
@@ -66,7 +66,7 @@ export const depmanage=(state={},action)=>{
 }
 
 //管理组
-export const groupmanage=(state={},action)=>{
+export const groupReducer=(state={},action)=>{
     switch(action.type){
         case GET_GROUP:
             return {
@@ -91,7 +91,7 @@ export const groupmanage=(state={},action)=>{
 }
 
 //管理用户
-export const usermanage=(state={},action)=>{
+export const userReducer=(state={},action)=>{
     switch(action.type){
         case GET_USER:
             return {

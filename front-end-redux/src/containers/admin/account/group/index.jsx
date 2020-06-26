@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import {connect} from 'react-redux'
 import {Card,Table,Button,Icon,message,Modal} from 'antd'
+import PropTypes from 'prop-types'
 
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
@@ -16,15 +17,16 @@ class Group extends Component{
     constructor(props){
         super(props)
         this.auth=React.createRef()
+        this.state={
+            isShowAdd:false,
+            isShowGM:false,
+            isShowGO:false,
+            loading:false,
+            groups:[],  //所有组,用于显示table数据
+            selectedGroup:{},    //选中组,用于选中授权
+        }
     }
-    state={
-        isShowAdd:false,
-        isShowGM:false,
-        isShowGO:false,
-        loading:false,
-        groups:[],  //所有组,用于显示table数据
-        selectedGroup:{},    //选中组,用于选中授权
-    }
+
     initColums=()=>{
         this.columns=[
         {
@@ -48,10 +50,10 @@ class Group extends Component{
         }
         ]
     }
-    getGroups=async ()=>{
+    initGroups=async ()=>{
         this.setState({loading:true})
         await this.props.rGro()
-        const result=this.props.groupmanage
+        const result=this.props.groupReducer
         this.setState({loading:false})
         this.setState({groups:result.data})
     }
@@ -83,10 +85,10 @@ class Group extends Component{
                     group._id=this.group._id
                 }
                 await this.props.couGro(group)
-                const result=this.props.groupmanage
+                const result=this.props.groupReducer
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getGroups()
+                    this.initGroups()
                 }else{
                     message.error(result.msg)
                 }
@@ -104,10 +106,10 @@ class Group extends Component{
             title:'确认删除 '+group.name+' 吗？',
             onOk:async()=>{
                 await this.props.dGro(group._id)
-                const result=this.props.groupmanage
+                const result=this.props.groupReducer
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getGroups()
+                    this.initGroups()
                 }else{
                     message.error(result.msg)
                 }
@@ -133,10 +135,10 @@ class Group extends Component{
         const menus=this.auth.current.getMenus()
         group.menu=menus?menus.join(','):menus
         await this.props.couGro(group)
-        const result=this.props.groupmanage
+        const result=this.props.groupReducer
         if(result.status===1){
             message.success(result.msg)
-            this.getGroups()
+            this.initGroups()
         }else{
             message.error(result.msg)
         }
@@ -151,7 +153,7 @@ class Group extends Component{
         group.operation=operations?operations.join(','):operations
         
         await this.props.couGro(group)
-        const result=this.props.groupmanage
+        const result=this.props.groupReducer
         if(result.status===1){
             //给自己角色授权，强制退出
             /*if(group._id===memUtils.user.group_id){
@@ -166,7 +168,7 @@ class Group extends Component{
                 })
             }*/
             message.success(result.msg)
-            this.getGroups()
+            this.initGroups()
         }else{
             message.error(result.msg)
         }
@@ -176,7 +178,7 @@ class Group extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getGroups()
+        this.initGroups()
     }
     render(){
         const {groups,loading,selectedGroup,isShowAdd,isShowGM,isShowGO}=this.state
@@ -245,7 +247,23 @@ class Group extends Component{
         )
     }
 }
+
+Group.propTypes={
+    groupReducer:PropTypes.object.isRequired,
+    rGro:PropTypes.func.isRequired,
+    couGro:PropTypes.func.isRequired,
+    dGro:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        groupReducer:state.groupReducer
+    }
+}
+
+const mapDispatchToProps = {rGro,couGro,dGro}
+
 export default connect(
-    state=>({groupmanage:state.groupmanage}),
-    {rGro,couGro,dGro}
+    mapStateToProps,
+    mapDispatchToProps
 )(Group)

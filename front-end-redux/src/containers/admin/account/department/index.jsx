@@ -1,5 +1,6 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {Card,Table,Button,Icon,message,Modal,Tag,Input} from 'antd'
 import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
@@ -11,11 +12,14 @@ import AddForm from './addform'
 import Highlighter from 'react-highlight-words'
 
 class Department extends Component{
-    state={
-        loading:false,
-        isShow:false,
-        searchText: '',
-        searchedColumn: '',
+    constructor(props){
+        super(props)
+        this.state={
+            loading:false,
+            isShow:false,
+            searchText: '',
+            searchedColumn: '',
+        }
     }
     
     getColumnSearchProps = dataIndex => ({
@@ -133,11 +137,11 @@ class Department extends Component{
         ]
     }
    
-    getDepartments = async()=>{
+    initDepartments = async()=>{
         this.setState({loading:true})
         await this.props.rDeps()
         this.setState({loading:false})
-        this.setState({departments:this.props.depmanage.data})
+        this.setState({departments:this.props.departmentReducer.data})
     }
 
     showAdd=()=>{
@@ -164,10 +168,10 @@ class Department extends Component{
                 else
                     department.status=false
                 await this.props.couDep(department)
-                const result=this.props.depmanage
+                const result=this.props.departmentReducer
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getDepartments()
+                    this.initDepartments()
                 }else{
                     message.error(result.msg)
                 }
@@ -180,10 +184,10 @@ class Department extends Component{
             title:'确认删除'+department.name+'吗？',
             onOk:async()=>{
                 await this.props.dDep(department._id)
-                const result=this.props.depmanage
+                const result=this.props.departmentReducer
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getDepartments()
+                    this.initDepartments()
                 }else{
                     message.error(result.msg)
                 } 
@@ -195,7 +199,7 @@ class Department extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getDepartments()
+        this.initDepartments()
     }
     render(){
         const {loading,isShow}=this.state
@@ -207,7 +211,7 @@ class Department extends Component{
                 bordered
                 rowKey='_id'
                 loading={loading}
-                dataSource={this.props.depmanage.data}
+                dataSource={this.props.departmentReducer.data}
                 columns={this.columns}
                 pagination={false}
                 scroll={{ y: 480 }}
@@ -225,14 +229,30 @@ class Department extends Component{
                     <AddForm 
                     setForm={(form)=>{this.form=form}} 
                     department={department}
-                    departments={this.props.depmanage.data}
+                    departments={this.props.departmentReducer.data}
                     />
                 </Modal>
             </Card>
         )
     }
 }
+
+Department.propTypes={
+    departmentReducer:PropTypes.object.isRequired,
+    rDeps:PropTypes.func.isRequired,
+    couDep:PropTypes.func.isRequired,
+    dDep:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        departmentReducer:state.departmentReducer
+    }
+}
+
+const mapDispatchToProps = {rDeps,couDep,dDep}
+
 export default connect(
-    state=>({depmanage:state.depmanage}),
-    {rDeps,couDep,dDep}
+    mapStateToProps,
+    mapDispatchToProps
 )(Department)

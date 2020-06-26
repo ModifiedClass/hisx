@@ -19,7 +19,8 @@ export default class DepartmentForm extends Component{
         }
     }
     static propTypes={
-        user:PropTypes.object
+        user:PropTypes.object,
+        initDepartment:PropTypes.object
     }
 
     //为父组件提供选中节点

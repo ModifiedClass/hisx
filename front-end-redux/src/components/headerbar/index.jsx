@@ -7,10 +7,10 @@ import LinkBtn from '../../components/linkbtn'
 import {formateDate} from '../../utils/dateUtils'
 import {SITENAME} from '../../utils/constants'
 import {logout} from '../../redux/actions/account-action'
-//import memUtils from '../../utils/memUtils'
-//import storeUtils from '../../utils/storeUtils'
 
 import './index.less'
+
+
 class HeaderBar extends Component{
     state={
         currentTime:formateDate(Date.now())
@@ -27,9 +27,6 @@ class HeaderBar extends Component{
             content:'确定退出吗?',
             onOk:()=>{
                 this.props.logout()
-                /*storeUtils.removeUser()
-                memUtils.user={}
-                this.props.history.replace('/login')*/
             }
         })
     }

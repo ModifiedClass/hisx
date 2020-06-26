@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
 import {Col,Row,Select,DatePicker } from 'antd'
+import PropTypes from 'prop-types'
 
 import ChartZdqk from './chart-zdqk'
 import {chartQyzdqk,chartBmyszdqk,rMzks} from '../../../../redux/actions/analysis-action'
@@ -9,31 +10,35 @@ const Option=Select.Option
 const { RangePicker } = DatePicker
 
 class Zdqk extends Component{
-    state={
 
-        data1:[],
-        data2:[],
-        departments:[],
-        seldep:264,
-        display:'none'
+    constructor(props){
+        super(props)
+        this.state={
+            data1:[],
+            data2:[],
+            departments:[],
+            seldep:264,
+            display:'none'
+        }
     }
+
     initqyzlqk=async(startdate,enddate)=>{
         await this.props.chartQyzdqk(startdate,enddate)
-        const res=this.props.chartmanage
+        const res=this.props.chartsReducer
         this.setState({
             data1:res.data
         })
     }
     initbmzlqk=async(department,startdate,enddate)=>{
         await this.props.chartBmyszdqk(department,startdate,enddate)
-        const res=this.props.chartmanage
+        const res=this.props.chartsReducer
         this.setState({
             data2:res.data
         })
     }
     initData=async()=>{
         await this.props.rMzks()
-        const res=this.props.chartmanage
+        const res=this.props.chartsReducer
         this.setState({
             departments:res.data
         })
@@ -83,7 +88,21 @@ class Zdqk extends Component{
         )
     }
 }
+
+Zdqk.propTypes={
+    chartsReducer:PropTypes.object.isRequired,
+    chartQyzdqk:PropTypes.func.isRequired,
+    chartBmyszdqk:PropTypes.func.isRequired,
+    rMzks:PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => {
+    return {chartsReducer:state.chartsReducer}
+}
+
+const mapDispatchToProps =  {chartQyzdqk,chartBmyszdqk,rMzks}
+
 export default connect(
-    state=>({chartmanage:state.chartmanage}),
-    {chartQyzdqk,chartBmyszdqk,rMzks}
+    mapStateToProps,
+    mapDispatchToProps
 )(Zdqk)

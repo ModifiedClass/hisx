@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import { Form, Icon, Input, Button,message } from 'antd';
 import {Redirect} from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 import {connect} from 'react-redux'
 import {login} from '../../redux/actions/account-action'
@@ -9,6 +10,7 @@ import {SITENAME} from '../../utils/constants'
 import './index.less'
 
 class Login extends Component {
+
     handleSubmit=e=> {
         e.preventDefault();
         this.props.form.validateFields(async(err, values) => {
@@ -24,6 +26,7 @@ class Login extends Component {
             this.props.history.replace('/')
         });
     }
+
     validatePwd=(rule,value,callback)=>{
         if(!value){
             callback('密码不能为空！')
@@ -37,6 +40,7 @@ class Login extends Component {
             callback()
         }
     }
+
     render(){
         const user=this.props.user
         if(user && user._id){
@@ -77,8 +81,20 @@ class Login extends Component {
         )
     }
 }
+
 const WarpLogin=Form.create({ name: 'login'})(Login)
+
+WarpLogin.propTypes={
+    user:PropTypes.object.isRequired,
+    login:PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => {
+    return {user:state.user}
+}
+const mapDispatchToProps =  {login}
+
 export default connect(
-    state=>({user:state.user}),
-    {login}
+    mapStateToProps,
+    mapDispatchToProps
 )(WarpLogin)

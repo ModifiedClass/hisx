@@ -1,6 +1,7 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
 import {Col,Row,Select,DatePicker } from 'antd'
+import PropTypes from 'prop-types'
 
 import ChartZlqk from './chart-zlqk'
 import {chartQyzlqk,chartBmyszlqk,rZyks} from '../../../../redux/actions/analysis-action'
@@ -9,32 +10,37 @@ const Option=Select.Option
 const { RangePicker } = DatePicker
 
 class Zlqk extends Component{
-    state={
-        indicator:[
-                    { name: '收病人数'},
-                    { name: '患者平均住院天数'},
-                    { name: '治愈率%',max:100},
-                    { name: '好转率%',max:100},
-                    { name: '未愈率%',max:100},
-                    { name: '死亡率%',max:100},
-                    { name: '其他%',max:100},
-                    { name: '三日内确诊率%',max:100},
-                    { name: '入出院诊断符合率%',max:100},
-                    { name: '药占比%',max:100},
-                    { name: '材料占比%',max:100},
-                    { name: '检查占比%',max:100},
-                    { name: '治疗占比%',max:100},
-                    { name: '其他费用占比%',max:100},
-                    { name: '平均费用'}
-                ],
-        data1:[],
-        data2:[],
-        legend1:[],
-        legend2:[],
-        departments:[],
-        seldep:264,
-        display:'none'
+
+    constructor(props){
+        super(props)
+        this.state={
+            indicator:[
+                        { name: '收病人数'},
+                        { name: '患者平均住院天数'},
+                        { name: '治愈率%',max:100},
+                        { name: '好转率%',max:100},
+                        { name: '未愈率%',max:100},
+                        { name: '死亡率%',max:100},
+                        { name: '其他%',max:100},
+                        { name: '三日内确诊率%',max:100},
+                        { name: '入出院诊断符合率%',max:100},
+                        { name: '药占比%',max:100},
+                        { name: '材料占比%',max:100},
+                        { name: '检查占比%',max:100},
+                        { name: '治疗占比%',max:100},
+                        { name: '其他费用占比%',max:100},
+                        { name: '平均费用'}
+                    ],
+            data1:[],
+            data2:[],
+            legend1:[],
+            legend2:[],
+            departments:[],
+            seldep:264,
+            display:'none'
+        }
     }
+    
     initqyzlqk=async(startdate,enddate)=>{
         await this.props.chartQyzlqk(startdate,enddate)
         const qyzlqk=this.props.chartsmanage
@@ -102,7 +108,21 @@ class Zlqk extends Component{
         )
     }
 }
+
+Zlqk.propTypes={
+    chartsReducer:PropTypes.object.isRequired,
+    chartQyzlqk:PropTypes.func.isRequired,
+    chartBmyszlqk:PropTypes.func.isRequired,
+    rZyks:PropTypes.func.isRequired
+}
+
+const mapStateToProps = state => {
+    return {chartsReducer:state.chartsReducer}
+}
+
+const mapDispatchToProps =  {chartQyzlqk,chartBmyszlqk,rZyks}
+
 export default connect(
-    state=>({chartsmanage:state.chartsmanage}),
-    {chartQyzlqk,chartBmyszlqk,rZyks}
+    mapStateToProps,
+    mapDispatchToProps
 )(Zlqk)

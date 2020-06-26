@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import {Card,Button} from 'antd'
+import {Card} from 'antd'
 import ReactEcharts from 'echarts-for-react'
 
 

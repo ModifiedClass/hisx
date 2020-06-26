@@ -1,15 +1,18 @@
 import React,{Component} from 'react'
 import {Row,Col,Button} from 'antd'
 import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {setBreadCrum} from '../../../redux/actions/account-action'
 import './index.less'
 
 class NotFound extends Component {
+
     goDashboard=()=>{
-            this.props.setBreadCrum('仪表盘')
-            this.props.history.replace('/dashboard')
-        }
+        this.props.setBreadCrum('仪表盘')
+        this.props.history.replace('/dashboard')
+    }
+
     render(){
         
         return(
@@ -28,7 +31,16 @@ class NotFound extends Component {
         )
     }
 }
+
+NotFound.propTypes={
+    setBreadCrum:PropTypes.func.isRequired
+}
+
+const mapStateToProps = null
+
+const mapDispatchToProps =  {setBreadCrum}
+
 export default connect(
-    null,
-    {setBreadCrum}
+    mapStateToProps,
+    mapDispatchToProps
 )(NotFound)
