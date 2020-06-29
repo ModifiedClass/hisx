@@ -1,4 +1,7 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
+
 import {Card,Select,Input,Button,Modal,Icon,Table,message,Tooltip,Tag} from 'antd'
 
 import {BASE_GREEN,BASE_RED,BASE_BLUE} from '../../../../utils/colors'
@@ -8,20 +11,25 @@ import PreviewBtn from '../../../../components/previewbtn'
 import {shortDate} from '../../../../utils/dateUtils'
 import {processingMode} from '../../../../config/selectConfig'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rProcessedRecords,dProcessedRecord,eProcessedRecord} from '../../../../api'
+import {rPrs,couPr,dPr,ePr} from '../../../../redux/actions/oapm-action'
 import htmlToDraft from 'html-to-draftjs'
 
 const Option=Select.Option
 const { Search } = Input
 
-export default class Home extends Component{
-    state={
-        processedrecords:[],
-        total:0,
-        loading:false,
-        isShow:false,
-        searchName:'',  //搜素关键字
-        searchType:''    //搜素类型
+class Home extends Component{
+
+    constructor(props){
+        super(props)
+        this.rev=React.createRef()
+        this.state={
+            processedrecords:[],
+            total:0,
+            loading:false,
+            isShow:false,
+            searchName:'',  //搜素关键字
+            searchType:''    //搜素类型
+        }
     }
     
     initColums=()=>{
@@ -168,14 +176,13 @@ export default class Home extends Component{
         }
         ]
     }
-    getProcessedRecords= async(pageNum)=>{
+    initProcessedRecords= async(pageNum)=>{
         this.pageNum=pageNum
         const isPage=true
         this.setState({loading:true})
         const{searchName,searchType}=this.state
-        let result
         if(searchName){
-            result=await rProcessedRecords({
+            await this.props.rPrs({
                 isPage,
                 pageNum,
                 pageSize:PAGE_SIZE,
@@ -183,16 +190,11 @@ export default class Home extends Component{
                 searchType
                 })
         }else{
-            result=await rProcessedRecords({isPage,pageNum,pageSize:PAGE_SIZE})
+            await this.props.rPrs({isPage,pageNum,pageSize:PAGE_SIZE})
         }
-        
         this.setState({loading:false})
-        if(result.status===1){
-            const {total,list}=result.data
-            this.setState({processedrecords:list,total})
-        }else{
-            message.error(result.msg)
-        }
+        const {total,list}=this.props.processedRecordReducer.data
+        this.setState({processedrecords:list,total})
     }
 
     showAdd=()=>{
@@ -209,10 +211,11 @@ export default class Home extends Component{
         Modal.confirm({
             title:'确认删除？',
             onOk:async()=>{
-                const result=await dProcessedRecord(processedrecord._id)
+                await this.props.dPr(processedrecord._id)
+                const result=this.props.deleteProcessedRecord
                 if(result.status===1){
-                    message.success('删除成功！')
-                    this.getProcessedRecords(1)
+                    message.success(result.msg)
+                    this.initProcessedRecords(1)
                 }
             }
         })
@@ -222,14 +225,14 @@ export default class Home extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getProcessedRecords(1)
+        this.initProcessedRecords(1)
     }
     
     render(){
         const {processedrecords,total,loading,searchName,searchType}=this.state
         const title=(<span>
             <Button type='primary' onClick={()=>this.props.history.push('/processedrecord/addorupdate')}><Icon type='unordered-list'/>新增</Button>&nbsp;&nbsp;
-            <Button type='primary' onClick={async ()=>{await eProcessedRecord()}}><Icon type="export" />导出excel</Button>
+            <Button type='primary' onClick={async ()=>{await this.props.ePr()}}><Icon type="export" />导出excel</Button>
             </span>)
         
         const extra=(
@@ -247,7 +250,7 @@ export default class Home extends Component{
             placeholder="搜索关键字" 
             value={searchName} 
             onChange={event => this.setState({searchName:event.target.value})} 
-            onSearch={()=>this.getProcessedRecords(1)}
+            onSearch={()=>this.initProcessedRecords(1)}
             enterButton />
         </span>
         )
@@ -265,10 +268,31 @@ export default class Home extends Component{
                     defaultPageSize:PAGE_SIZE,
                     ShowQuickJumper:true,
                     total,
-                    onChange:this.getProcessedRecords
+                    onChange:this.initProcessedRecords
                     }}
                 />
             </Card>
         )
     }
 }
+
+Home.propTypes={
+    processedRecordReducer:PropTypes.object.isRequired,
+    rPrs:PropTypes.func.isRequired,
+    couPr:PropTypes.func.isRequired,
+    dPr:PropTypes.func.isRequired,
+    ePr:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        processedRecordReducer:state.processedRecordReducer,
+    }
+}
+
+const mapDispatchToProps = {rPrs,couPr,dPr,ePr}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home)

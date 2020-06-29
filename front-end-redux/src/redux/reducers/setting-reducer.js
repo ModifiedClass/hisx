@@ -1,24 +1,24 @@
 import {
-    GET_TIMELINE,
-    COU_TIMELINE,
-    DEL_TIMELINE,
+    BACKUP_DATA,
+    CLEAR_ACCLOG,
+    CLEAR_ERRLOG,
 } from '../actiontypes'
 
 //管理时间轴
-export const timelineReducer=(state={},action)=>{
+export const settingReducer=(state={},action)=>{
     switch(action.type){
-        case GET_TIMELINE:
+        case BACKUP_DATA:
             return {
                 ...state,
                 data:action.data
             }
-        case COU_TIMELINE:
+        case CLEAR_ACCLOG:
             return {
                 ...state,
                 msg:action.msg,
                 status:action.status
             }
-        case DEL_TIMELINE:
+        case CLEAR_ERRLOG:
             return {
                 ...state,
                 msg:action.msg,

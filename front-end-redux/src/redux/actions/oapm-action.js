@@ -14,6 +14,7 @@ import {
     COU_PROCESSEDRECORD,
     DEL_PROCESSEDRECORD,
     EXPORT_PROCESSEDRECORD_EXCEL,
+    UPLOAD_IMG,
     GET_PRINTERREPAIR,
     COU_PRINTERREPAIR,
     DEL_PRINTERREPAIR,
@@ -142,13 +143,32 @@ export const dPr = processedrecordId => async dispatch=>{
     dispatch(dProcessedRecordAction(result.msg,result.status))
 }
 //导出处理记录excel
-
+const eProcessedRecordAction = data =>({
+    type:EXPORT_PROCESSEDRECORD_EXCEL,
+    data
+})
+export const ePr = () => async dispatch => {
+    const result = await eProcessedRecord()
+    if(result.status === 1){
+        dispatch(eProcessedRecordAction(result.data))
+    }
+}
+//上传图片
+const uploadImgAction = (msg,status) =>({
+    type:UPLOAD_IMG,
+    msg,
+    status
+})
+export const uImg = name => async dispatch=>{
+    const result=await cImg(name)
+    dispatch(uploadImgAction(result.msg,result.status))
+}
 //获取设备维修
 const rPrinterRepairsAction = data =>({
     type:GET_PRINTERREPAIR,
     data
 })
-export const rDrs = () => async dispatch => {
+export const rPrps = () => async dispatch => {
     const result = await rPrinterRepairs()
     if(result.status === 1){
         dispatch(rPrinterRepairsAction(result.data))
@@ -160,7 +180,7 @@ const couPrinterRepairAction = (msg,status) =>({
     msg,
     status
 })
-export const couDr = printerrepair => async dispatch=>{
+export const couPrp = printerrepair => async dispatch=>{
     const result=await couPrinterRepair(printerrepair)
     dispatch(couPrinterRepairAction(result.msg,result.status))
 }
@@ -170,12 +190,20 @@ const dPrinterRepairAction = (msg,status) =>({
     msg,
     status
 })
-export const dDr = printerrepairId => async dispatch=>{
+export const dPrp = printerrepairId => async dispatch=>{
     const result = await dPrinterRepair(printerrepairId)
     dispatch(dPrinterRepairAction(result.msg,result.status))
 }
 //审核设备维修
-
+const rePrinterRepairAction = (msg,status) =>({
+    type:REVIEWED_PRINTERREPAIR,
+    msg,
+    status
+})
+export const rePrp = handlerId => async dispatch=>{
+    const result = await rePrinterRepair(handlerId)
+    dispatch(rePrinterRepairAction(result.msg,result.status))
+}
 //获取硒鼓加粉
 const rCartridaysAction = data =>({
     type:GET_CARTRIDAY,
@@ -208,3 +236,12 @@ export const dCd = cartriddayId => async dispatch=>{
     dispatch(dCartridayAction(result.msg,result.status))
 }
 //审核硒鼓加粉
+const reCartridayAction = (msg,status) =>({
+    type:REVIEWED_CARTRIDAY,
+    msg,
+    status
+})
+export const reCd = handlerId => async dispatch=>{
+    const result = await reCartriday(handlerId)
+    dispatch(reCartridayAction(result.msg,result.status))
+}

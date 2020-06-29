@@ -1,26 +1,32 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 import {Card,Table,Button,Icon,message,Modal,Select,Input} from 'antd'
 
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rDeviceModels,couDeviceModel,dDeviceModel,rDeviceCategorys} from '../../../../api'
+import {rDms,couDm,dDm,rDcs} from '../../../../redux/actions/informationdevice-action'
 import AddForm from './addform'
 import {formateDate} from '../../../../utils/dateUtils'
 
 const { Search } = Input
 const Option=Select.Option
 
-export default class DeviceModel extends Component{
+class DeviceModel extends Component{
 
-    state={
-        isShowAdd:false,
-        loading:false,
-        devicemodels:[],  //所有型号,用于显示table数据
-        devicecategorys:[],
-        searchName:'',  //搜素关键字
-        searchType:''    //搜素类型
+    constructor(props){
+        super(props)
+        this.state={
+            isShowAdd:false,
+            loading:false,
+            devicemodels:[],  //所有型号,用于显示table数据
+            devicecategorys:[],
+            searchName:'',  //搜素关键字
+            searchType:''    //搜素类型
+        }
     }
+
     initColums=()=>{
         this.columns=[
         {
@@ -67,32 +73,19 @@ export default class DeviceModel extends Component{
         this.devicecategoryNames=devicecategoryNames
     }
     
-    getDeviceModels=async ()=>{
+    initDeviceModels=async ()=>{
         const dm={}
         dm.name=this.state.searchName
         dm.devicecategory=this.state.searchType
         this.setState({loading:true})
-        const result=await rDeviceModels(dm)
+        await this.props.rDms(dm)
         this.setState({loading:false})
-        if(result.status===1){
-            const devicemodels=result.data
-            this.setState({
-                devicemodels:devicemodels
-            })
-        }else{
-            this.setState({
-                devicemodels:[]
-            })
-            message.error(result.msg)
-        }
-        const dresult=await rDeviceCategorys()
-        if(dresult.status===1){
-            const devicecategorys=dresult.data
-            this.initDevicecategoryNames(devicecategorys)
-            this.setState({
-                devicecategorys
-            })
-        }
+        this.setState({devicemodels:this.props.devicemodelReducer.data})
+
+        await this.props.rDcs()
+        const devicecategorys=this.props.devicecategoryReducer.data
+        this.initDevicecategoryNames(devicecategorys)
+        this.setState({devicecategorys})
     }
 
     showAdd=()=>{
@@ -110,10 +103,11 @@ export default class DeviceModel extends Component{
                 if(this.devicemodel){
                     devicemodel._id=this.devicemodel._id
                 }
-                const result=await couDeviceModel(devicemodel)
+                await this.props.couDm(devicemodel)
+                const result=this.props.devicemodelReducer
                 if(result.status===1){
-                    message.success('操作成功')
-                    this.getDeviceModels()
+                    message.success(result.msg)
+                    this.initDeviceModels()
                 }else{
                     message.error(result.msg)
                 }
@@ -130,10 +124,11 @@ export default class DeviceModel extends Component{
         Modal.confirm({
             title:'确认删除 '+devicemodel.name+' 吗？',
             onOk:async()=>{
-                const result=await dDeviceModel(devicemodel._id)
+                await this.props.dDm(devicemodel._id)
+                const result=this.props.devicemodelReducer
                 if(result.status===1){
-                    message.success('删除成功！')
-                    this.getDeviceModels()
+                    message.success(result.msg)
+                    this.initDeviceModels()
                 }
             }
         })
@@ -143,10 +138,10 @@ export default class DeviceModel extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getDeviceModels()
+        this.initDeviceModels()
     }
     render(){
-        const {devicemodels,devicecategorys,loading,isShowAdd,searchName,searchType}=this.state
+        const {devicecategorys,loading,isShowAdd,searchName,searchType}=this.state
         const devicemodel=this.devicemodel||{}
         const title=(
              <span>
@@ -170,7 +165,7 @@ export default class DeviceModel extends Component{
             placeholder="搜索关键字" 
             value={searchName} 
             onChange={event => this.setState({searchName:event.target.value})} 
-            onSearch={this.getDeviceModels}
+            onSearch={this.initDeviceModels}
             enterButton />
         </span>
         )
@@ -180,7 +175,7 @@ export default class DeviceModel extends Component{
                 bordered
                 rowKey='_id'
                 loading={loading}
-                dataSource={devicemodels}
+                dataSource={this.props.devicemodelReducer.data}
                 columns={this.columns}
                 pagination={{defaultPageSize:PAGE_SIZE}}
                 />
@@ -199,3 +194,25 @@ export default class DeviceModel extends Component{
         )
     }
 }
+DeviceModel.propTypes={
+    devicecategoryReducer:PropTypes.object.isRequired,
+    devicemodelReducer:PropTypes.object.isRequired,
+    rDcs:PropTypes.func.isRequired,
+    rDms:PropTypes.func.isRequired,
+    couDm:PropTypes.func.isRequired,
+    dDm:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        devicecategoryReducer:state.devicecategoryReducer,
+        devicemodelReducer:state.devicemodelReducer
+    }
+}
+
+const mapDispatchToProps = {rDcs,rDms,couDm,dDm}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(DeviceModel)

@@ -17,11 +17,16 @@ const Option=Select.Option
 const Item=Form.Item
 
 class SearchForm extends PureComponent{
-    state={
-        devicecategorys:[],
-        devicemodels:[],
-        installlocations:[]
+
+    constructor(props){
+        super(props)
+        this.state={
+            devicecategorys:[],
+            devicemodels:[],
+            installlocations:[]
+        }
     }
+
     static propTypes={
         setForm:PropTypes.func.isRequired
     }
@@ -38,7 +43,6 @@ class SearchForm extends PureComponent{
     getDM=async value =>{
         this.setState({devicemodels:[]})
         const result=await rDeviceModels({'devicecategory':value})
-        console.log(result.data)
         if(result.status===1){
             this.setState({devicemodels:result.data})
         }  

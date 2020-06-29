@@ -4,48 +4,34 @@
 异步action: 函数dispatch=>{}
 */
 import {
-    GET_TIMELINE,
-    COU_TIMELINE,
-    DEL_TIMELINE,
+    DISPLAY_ZLTS,
+    DISPLAY_TJTS,
 } from '../actiontypes'
 
 import {
-    rTimeLines,
-    couTimeLine,
-    dTimeLine,
+    getzlhists,
+    gettjxtts,
 } from '../../api'
 
 
-//获取时间轴
-const rTimeLinesAction = data =>({
-    type:GET_TIMELINE,
+//获取zlhis表空间使用情况
+const getzlhistsAction = data =>({
+    type:DISPLAY_ZLTS,
     data
 })
 export const rTls = () => async dispatch => {
-    const result = await rTimeLines()
+    const result = await getzlhists()
     if(result.status === 1){
-        dispatch(rTimeLinesAction(result.data))
+        dispatch(getzlhistsAction(result.data))
     }
   }
 
-//新增修改时间轴
-const couTimeLineAction = (msg,status) =>({
-    type:COU_TIMELINE,
-    msg,
-    status
+//获取体检系统表空间使用情况
+const gettjxttsAction = data =>({
+    type:DISPLAY_TJTS,
+    data
 })
-export const couTl = timeline => async dispatch=>{
-    const result=await couTimeLine(timeline)
-    dispatch(couTimeLineAction(result.msg,result.status))
-}
-
-//删除时间轴
-const dTimeLineAction = (msg,status) =>({
-    type:DEL_TIMELINE,
-    msg,
-    status
-})
-export const dTl = timelineId => async dispatch=>{
-    const result = await dTimeLine(timelineId)
-    dispatch(dTimeLineAction(result.msg,result.status))
+export const couTl = () => async dispatch=>{
+    const result=await gettjxtts()
+    dispatch(gettjxttsAction(result.data))
 }

@@ -1,24 +1,26 @@
 import React,{Component} from 'react';
 import {Card,Table,Button,Icon,message,Modal} from 'antd'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {
-    rInstallLocations,
-    couInstallLocation,
-    dInstallLocation
-} from '../../../../api'
+import {rIls,couIl,dIl} from '../../../../redux/actions/informationdevice-action'
 import AddForm from './addform'
 import {formateDate} from '../../../../utils/dateUtils'
 
-export default class InstallLocation extends Component{
+class InstallLocation extends Component{
 
-    state={
-        isShowAdd:false,
-        loading:false,
-        installlocations:[],  //所有安装地点,用于显示table数据
+    constructor(props){
+        super(props)
+        this.state={
+            isShowAdd:false,
+            loading:false,
+            installlocations:[],  //所有安装地点,用于显示table数据
+        }
     }
+
     initColums=()=>{
         this.columns=[
         {
@@ -42,16 +44,11 @@ export default class InstallLocation extends Component{
         }
         ]
     }
-    getInstallLocations=async ()=>{
+    initInstallLocations=async ()=>{
         this.setState({loading:true})
-        const result=await rInstallLocations()
+        await this.props.rIls()
         this.setState({loading:false})
-        if(result.status===1){
-            const installlocations=result.data
-            this.setState({
-                installlocations
-            })
-        }
+        this.setState({ installlocations:this.props.installlocationReducer.data })
     }
 
     showAdd=()=>{
@@ -69,10 +66,11 @@ export default class InstallLocation extends Component{
                 if(this.installlocation){
                     installlocation._id=this.installlocation._id
                 }
-                const result=await couInstallLocation(installlocation)
+                await this.props.couIl(installlocation)
+                const result=this.props.installlocationReducer
                 if(result.status===1){
-                    message.success('操作成功')
-                    this.getInstallLocations()
+                    message.success(result.msg)
+                    this.initInstallLocations()
                 }else{
                     message.error(result.msg)
                 }
@@ -89,10 +87,11 @@ export default class InstallLocation extends Component{
         Modal.confirm({
             title:'确认删除 '+installlocation.name+' 吗？',
             onOk:async()=>{
-                const result=await dInstallLocation(installlocation._id)
+                await this.props.dIl(installlocation._id)
+                const result=this.props.installlocationReducer
                 if(result.status===0){
-                    message.success('删除成功！')
-                    this.getInstallLocations()
+                    message.success(result.msg)
+                    this.initInstallLocations()
                 }
             }
         })
@@ -102,7 +101,7 @@ export default class InstallLocation extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getInstallLocations()
+        this.initInstallLocations()
     }
     render(){
         const {installlocations,loading,isShowAdd}=this.state
@@ -136,3 +135,23 @@ export default class InstallLocation extends Component{
         )
     }
 }
+
+InstallLocation.propTypes={
+    installlocationReducer:PropTypes.object.isRequired,
+    rIls:PropTypes.func.isRequired,
+    couIl:PropTypes.func.isRequired,
+    dIl:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        installlocationReducer:state.installlocationReducer
+    }
+}
+
+const mapDispatchToProps = {rIls,couIl,dIl}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(InstallLocation)

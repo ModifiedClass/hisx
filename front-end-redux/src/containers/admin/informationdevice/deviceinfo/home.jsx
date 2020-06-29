@@ -1,4 +1,6 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 import {
     Collapse,
     Card,
@@ -17,24 +19,28 @@ import PreviewBtn from '../../../../components/previewbtn'
 import SearchForm from './searchform'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rDeviceInfos,dDeviceInfo} from '../../../../api'
+import {rDis,couDi,dDi} from '../../../../redux/actions/informationdevice-action'
 import {deviceRunSystem} from '../../../../config/selectConfig'
 const { Panel } = Collapse
 
-export default class Home extends Component{
-    state={
-        deviceinfos:[],
-        total:0,
-        loading:false,
-        isShow:false,
-        devicecategory:'',  //搜素关键字
-        devicemodel:'',
-        installlocation:'',
-        runos:'',
-        name:'',
-        ip:'',
-        mac:'',
-        status:'',
+class Home extends Component{
+
+    constructor(props){
+        super(props)
+        this.state={
+            deviceinfos:[],
+            total:0,
+            loading:false,
+            isShow:false,
+            devicecategory:'',  //搜素关键字
+            devicemodel:'',
+            installlocation:'',
+            runos:'',
+            name:'',
+            ip:'',
+            mac:'',
+            status:'',
+        }
     }
     
     initColums=()=>{
@@ -142,7 +148,7 @@ export default class Home extends Component{
         ]
     }
     
-    getDeviceInfos= async(pageNum)=>{
+    initDeviceInfos= async(pageNum)=>{
         this.pageNum=pageNum
         const isPage=true
         this.setState({loading:true})
@@ -157,7 +163,7 @@ export default class Home extends Component{
             status,
             remarks
         }=this.state
-        let result=await rDeviceInfos({
+        await this.props.rDis({
             isPage,
             pageNum,
             pageSize:PAGE_SIZE,
@@ -171,15 +177,9 @@ export default class Home extends Component{
             status,
             remarks
         })
-        
         this.setState({loading:false})
-        if(result.status===1){
-            const {total,list}=result.data
-            this.setState({deviceinfos:list,total})
-        }else{
-            this.setState({deviceinfos:[],total:0})
-            message.error(result.msg)
-        }
+        const {total,list}=this.props.deviceinfoReducer.data
+        this.setState({deviceinfos:list,total})
     }
 
     showAdd=()=>{
@@ -200,10 +200,11 @@ export default class Home extends Component{
         Modal.confirm({
             title:'确认删除'+deviceinfo.name+'吗？',
             onOk:async()=>{
-                const result=await dDeviceInfo(deviceinfo._id)
+                await this.props.dDi(deviceinfo._id)
+                const result=this.props.deviceinfoReducer
                 if(result.status===1){
-                    message.success('删除成功！')
-                    this.getDeviceInfos(this.pageNum)
+                    message.success(result.msg)
+                    this.initDeviceInfos(this.pageNum)
                 }
             }
         })
@@ -219,17 +220,18 @@ export default class Home extends Component{
             mac:searchItem.mac,
             status:searchItem.status
         },()=>{  //解决setState延迟
-            this.getDeviceInfos(this.pageNum)
+            this.initDeviceInfos(this.pageNum)
         })
     }
 
     componentWillMount(){
         this.initColums()
     }
-    componentDidMount(){
-        this.getDeviceInfos(1)
-    }
     
+    componentDidMount(){
+        this.initDeviceInfos(1)
+    }
+
     render(){
         const {deviceinfos,total,loading}=this.state
         const title=<Button type='primary' onClick={()=>this.props.history.push('/deviceinfo/addorupdate')}><Icon type='unordered-list'/>新增</Button>
@@ -251,10 +253,30 @@ export default class Home extends Component{
                     defaultPageSize:PAGE_SIZE,
                     ShowQuickJumper:true,
                     total,
-                    onChange:this.getDeviceInfos //(pageNum)=>{this.getDeviceInfos(pageNum)}
+                    onChange:this.initDeviceInfos //(pageNum)=>{this.initDeviceInfos(pageNum)}
                     }}
                 />
             </Card>
         )
     }
 }
+
+Home.propTypes={
+    deviceinfoReducer:PropTypes.object.isRequired,
+    rDis:PropTypes.func.isRequired,
+    couDi:PropTypes.func.isRequired,
+    dDi:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        deviceinfoReducer:state.deviceinfoReducer
+    }
+}
+
+const mapDispatchToProps = {rDis,couDi,dDi}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home)

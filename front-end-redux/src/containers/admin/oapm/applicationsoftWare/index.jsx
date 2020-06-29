@@ -1,4 +1,6 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {Card,Table,Button,Icon,message,Modal,Tooltip} from 'antd'
 import EditBtn from '../../../../components/editbtn'
@@ -6,16 +8,22 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
 import {appFrameWork,dataBase} from '../../../../config/selectConfig'
-import {rApplicationSoftwares,rDeviceInfos,couApplicationSoftware,dApplicationSoftware} from '../../../../api'
+import {rAppss,couApps,dApps} from '../../../../redux/actions/oapm-action'
+import {rDis} from '../../../../redux/actions/informationdevice-action'
 import AddForm from './addform'
 
-export default class ApplicationSoftWare extends Component{
-    state={
-        applicationsoftwares:[],
-        deviceinfos:[],
-        loading:false,
-        isShow:false,
+class ApplicationSoftWare extends Component{
+
+    constructor(props){
+        super(props)
+        this.state={
+            applicationsoftwares:[],
+            deviceinfos:[],
+            loading:false,
+            isShow:false,
+        }
     }
+
     initColums=()=>{
         this.columns=[
         {
@@ -89,7 +97,7 @@ export default class ApplicationSoftWare extends Component{
         })
         return display
     }
-    initDeviceinfoNames=async(deviceinfos)=>{
+    initDeviceinfoNames=async deviceinfos =>{
         const DeviceinfoNames=deviceinfos? deviceinfos.reduce((pre,deviceinfo)=>{
             pre[deviceinfo._id]=deviceinfo.name
             return pre
@@ -97,21 +105,15 @@ export default class ApplicationSoftWare extends Component{
         this.DeviceinfoNames=DeviceinfoNames
     }
     
-    getApplicationSoftWares= async()=>{
+    initApplicationSoftWares= async()=>{
         this.setState({loading:true})
-        const result=await rApplicationSoftwares()
+        await this.props.rAppss()
         this.setState({loading:false})
-        if(result.status===1){
-            const applicationsoftwares=result.data
-            this.setState({applicationsoftwares})
-        }else{
-            message.error(result.msg)
-        }
-        const dis=await rDeviceInfos({'isPage':false})
-        if(dis.status===1){
-            this.initDeviceinfoNames(dis.data.list)
-            this.setState({deviceinfos:dis.data.list})
-        }
+        this.setState({applicationsoftwares:this.props.applicationSoftwareReducer.data})
+        await this.props.rDis({'isPage':false})
+        const dis=this.props.deviceinfoReducer.data.list
+        this.initDeviceinfoNames(dis)
+        this.setState({deviceinfos:dis})
     }
 
     showAdd=()=>{
@@ -133,10 +135,11 @@ export default class ApplicationSoftWare extends Component{
                 if(this.applicationsoftware){
                     applicationsoftware._id=this.applicationsoftware._id
                 }
-                const result=await couApplicationSoftware(applicationsoftware)
+                await this.props.couApps(applicationsoftware)
+                const result=this.props.applicationSoftwareReducer
                 if(result.status===1){
-                    message.success('操作成功')
-                    this.getApplicationSoftWares()
+                    message.success(result.msg)
+                    this.initApplicationSoftWares()
                 }else{
                     message.error(result.msg)
                 }
@@ -149,10 +152,11 @@ export default class ApplicationSoftWare extends Component{
         Modal.confirm({
             title:'确认删除'+applicationsoftware.name+'吗？',
             onOk:async()=>{
-                const result=await dApplicationSoftware(applicationsoftware._id)
+                await this.props.dApps(applicationsoftware._id)
+                const result=this.props.applicationSoftwareReducer
                 if(result.status===1){
-                    message.success('删除成功！')
-                    this.getApplicationSoftWares()
+                    message.success(result.msg)
+                    this.initApplicationSoftWares()
                 }
             }
         })
@@ -162,7 +166,7 @@ export default class ApplicationSoftWare extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getApplicationSoftWares()
+        this.initApplicationSoftWares()
     }
     render(){
         const {applicationsoftwares,loading,isShow,deviceinfos}=this.state
@@ -198,3 +202,26 @@ export default class ApplicationSoftWare extends Component{
         )
     }
 }
+
+ApplicationSoftWare.propTypes={
+    applicationSoftwareReducer:PropTypes.object.isRequired,
+    deviceinfoReducer:PropTypes.object.isRequired,
+    rAppss:PropTypes.func.isRequired,
+    couApps:PropTypes.func.isRequired,
+    dApps:PropTypes.func.isRequired,
+    rDis:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        applicationSoftwareReducer:state.applicationSoftwareReducer,
+        deviceinfoReducer:state.deviceinfoReducer
+    }
+}
+
+const mapDispatchToProps = {rAppss,couApps,dApps,rDis}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ApplicationSoftWare)

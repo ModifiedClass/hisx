@@ -1,28 +1,20 @@
 import {
-    GET_TIMELINE,
-    COU_TIMELINE,
-    DEL_TIMELINE,
+    DISPLAY_ZLTS,
+    DISPLAY_TJTS,
 } from '../actiontypes'
 
 //管理时间轴
-export const timelineReducer=(state={},action)=>{
+export const toolsReducer=(state={},action)=>{
     switch(action.type){
-        case GET_TIMELINE:
+        case DISPLAY_ZLTS:
             return {
                 ...state,
                 data:action.data
             }
-        case COU_TIMELINE:
+        case DISPLAY_TJTS:
             return {
                 ...state,
-                msg:action.msg,
-                status:action.status
-            }
-        case DEL_TIMELINE:
-            return {
-                ...state,
-                msg:action.msg,
-                status:action.status
+                data:action.data
             }
         default:
             return state

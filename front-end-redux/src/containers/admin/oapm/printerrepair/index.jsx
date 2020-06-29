@@ -1,4 +1,6 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {Card,Table,Button,Icon,message,Modal,Tag} from 'antd'
 import EditBtn from '../../../../components/editbtn'
@@ -6,23 +8,26 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate,shortDate} from '../../../../utils/dateUtils'
 import {PAGE_SIZE} from '../../../../utils/constants'
 import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
-import {rPrinterRepairs,couPrinterRepair,dPrinterRepair,rePrinterRepair,rUsers,rDeviceInfos,rGroups} from '../../../../api'
+import {rPrps,couPrp,dPrp,rePrp} from '../../../../redux/actions/oapm-action'
+import {rUs,rGro} from '../../../../redux/actions/account-action'
+import {rDis} from '../../../../redux/actions/informationdevice-action'
 import AddForm from './addform'
 import ReviewForm from './reviewform'
 
-export default class PrinterRepair extends Component{
+class PrinterRepair extends Component{
     constructor(props){
         super(props)
         this.rev=React.createRef()
+        this.state={
+            printerrepairs:[],
+            loading:false,
+            isShow:false,
+            reviewShow:false,
+            users:[],
+            deviceinfos:[]
+        }
     }
-    state={
-        printerrepairs:[],
-        loading:false,
-        isShow:false,
-        reviewShow:false,
-        users:[],
-        deviceinfos:[]
-    }
+    
     initColums=()=>{
         this.columns=[
         {
@@ -86,7 +91,8 @@ export default class PrinterRepair extends Component{
     //初始化table设备类别/型号/sn列显示
     initDeviceinfos=async()=>{
         this.setState({deviceinfos:[]})
-        const result=await rDeviceInfos({'isPage':false})
+        await this.props.rDis({'isPage':false})
+        const result=this.props.deviceinfoReducer
         const list=[]
         if(result.status===1){
            const obj=result.data.list
@@ -98,10 +104,12 @@ export default class PrinterRepair extends Component{
     }
     //初始化用户用于传子控件
     initUsers=async()=>{
-        const gs=await rGroups({'name':'信息科'})
+        await this.props.rGro({'name':'信息科'})
+        const gs=this.props.groupReducer
         if(gs.status===1){
             const g=gs.data[0]._id
-            const result=await rUsers({'group':g})
+            await this.props.rUs({'group':g})
+            const result=this.props.userReducer
             if(result.status===1){
                 const users=result.data
                 this.setState({users})            
@@ -109,16 +117,11 @@ export default class PrinterRepair extends Component{
         }
     }
     
-    getPrinterRepairs= async()=>{
+    initPrinterRepairs= async()=>{
         this.setState({loading:true})
-        const result=await rPrinterRepairs()
+        await this.props.rPrps()
         this.setState({loading:false})
-        if(result.status===1){
-            const printerrepairs=result.data
-            this.setState({printerrepairs})
-        }else{
-            message.error(result.msg)
-        }
+        this.setState({printerrepairs:this.props.printerRepairReducer.data})
     }
 
     showAdd=()=>{
@@ -145,10 +148,11 @@ export default class PrinterRepair extends Component{
                 if(this.printerrepair){
                     printerrepair._id=this.printerrepair._id
                 }
-                const result=await couPrinterRepair(printerrepair)
+                await this.props.couPrp(printerrepair)
+                const result=this.props.rePrinterRepair
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getPrinterRepairs()
+                    this.initPrinterRepairs()
                 }else{
                     message.error(result.msg)
                 }   
@@ -161,10 +165,11 @@ export default class PrinterRepair extends Component{
         Modal.confirm({
             title:'确认删除'+printerrepair.name+'吗？',
             onOk:async()=>{
-                const result=await dPrinterRepair(printerrepair._id)
+                await this.props.dPrp(printerrepair._id)
+                const result=this.props.printerRepairReducer
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getPrinterRepairs()
+                    this.initPrinterRepairs()
                 }
             }
         })
@@ -173,10 +178,11 @@ export default class PrinterRepair extends Component{
     reviewPrinterRepair=async()=>{
         this.setState({reviewShow:false})
         const handler=this.rev.current.gethandler()
-        const result=await rePrinterRepair(handler)
+        await this.props.rePrp(handler)
+        const result=this.props.printerRepairReducer
         if(result.status===1){
             message.success(result.msg)
-            this.getPrinterRepairs()
+            this.initPrinterRepairs()
         }else{
             message.error(result.msg)
         }
@@ -187,7 +193,7 @@ export default class PrinterRepair extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getPrinterRepairs()
+        this.initPrinterRepairs()
         this.initUsers()
     }
     render(){
@@ -240,3 +246,32 @@ export default class PrinterRepair extends Component{
         )
     }
 }
+
+PrinterRepair.propTypes={
+    userReducer:PropTypes.object.isRequired,
+    groupReducer:PropTypes.object.isRequired,
+    printerRepairReducer:PropTypes.object.isRequired,
+    rPrps:PropTypes.func.isRequired,
+    couPrp:PropTypes.func.isRequired,
+    dPrp:PropTypes.func.isRequired,
+    rDis:PropTypes.func.isRequired,
+    rUs:PropTypes.func.isRequired,
+    rGro:PropTypes.func.isRequired,
+    rePrp:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        userReducer:state.userReducer,
+        groupReducer:state.groupReducer,
+        printerRepairReducer:state.printerRepairReducer,
+        deviceinfoReducer:state.deviceinfoReducer
+    }
+}
+
+const mapDispatchToProps = {rPrps,couPrp,dPrp,rDis,rUs,rGro,rePrp}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(PrinterRepair)

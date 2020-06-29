@@ -4,48 +4,48 @@
 异步action: 函数dispatch=>{}
 */
 import {
-    GET_TIMELINE,
-    COU_TIMELINE,
-    DEL_TIMELINE,
+    BACKUP_DATA,
+    CLEAR_ACCLOG,
+    CLEAR_ERRLOG,
 } from '../actiontypes'
 
 import {
-    rTimeLines,
-    couTimeLine,
-    dTimeLine,
+    delovertimesession,
+    database_backup,
+    clear_nginxlog,
 } from '../../api'
 
 
-//获取时间轴
-const rTimeLinesAction = data =>({
-    type:GET_TIMELINE,
+//清理session
+const delovertimesessionAction = data =>({
+    type:BACKUP_DATA,
     data
 })
-export const rTls = () => async dispatch => {
-    const result = await rTimeLines()
+export const dots = () => async dispatch => {
+    const result = await delovertimesession()
     if(result.status === 1){
-        dispatch(rTimeLinesAction(result.data))
+        dispatch(delovertimesessionAction(result.data))
     }
   }
 
-//新增修改时间轴
-const couTimeLineAction = (msg,status) =>({
-    type:COU_TIMELINE,
+//备份
+const databasebackupAction = (msg,status) =>({
+    type:CLEAR_ACCLOG,
     msg,
     status
 })
-export const couTl = timeline => async dispatch=>{
-    const result=await couTimeLine(timeline)
-    dispatch(couTimeLineAction(result.msg,result.status))
+export const dbb = path => async dispatch=>{
+    const result=await database_backup(path)
+    dispatch(databasebackupAction(result.msg,result.status))
 }
 
-//删除时间轴
-const dTimeLineAction = (msg,status) =>({
-    type:DEL_TIMELINE,
+//清理日志
+const clearnginxlogAction = (msg,status) =>({
+    type:CLEAR_ERRLOG,
     msg,
     status
 })
-export const dTl = timelineId => async dispatch=>{
-    const result = await dTimeLine(timelineId)
-    dispatch(dTimeLineAction(result.msg,result.status))
+export const cnl = path => async dispatch=>{
+    const result = await clear_nginxlog(path)
+    dispatch(clearnginxlogAction(result.msg,result.status))
 }

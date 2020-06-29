@@ -82,6 +82,8 @@ export const COU_PROCESSEDRECORD='cou_processedrecord'
 export const DEL_PROCESSEDRECORD='del_processedrecord'
 //导出处理记录excel
 export const EXPORT_PROCESSEDRECORD_EXCEL='export_processedrecord_excel'
+//上传图片
+export const UPLOAD_IMG='upload_img'
 //获取设备维修
 export const GET_PRINTERREPAIR='get_printerrepair'
 //新增修改设备维修
@@ -98,6 +100,7 @@ export const COU_CARTRIDAY='cou_cartriday'
 export const DEL_CARTRIDAY='del_cartriday'
 //审核硒鼓加粉
 export const REVIEWED_CARTRIDAY='reviewed_cartriday'
+
 /**informationdevice**/
 //获取设备类别
 export const GET_DEVICECATEGORY='get_devicecategory'
@@ -123,6 +126,7 @@ export const GET_DEVICEINFO='get_deviceinfo'
 export const COU_DEVICEINFO='cou_deviceinfo'
 //删除设备信息
 export const DEL_DEVICEINFO='del_deviceinfo'
+
 /**setting**/
 //备份数据
 export const BACKUP_DATA='backup_data'
@@ -130,11 +134,13 @@ export const BACKUP_DATA='backup_data'
 export const CLEAR_ACCLOG='clear_acclog'
 //清除错误日志
 export const CLEAR_ERRLOG='clear_errlog'
+
 /**tools**/
 //查看中联表空间
 export const DISPLAY_ZLTS='display_zlts'
 //查看体检系统表空间
 export const DISPLAY_TJTS='display_tjts'
+
 /**bms**/
 //获取图书类别
 export const GET_BOOKCATEGORY='get_bookcategory'
@@ -151,9 +157,9 @@ export const DEL_BOOK='del_book'
 //获取图书库存
 export const GET_BOOKSTOCK='get_bookstock'
 //新增修改图书库存
-export const COU__BOOKSTOCK='cou_bookstock'
+export const COU_BOOKSTOCK='cou_bookstock'
 //删除图书库存
-export const DEL__BOOKSTOCK='del_bookstock'
+export const DEL_BOOKSTOCK='del_bookstock'
 //获取借阅记录
 export const GET_BORROWRECORD='get_borrowrecord'
 //新增修改借阅记录

@@ -1,4 +1,6 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {Card,Table,Button,Icon,message,Modal,Tag} from 'antd'
 import EditBtn from '../../../../components/editbtn'
@@ -6,23 +8,25 @@ import DeleteBtn from '../../../../components/deletebtn'
 import {formateDate,shortDate} from '../../../../utils/dateUtils'
 import {BASE_GREEN,BASE_YELLOW} from '../../../../utils/colors'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rCartridays,couCartriday,dCartriday,reCartriday,rUsers,rGroups} from '../../../../api'
+import {rCds,couCd,dCd,reCd} from '../../../../redux/actions/oapm-action'
+import {rUs,rGro} from '../../../../redux/actions/account-action'
 
 import AddForm from './addform'
 import ReviewForm from './reviewform'
 
-export default class Cartriday extends Component{
+class Cartriday extends Component{
     constructor(props){
         super(props)
         this.rev=React.createRef()
+        this.state={
+            cartridays:[],
+            loading:false,
+            isShow:false,
+            reviewShow:false,
+            users:[]
+        }
     }
-    state={
-        cartridays:[],
-        loading:false,
-        isShow:false,
-        reviewShow:false,
-        users:[]
-    }
+    
     initColums=()=>{
         this.columns=[
         {
@@ -77,10 +81,12 @@ export default class Cartriday extends Component{
     }
     
     initUsers=async()=>{
-        const gs=await rGroups({'name':'信息科'})
+        await this.props.rGro({'name':'信息科'})
+        const gs=this.props.groupReducer
         if(gs.status===1){
             const g=gs.data[0]._id
-            const result=await rUsers({'group':g})
+            await this.props.rUs({'group':g})
+            const result=this.props.userReducer
             if(result.status===1){
                 const users=result.data
                 this.setState({users})            
@@ -88,16 +94,11 @@ export default class Cartriday extends Component{
         }
     }
     
-    getCartridays= async()=>{
+    initCartridays= async()=>{
         this.setState({loading:true})
-        const result=await rCartridays()
+        await this.props.rCds()
         this.setState({loading:false})
-        if(result.status===1){
-            const cartridays=result.data
-            this.setState({cartridays})
-        }else{
-            message.error(result.msg)
-        }
+        this.setState({cartridays:this.props.cartridayReducer.data})
     }
 
     showAdd=()=>{
@@ -124,10 +125,11 @@ export default class Cartriday extends Component{
                 if(this.cartriday){
                     cartriday._id=this.cartriday._id
                 }
-                const result=await couCartriday(cartriday)
+                await this.props.couCd(cartriday)
+                const result=this.props.cartridayReducer
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getCartridays()
+                    this.initCartridays()
                 }else{
                     message.error(result.msg)
                 }
@@ -140,10 +142,11 @@ export default class Cartriday extends Component{
         Modal.confirm({
             title:'确认删除'+cartriday.name+'吗？',
             onOk:async()=>{
-                const result=await dCartriday(cartriday._id)
+                await this.props.dCd(cartriday._id)
+                const result=this.props.cartridayReducer
                 if(result.status===1){
                     message.success(result.msg)
-                    this.getCartridays()
+                    this.initCartridays()
                 }
             }
         })
@@ -152,10 +155,11 @@ export default class Cartriday extends Component{
     reviewCartriday=async()=>{
         this.setState({reviewShow:false})
         const _handler=this.rev.current.gethandler()
-        const result=await reCartriday(_handler)
+        await this.props.reCd(_handler)
+        const result=this.props.cartridayReducer
         if(result.status===1){
             message.success(result.msg)
-            this.getCartridays()
+            this.initCartridays()
         }else{
             message.error(result.msg)
         }
@@ -165,7 +169,7 @@ export default class Cartriday extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getCartridays()
+        this.initCartridays()
         this.initUsers()
     }
     render(){
@@ -218,3 +222,30 @@ export default class Cartriday extends Component{
         )
     }
 }
+
+Cartriday.propTypes={
+    userReducer:PropTypes.object.isRequired,
+    groupReducer:PropTypes.object.isRequired,
+    cartridayReducer:PropTypes.object.isRequired,
+    rCds:PropTypes.func.isRequired,
+    couCd:PropTypes.func.isRequired,
+    dCd:PropTypes.func.isRequired,
+    reCd:PropTypes.func.isRequired,
+    rUs:PropTypes.func.isRequired,
+    rGro:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        userReducer:state.userReducer,
+        groupReducer:state.groupReducer,
+        cartridayReducer:state.cartridayReducer,
+    }
+}
+
+const mapDispatchToProps = {rCds,couCd,dCd,reCd,rUs,rGro}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Cartriday)

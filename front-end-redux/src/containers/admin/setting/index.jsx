@@ -1,11 +1,9 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
 
 import {Form,Card,Button,Icon,message} from 'antd'
-import {
-    //delovertimesession,
-    database_backup,
-    clear_nginxlog
-} from '../../../api'
+import {dbb,cnl} from '../../../redux/actions/setting-action'
 import {
     ACCESS_LOG_PATH,
     ERROR_LOG_PATH,
@@ -14,7 +12,7 @@ import {
 
 const Item=Form.Item
 
-export default class Setting extends Component{
+class Setting extends Component{
     
     /*clearSession=async()=>{
         const result=await delovertimesession()
@@ -22,17 +20,20 @@ export default class Setting extends Component{
     }*/
     
     dbBackup=async()=>{
-        const result=await database_backup(DB_BACKUP_PATH)
+        await this.props.dbb(DB_BACKUP_PATH)
+        const result=this.props.settingReducer
         message.success(result.msg)
     }
     
     clearAccessLog=async()=>{
-        const result=await clear_nginxlog(ACCESS_LOG_PATH)
+        await this.props.cnl(ACCESS_LOG_PATH)
+        const result=this.props.settingReducer
         message.success(result.msg)
     }
     
     clearErrorLog=async()=>{
-        const result=await clear_nginxlog(ERROR_LOG_PATH)
+        await this.props.cnl(ERROR_LOG_PATH)
+        const result=this.props.settingReducer
         message.success(result.msg)
     }
     
@@ -56,3 +57,22 @@ export default class Setting extends Component{
         )
     }
 }
+
+Setting.propTypes={
+    settingReducer:PropTypes.object.isRequired,
+    dbb:PropTypes.func.isRequired,
+    cnl:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        settingReducer:state.settingReducer,
+    }
+}
+
+const mapDispatchToProps = {dbb,cnl}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Setting)

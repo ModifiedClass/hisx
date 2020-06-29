@@ -1,20 +1,27 @@
 import React,{Component} from 'react';
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types'
+
 import {Card,Table,Button,Icon,message,Modal} from 'antd'
 
 import EditBtn from '../../../../components/editbtn'
 import DeleteBtn from '../../../../components/deletebtn'
 import {PAGE_SIZE} from '../../../../utils/constants'
-import {rDeviceCategorys,couDeviceCategory,dDeviceCategory} from '../../../../api'
+import {rDcs,couDc,dDc} from '../../../../redux/actions/informationdevice-action'
 import AddForm from './addform'
 import {formateDate} from '../../../../utils/dateUtils'
 
-export default class DeviceCategory extends Component{
-
-    state={
-        isShowAdd:false,
-        loading:false,
-        devicecategorys:[],  //所有类别,用于显示table数据
+class DeviceCategory extends Component{
+    
+    constructor(props){
+        super(props)
+        this.state={
+            isShowAdd:false,
+            loading:false,
+            devicecategorys:[],  //所有类别,用于显示table数据
+        }
     }
+
     initColums=()=>{
         this.columns=[
         {
@@ -41,16 +48,11 @@ export default class DeviceCategory extends Component{
         }
         ]
     }
-    getDeviceCategorys=async ()=>{
+    initDeviceCategorys=async ()=>{
         this.setState({loading:true})
-        const result=await rDeviceCategorys()
+        await this.props.rDcs()
         this.setState({loading:false})
-        if(result.status===1){
-            const devicecategorys=result.data
-            this.setState({
-                devicecategorys:devicecategorys
-            })
-        }
+        this.setState({devicecategorys:this.props.devicecategoryReducer.data})
     }
 
     showAdd=()=>{
@@ -68,10 +70,11 @@ export default class DeviceCategory extends Component{
                 if(this.devicecategory){
                     devicecategory._id=this.devicecategory._id
                 }
-                const result=await couDeviceCategory(devicecategory)
+                await this.props.couDc(devicecategory)
+                const result=this.props.devicecategoryReducer
                 if(result.status===1){
-                    message.success('操作成功')
-                    this.getDeviceCategorys()
+                    message.success(result.msg)
+                    this.initDeviceCategorys()
                 }else{
                     message.error(result.msg)
                 }
@@ -88,10 +91,11 @@ export default class DeviceCategory extends Component{
         Modal.confirm({
             title:'确认删除 '+devicecategory.name+' 吗？',
             onOk:async()=>{
-                const result=await dDeviceCategory(devicecategory._id)
+                await this.props.dDc(devicecategory._id)
+                const result=this.props.devicecategoryReducer
                 if(result.status===1){
-                    message.success('删除成功！')
-                    this.getDeviceCategorys()
+                    message.success(result.msg)
+                    this.initDeviceCategorys()
                 }
             }
         })
@@ -101,10 +105,10 @@ export default class DeviceCategory extends Component{
         this.initColums()
     }
     componentDidMount(){
-        this.getDeviceCategorys()
+        this.initDeviceCategorys()
     }
     render(){
-        const {devicecategorys,loading,isShowAdd}=this.state
+        const {loading,isShowAdd}=this.state
         const devicecategory=this.devicecategory||{}
         const title=(
              <span>
@@ -116,7 +120,7 @@ export default class DeviceCategory extends Component{
                 bordered
                 rowKey='_id'
                 loading={loading}
-                dataSource={devicecategorys}
+                dataSource={this.props.devicecategoryReducer.data}
                 columns={this.columns}
                 pagination={{defaultPageSize:PAGE_SIZE}}
                 />
@@ -135,3 +139,23 @@ export default class DeviceCategory extends Component{
         )
     }
 }
+
+DeviceCategory.propTypes={
+    devicecategoryReducer:PropTypes.object.isRequired,
+    rDcs:PropTypes.func.isRequired,
+    couDc:PropTypes.func.isRequired,
+    dDc:PropTypes.func.isRequired,
+}
+
+const mapStateToProps = state => {
+    return {
+        devicecategoryReducer:state.devicecategoryReducer
+    }
+}
+
+const mapDispatchToProps = {rDcs,couDc,dDc}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(DeviceCategory)
