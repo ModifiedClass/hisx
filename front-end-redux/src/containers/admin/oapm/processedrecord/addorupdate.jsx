@@ -1,11 +1,13 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
 
 import {Card,Form,Input,Select,Button,Icon,DatePicker,message} from 'antd'
 import BackBtn from '../../../../components/backbtn'
 import PicsWall from './picswall'
 import RichTextEditor from './richtexteditor'
 
-import {couProcessedRecord,rDepartments,rProblemCategorys,rUsers} from '../../../../api'
+import {rPrs,couPr,rPcs} from '../../../../redux/actions/oapm-action'
+import {rDeps,rUs} from '../../../../redux/actions/account-action'
 import {shortDate} from '../../../../utils/dateUtils'
 import {problemState,processingMode} from '../../../../config/selectConfig'
 import moment from 'moment'
@@ -30,46 +32,31 @@ class AddOrUpdate extends Component{
         this.editor=React.createRef()
     }
     
-    getProblemCategorys=async ()=>{
-        const result=await rProblemCategorys()
-        if(result.status===1){
-            const problemcategorys=result.data
-            this.setState({problemcategorys})            
-        }
-        
+    initProblemCategorys=async ()=>{
+        await this.props.rPcs()
+        const result=this.props.problemCategoryReducer
+        const problemcategorys=result.data
+        this.setState({problemcategorys}) 
     }
     
     handleSearchDepartments=async value =>{
         if(value){
-            const result1=await rDepartments({'code':value})
-            const result2=await rDepartments({'name':value})
-            if(result1.status===1){
-                const departments=result1.data
-                this.setState({departments})            
-            }else if(result2.status===1){
-                const departments=result2.data
-                this.setState({departments})            
-            }else{
-                this.setState({departments:[]})
-            }
+            await this.props.rDeps({'code':value})
+            const result=this.props.departmentReducer
+            const departments=result.data
+            this.setState({departments})            
         }else{
             this.setState({departments:[]})
         }
+        
     }
     
     handleSearchUsers=async value =>{
         if(value){
-            const result1=await rUsers({'username':value})
-            const result2=await rUsers({'name':value})
-            if(result1.status===1){
-                const users=result1.data
-                this.setState({users})            
-            }else if(result2.status===1){
-                const users=result2.data
-                this.setState({users}) 
-            }else{
-                this.setState({users:[]}) 
-            }
+            await this.props.rUs({'name':value})
+            const result=this.props.userReducer
+            const users=result.data
+            this.setState({users})            
         }else{
             this.setState({users:[]})
         }
@@ -111,7 +98,8 @@ class AddOrUpdate extends Component{
                 if(this.isUpdate){
                     processedrecord._id=this.processedrecord._id
                 }
-                const result=await couProcessedRecord(processedrecord)
+                await this.props.couPr(processedrecord)
+                const result=this.props.processedRecordReducer
                 if(result.status===1){
                     message.success(result.msg)
                     this.props.history.goBack()
@@ -123,7 +111,7 @@ class AddOrUpdate extends Component{
     }
     
     componentWillMount(){
-        this.getProblemCategorys()
+        this.initProblemCategorys()
         
         const processedrecord=this.props.location.state
         this.isUpdate=!!processedrecord
@@ -324,4 +312,18 @@ class AddOrUpdate extends Component{
         )
     }
 }
-export default Form.create()(AddOrUpdate)
+const mapStateToProps = state => {
+    return {
+        processedRecordReducer:state.processedRecordReducer,
+        departmentReducer:state.departmentReducer,
+        userReducer:state.userReducer,
+        problemCategoryReducer:state.problemCategoryReducer
+    }
+}
+
+const mapDispatchToProps = {rPrs,couPr,rPcs,rDeps,rUs}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Form.create()(AddOrUpdate))

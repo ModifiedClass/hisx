@@ -53,8 +53,8 @@ const rApplicationSoftwaresAction = data =>({
     type:GET_APPWARE,
     data
 })
-export const rAppss = () => async dispatch => {
-    const result = await rApplicationSoftwares()
+export const rAppss = applicationsoftware => async dispatch => {
+    const result = await rApplicationSoftwares(applicationsoftware)
     if(result.status === 1){
         dispatch(rApplicationSoftwaresAction(result.data))
     }
@@ -85,8 +85,8 @@ const rProblemCategorysAction = data =>({
     type:GET_PROBLEMCATEGORY,
     data
 })
-export const rPcs = () => async dispatch => {
-    const result = await rProblemCategorys()
+export const rPcs = problemcategory => async dispatch => {
+    const result = await rProblemCategorys(problemcategory)
     if(result.status === 1){
         dispatch(rProblemCategorysAction(result.data))
     }
@@ -116,8 +116,8 @@ const rProcessedRecordsAction = data =>({
     type:GET_PROCESSEDRECORD,
     data
 })
-export const rPrs = () => async dispatch => {
-    const result = await rProcessedRecords()
+export const rPrs = processedrecord => async dispatch => {
+    const result = await rProcessedRecords(processedrecord)
     if(result.status === 1){
         dispatch(rProcessedRecordsAction(result.data))
     }
@@ -168,8 +168,8 @@ const rPrinterRepairsAction = data =>({
     type:GET_PRINTERREPAIR,
     data
 })
-export const rPrps = () => async dispatch => {
-    const result = await rPrinterRepairs()
+export const rPrps = printerrepair => async dispatch => {
+    const result = await rPrinterRepairs(printerrepair)
     if(result.status === 1){
         dispatch(rPrinterRepairsAction(result.data))
     }
@@ -209,8 +209,8 @@ const rCartridaysAction = data =>({
     type:GET_CARTRIDAY,
     data
 })
-export const rCds = () => async dispatch => {
-    const result = await rCartridays()
+export const rCds = cartridday => async dispatch => {
+    const result = await rCartridays(cartridday)
     if(result.status === 1){
         dispatch(rCartridaysAction(result.data))
     }

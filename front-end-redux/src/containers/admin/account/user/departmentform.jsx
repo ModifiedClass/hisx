@@ -20,7 +20,7 @@ export default class DepartmentForm extends Component{
     }
     static propTypes={
         user:PropTypes.object,
-        initDepartment:PropTypes.object
+        initDepartment:PropTypes.array
     }
 
     //为父组件提供选中节点

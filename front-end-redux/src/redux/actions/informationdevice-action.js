@@ -39,8 +39,8 @@ const rDeviceCategorysAction = data =>({
     type:GET_DEVICECATEGORY,
     data
 })
-export const rDcs = () => async dispatch => {
-    const result = await rDeviceCategorys()
+export const rDcs = devicecategory => async dispatch => {
+    const result = await rDeviceCategorys(devicecategory)
     if(result.status === 1){
         dispatch(rDeviceCategorysAction(result.data))
     }
@@ -73,8 +73,8 @@ const rDeviceModelsAction = data =>({
     type:GET_DEVICEMODEL,
     data
 })
-export const rDms = () => async dispatch => {
-    const result = await rDeviceModels()
+export const rDms = devicemodel => async dispatch => {
+    const result = await rDeviceModels(devicemodel)
     if(result.status === 1){
         dispatch(rDeviceModelsAction(result.data))
     }
@@ -107,8 +107,8 @@ const rInstallLocationsAction = data =>({
     type:GET_INSTALLLOCATION,
     data
 })
-export const rIls = () => async dispatch => {
-    const result = await rInstallLocations()
+export const rIls = installlocation => async dispatch => {
+    const result = await rInstallLocations(installlocation)
     if(result.status === 1){
         dispatch(rInstallLocationsAction(result.data))
     }
@@ -141,8 +141,8 @@ const rDeviceInfoAction = data =>({
     type:GET_DEVICEINFO,
     data
 })
-export const rDis = () => async dispatch => {
-    const result = await rDeviceInfos()
+export const rDis = deviceinfo => async dispatch => {
+    const result = await rDeviceInfos(deviceinfo)
     if(result.status === 1){
         dispatch(rDeviceInfoAction(result.data))
     }

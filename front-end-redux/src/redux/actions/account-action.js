@@ -36,10 +36,10 @@ import {
 import {ptoc} from '../../utils/departmentUtils'
 
 //设置面包屑同步action
-export const setBreadCrum=(breadCrum)=>({type:SET_BREAD_CRUM,data:breadCrum})
+export const setBreadCrum= breadCrum =>({type:SET_BREAD_CRUM,data:breadCrum})
 
 //接收用户同步action
-export const receiveUser=(user)=>({type:RECEIVE_USER,data:user})
+export const receiveUser= user =>({type:RECEIVE_USER,data:user})
 //登录
 
 export const login=(username,password)=>{
@@ -83,8 +83,8 @@ const rDepartmentsAction = data =>({
     type:GET_DEPARTMENT,
     data
 })
-export const rDeps = () => async dispatch => {
-    const result = await rDepartments()
+export const rDeps = department => async dispatch => {
+    const result = await rDepartments(department)
     if(result.status === 1){
         const data = ptoc(result.data)
         dispatch(rDepartmentsAction(data))
@@ -118,8 +118,8 @@ const rGroupsAction = data =>({
     type:GET_GROUP,
     data
 })
-export const rGro = () => async dispatch => {
-    const result = await rGroups()
+export const rGro = group => async dispatch => {
+    const result = await rGroups(group)
     if(result.status === 1){
         const data = result.data
         dispatch(rGroupsAction(data))
@@ -153,8 +153,8 @@ const rUserAction = data =>({
     type:GET_USER,
     data
 })
-export const rUs = () => async dispatch => {
-    const result = await rUsers()
+export const rUs = user => async dispatch => {
+    const result = await rUsers(user)
     if(result.status === 1){
         const data = result.data
         dispatch(rUserAction(data))

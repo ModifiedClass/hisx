@@ -1,11 +1,12 @@
-import React,{Component} from 'react';
+import React,{Component} from 'react'
+import {connect} from 'react-redux'
 
 import {Card,Form,Input,Select,Button,Icon,DatePicker,message} from 'antd'
 import BackBtn from '../../../../components/backbtn'
 
 import {shortDate} from '../../../../utils/dateUtils'
 import {deviceRunSystem,deviceStatus} from '../../../../config/selectConfig'
-import {rDeviceCategorys,rDeviceModels,rInstallLocations,rDeviceInfos,couDeviceInfo} from '../../../../api'
+import {rDcs,rDms,rIls,rDis,couDi} from '../../../../redux/actions/informationdevice-action'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
@@ -26,27 +27,23 @@ class AddOrUpdate extends Component{
 
     getDM=async value =>{
         this.setState({devicemodels:[]})
-        const result=await rDeviceModels({'devicecategory':value})
-        if(result.status===1){
-            this.setState({devicemodels:result.data})
-        }  
+        await this.props.rDms({'devicecategory':value})
+        const result=this.props.devicemodelReducer
+        this.setState({devicemodels:result.data})
     }
     
     initSelect=async()=>{
-        const devicecategorys=await rDeviceCategorys()
-        if(devicecategorys.status===1){
-            this.setState({devicecategorys:devicecategorys.data})
-        }
+        await this.props.rDcs()
+        const devicecategorys=this.props.devicecategoryReducer
+        this.setState({devicecategorys:devicecategorys.data})
         
-        const installlocations=await rInstallLocations()
-        if(installlocations.status===1){
-            this.setState({installlocations:installlocations.data})
-        }
+        await this.props.rIls()
+        const installlocations=this.props.installlocationReducer
+        this.setState({installlocations:installlocations.data})
         
-        const deviceinfos=await rDeviceInfos({'isPage':false})
-        if(deviceinfos.status===1){
-            this.setState({parents:deviceinfos.data.list})            
-        }
+        await this.props.rDis({'isPage':false})
+        const deviceinfos=this.props.deviceinfoReducer
+        this.setState({parents:deviceinfos.data.list})            
     }
     
 
@@ -57,7 +54,8 @@ class AddOrUpdate extends Component{
                 if(this.deviceinfo.deviceinfo){
                     deviceinfo._id=this.deviceinfo.deviceinfo._id
                 }
-                const result=await couDeviceInfo(deviceinfo)
+                await this.props.couDi(deviceinfo)
+                const result=this.props.deviceinfoReducer
                 if(result.status===1){
                     message.success(result.msg)
                     this.props.history.goBack()
@@ -233,4 +231,22 @@ class AddOrUpdate extends Component{
         )
     }
 }
-export default Form.create()(AddOrUpdate)
+
+const mapStateToProps = state => {
+    return {
+        devicecategoryReducer:state.devicecategoryReducer,
+        departmentReducer:state.departmentReducer,
+        userReducer:state.userReducer,
+        problemCategoryReducer:state.problemCategoryReducer,
+        installlocationReducer:state.installlocationReducer,
+        deviceinfoReducer:state.deviceinfoReducer,
+        devicemodelReducer:state.devicemodelReducer
+    }
+}
+
+const mapDispatchToProps = {rDcs,rDms,rIls,rDis,couDi}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Form.create()(AddOrUpdate))

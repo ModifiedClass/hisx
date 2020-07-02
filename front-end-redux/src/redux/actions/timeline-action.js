@@ -21,8 +21,8 @@ const rTimeLinesAction = data =>({
     type:GET_TIMELINE,
     data
 })
-export const rTls = () => async dispatch => {
-    const result = await rTimeLines()
+export const rTls = timeline => async dispatch => {
+    const result = await rTimeLines(timeline)
     if(result.status === 1){
         dispatch(rTimeLinesAction(result.data))
     }

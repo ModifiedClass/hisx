@@ -24,7 +24,7 @@ class User extends Component{
             users:[],  //所有用户
             groups:[],   //用户组
             selectedUser:{},    //选中用户
-            initDepartment:{}   //传给子组件初始化tree
+            initDepartment:[]   //传给子组件初始化tree
         }
     }
     
@@ -231,7 +231,7 @@ class User extends Component{
         const result=this.props.departmentReducer
         this.setState({
             udShow:true,
-            initDepartment:result?ptoc(result.data):{}
+            initDepartment:result?ptoc(result.data):[]
         })
     }
     
@@ -331,7 +331,7 @@ class User extends Component{
                   visible={udShow}
                   onOk={this.UserDepartment}
                   onCancel={()=>{
-                      this.setState({udShow:false,initDepartment:{}})
+                      this.setState({udShow:false,initDepartment:[]})
                   }}
                 >
                     <DepartmentForm ref={this.auth} initDepartment={initDepartment} user={selectedUser}/>

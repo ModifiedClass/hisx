@@ -83,15 +83,11 @@ class Cartriday extends Component{
     initUsers=async()=>{
         await this.props.rGro({'name':'信息科'})
         const gs=this.props.groupReducer
-        if(gs.status===1){
-            const g=gs.data[0]._id
-            await this.props.rUs({'group':g})
-            const result=this.props.userReducer
-            if(result.status===1){
-                const users=result.data
-                this.setState({users})            
-            }
-        }
+        const g=gs.data[0]._id
+        await this.props.rUs({'group':g})
+        const result=this.props.userReducer
+        const users=result.data
+        this.setState({users})            
     }
     
     initCartridays= async()=>{

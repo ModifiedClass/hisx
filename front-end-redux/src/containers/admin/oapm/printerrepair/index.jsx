@@ -94,27 +94,21 @@ class PrinterRepair extends Component{
         await this.props.rDis({'isPage':false})
         const result=this.props.deviceinfoReducer
         const list=[]
-        if(result.status===1){
-           const obj=result.data.list
-           for(let i=0;i<obj.length;i++){
-               list.push({'id':obj[i]._id,'text':obj[i].devicemodel.devicecategory.name+'/'+obj[i].devicemodel.name+'/'+obj[i].sn})
-           }
-           this.setState({deviceinfos:list})
+        const obj=result.data.list
+        for(let i=0;i<obj.length;i++){
+            list.push({'id':obj[i]._id,'text':obj[i].devicemodel.devicecategory.name+'/'+obj[i].devicemodel.name+'/'+obj[i].sn})
         }
+        this.setState({deviceinfos:list})
     }
     //初始化用户用于传子控件
     initUsers=async()=>{
         await this.props.rGro({'name':'信息科'})
         const gs=this.props.groupReducer
-        if(gs.status===1){
-            const g=gs.data[0]._id
-            await this.props.rUs({'group':g})
-            const result=this.props.userReducer
-            if(result.status===1){
-                const users=result.data
-                this.setState({users})            
-            }
-        }
+        const g=gs.data[0]._id
+        await this.props.rUs({'group':g})
+        const result=this.props.userReducer
+        const users=result.data
+        this.setState({users})            
     }
     
     initPrinterRepairs= async()=>{

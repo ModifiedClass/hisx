@@ -39,8 +39,8 @@ const rBookCategorysAction = data =>({
     type:GET_BOOKCATEGORY,
     data
 })
-export const rBcs = () => async dispatch => {
-    const result = await rBookCategorys()
+export const rBcs = bookcategory => async dispatch => {
+    const result = await rBookCategorys(bookcategory)
     if(result.status === 1){
         dispatch(rBookCategorysAction(result.data))
     }
@@ -72,8 +72,8 @@ const rBooksAction = data =>({
     type:GET_BOOK,
     data
 })
-export const rBis = () => async dispatch => {
-    const result = await rBooks()
+export const rBis = book => async dispatch => {
+    const result = await rBooks(book)
     if(result.status === 1){
         dispatch(rBooksAction(result.data))
     }
@@ -105,8 +105,8 @@ const rBookStocksAction = data =>({
     type:GET_BOOKSTOCK,
     data
 })
-export const rBss = () => async dispatch => {
-    const result = await rBookStocks()
+export const rBss = bookstock => async dispatch => {
+    const result = await rBookStocks(bookstock)
     if(result.status === 1){
         dispatch(rBookStocksAction(result.data))
     }
@@ -138,8 +138,8 @@ const rBorrowRecordsAction = data =>({
     type:GET_BORROWRECORD,
     data
 })
-export const rBrs = () => async dispatch => {
-    const result = await rBorrowRecords()
+export const rBrs = borrowrecord => async dispatch => {
+    const result = await rBorrowRecords(borrowrecord)
     if(result.status === 1){
         dispatch(rBorrowRecordsAction(result.data))
     }
