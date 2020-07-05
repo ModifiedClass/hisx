@@ -68,6 +68,8 @@ def chart_processedrecord_day(request):
         seriesdata.append({
             'name': l,
             'type': 'line',
+            'stack': ' ',
+            'areaStyle': {},
             'smooth': True,
             'data':two
         })
