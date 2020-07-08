@@ -42,6 +42,7 @@ class AddOrUpdate extends Component{
     handleSearchDepartments=async value =>{
         if(value){
             await this.props.rDeps({'code':value})
+            await this.props.rDeps({'name':value})
             const result=this.props.departmentReducer
             const departments=result.data
             this.setState({departments})            
@@ -53,6 +54,7 @@ class AddOrUpdate extends Component{
     
     handleSearchUsers=async value =>{
         if(value){
+            await this.props.rUs({'username':value})
             await this.props.rUs({'name':value})
             const result=this.props.userReducer
             const users=result.data

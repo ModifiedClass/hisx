@@ -10,6 +10,7 @@ import {formateDate} from '../../../../utils/dateUtils'
 import {rDeps,couDep,dDep} from '../../../../redux/actions/account-action'
 import AddForm from './addform'
 import Highlighter from 'react-highlight-words'
+import {ptoc} from '../../../../utils/departmentUtils'
 
 class Department extends Component{
     constructor(props){
@@ -140,8 +141,10 @@ class Department extends Component{
     initDepartments = async()=>{
         this.setState({loading:true})
         await this.props.rDeps()
+        const data=this.props.departmentReducer.data
+        const departments = ptoc(data)
         this.setState({loading:false})
-        this.setState({departments:this.props.departmentReducer.data})
+        this.setState({departments})
     }
 
     showAdd=()=>{

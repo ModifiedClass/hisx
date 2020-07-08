@@ -33,7 +33,6 @@ import {
     dUser,
     cReset
 } from '../../api'
-import {ptoc} from '../../utils/departmentUtils'
 
 //设置面包屑同步action
 export const setBreadCrum= breadCrum =>({type:SET_BREAD_CRUM,data:breadCrum})
@@ -86,8 +85,7 @@ const rDepartmentsAction = data =>({
 export const rDeps = department => async dispatch => {
     const result = await rDepartments(department)
     if(result.status === 1){
-        const data = ptoc(result.data)
-        dispatch(rDepartmentsAction(data))
+        dispatch(rDepartmentsAction(result.data))
     }
   }
 
