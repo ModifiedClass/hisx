@@ -1,0 +1,27 @@
+centos 
+u:root  p:cnelte
+
+mysql 
+mysql -u root -p
+u:root p:Mysql-5.7.24
+
+source /root/env2/bin/activate
+cd /var/www/hisx
+python manage.py runserver 0.0.0.0:8001 
+
+npm
+下载
+wget https://npm.taobao.org/mirrors/node/v14.5.0/node-v14.5.0-linux-x64.tar.gz
+解压
+tar -xvf  node-v14.5.0-linux-x64.tar.gz
+重命名
+mv node-v14.5.0-linux-x64 node
+添加环境变量
+vi /etc/profile
+export NODE_HOME=/usr/local/node  
+export PATH=$NODE_HOME/bin:$PATH
+刷新
+source /etc/profile
+查看版本
+node -v
+npm -v
