@@ -54,7 +54,7 @@ class AddOrUpdate extends Component{
     
     handleSearchUsers=async value =>{
         if(value){
-            await this.props.rUs({'username':value})
+            //await this.props.rUs({'username':value})
             await this.props.rUs({'name':value})
             const result=this.props.userReducer
             const users=result.data
