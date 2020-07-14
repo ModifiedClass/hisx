@@ -25,3 +25,17 @@ source /etc/profile
 查看版本
 node -v
 npm -v
+
+vi显示中文乱码
+vi    配置文件路径：/etc/virc
+vim 配置文件路径：/etc/vimrc
+
+if v:lang =~ "utf8$" || v:lang =~ "UTF-8$"
+   set fileencodings=ucs-bom,utf-8,latin1,gbk,cp936,gb2312
+   set termencoding=utf-8
+   set fileformats=unix
+   set encoding=prc
+endif
+
+vim中取消^M显示方法
+进入命令模式后:%s/\r//g
